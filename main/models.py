@@ -57,19 +57,19 @@ class KpiModel(models.Model):
             return "LEGEND"
 
     def get_koef(self):
-        if self.sport < 40:
+        if self.general < 40:
             return 0
-        elif self.sport < 60:
+        elif self.general< 60:
             return 1
-        elif self.sport < 70:
+        elif self.general< 70:
             return 0.8
-        elif self.sport < 80:
+        elif self.general< 80:
             return 0.6
-        elif self.sport < 90:
+        elif self.general< 90:
             return 0.4
-        elif self.sport < 100:
+        elif self.general< 100:
             return 0.2
-        elif self.sport < 110:
+        elif self.general< 110:
             return 0.15
         else:
             return 0.1
