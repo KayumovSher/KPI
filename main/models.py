@@ -29,26 +29,24 @@ class KpiModel(models.Model):
 
     def calculate_general(self):
         total_sum = self.sport + self.book + float(self.eureka) + float(self.work)
+        if total_sum <= 10:
+            result = total_sum
+        elif total_sum <= 23:
+            result = 10 + 0.8 * (total_sum - 10)
+        elif total_sum <= 39:
+            result = 10.4 + 0.6 * (total_sum - 23)
+        elif total_sum <= 64:
+            result = 9.6 + 0.4 * (total_sum - 39)
+        elif total_sum <= 114:
+            result = 10 + 0.2 * (total_sum - 64)
+        elif total_sum <= 181:
+            result = 10 + 0.15 * (total_sum - 114)
+        elif total_sum < 281:
+            result = 10.05 + 0.1 * (total_sum - 181)
+        else:
+            result = 9.95
 
-        
-        # if total_sum <= 10:
-        #     result = total_sum
-        # elif total_sum <= 23:
-        #     result = 10 + 0.8 * (total_sum - 10)
-        # elif total_sum <= 39:
-        #     result = 10.4 + 0.6 * (total_sum - 23)
-        # elif total_sum <= 64:
-        #     result = 9.6 + 0.4 * (total_sum - 39)
-        # elif total_sum <= 114:
-        #     result = 10 + 0.2 * (total_sum - 64)
-        # elif total_sum <= 181:
-        #     result = 10 + 0.15 * (total_sum - 114)
-        # elif total_sum < 281:
-        #     result = 10.05 + 0.1 * (total_sum - 181)
-        # else:
-        #     result = 9.95
-
-        # self.general = 50 + result
+        self.general = 50 + result
 
     def get_league(self):
         if self.general < 40:
