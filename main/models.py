@@ -57,23 +57,10 @@ class KpiModel(models.Model):
             return "LEGEND"
 
     def get_koef(self):
-        if self.general < 40:
-            return 0
-        elif self.general< 60:
-            return 1
-        elif self.general< 70:
-            return 0.8
-        elif self.general< 80:
-            return 0.6
-        elif self.general< 90:
-            return 0.4
-        elif self.general< 100:
-            return 0.2
-        elif self.general< 110:
-            return 0.15
-        else:
-            return 0.1
-
+        koef_pairs = {'WOOD':1, "STONE":0.8, "BRONZE":0.6, "SILVER":0.4, "CRYSTAL":0.2, "ELITE":0.15, "LEGEND":0.1}
+        league = self.get_league()
+        return koef_pairs[league]
+        
     def save(self, *args, **kwargs):
         self.calculate_general()
 
