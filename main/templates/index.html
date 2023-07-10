@@ -1,4 +1,5 @@
 {% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -16,7 +17,9 @@
             <thead class="thead-dark">
                 <tr>
                     <th>F.I.O</th>
-                    <th>Kitob</th>
+                    <th>
+                        <a href="https://docs.google.com/spreadsheets/d/13aPcjyMXeHoDP3VeYuTcN4DlKeJEvOr_2t3qR4TV_3w/edit#gid=651037231">Kitob</a>
+                    </th>
                     <th>Sport</th>
                     <th>Ish</th>
                     <th>Eurika</th>
@@ -26,92 +29,28 @@
                 </tr>
             </thead>
             <tbody>
+                
+                {% for i in kpi  %}  
                 <tr>
-                    <td>Shermuhammad</td>
-                    <td>1</td>
-                    <td>0</td>
-                    <td>0.5</td>
-                    <td>5</td>
-                    <td>50</td>
-                    <td>Wood</td>
-                    <td>0.8</td>
+                    <td>{{i.name}}</td>
+                    <td>
+                        <a href="https://docs.google.com/spreadsheets/d/13aPcjyMXeHoDP3VeYuTcN4DlKeJEvOr_2t3qR4TV_3w/edit#gid=651037231">{{i.book}}</a>
+                    </td>
+                    <td>{{i.sport}}</td>
+                    <td>{{i.work}}</td>
+                    <td>{{i.eureka}}</td>
+                    <td>{{i.general}}</td>
+                    <td>{{i.league}}</td>
+                    <td>{{i.koef}}</td>
                 </tr>
-                <tr>
-                    <td>Shermuhammad</td>
-                    <td>1</td>
-                    <td>0</td>
-                    <td>0.5</td>
-                    <td>5</td>
-                    <td>50</td>
-                    <td>Wood</td>
-                    <td>0.8</td>
-                </tr>
-                <tr>
-                    <td>Shermuhammad</td>
-                    <td>1</td>
-                    <td>0</td>
-                    <td>0.5</td>
-                    <td>5</td>
-                    <td>50</td>
-                    <td>Wood</td>
-                    <td>0.8</td>
-                </tr>
-                <tr>
-                    <td>Shermuhammad</td>
-                    <td>1</td>
-                    <td>0</td>
-                    <td>0.5</td>
-                    <td>5</td>
-                    <td>50</td>
-                    <td>Wood</td>
-                    <td>0.8</td>
-                </tr>
-                <tr>
-                    <td>Shermuhammad</td>
-                    <td>1</td>
-                    <td>0</td>
-                    <td>0.5</td>
-                    <td>5</td>
-                    <td>50</td>
-                    <td>Wood</td>
-                    <td>0.8</td>
-                </tr>
-                <tr>
-                    <td>Shermuhammad</td>
-                    <td>1</td>
-                    <td>0</td>
-                    <td>0.5</td>
-                    <td>5</td>
-                    <td>50</td>
-                    <td>Wood</td>
-                    <td>0.8</td>
-                </tr>
-                <tr>
-                    <td>Shermuhammad</td>
-                    <td>1</td>
-                    <td>0</td>
-                    <td>0.5</td>
-                    <td>5</td>
-                    <td>50</td>
-                    <td>Wood</td>
-                    <td>0.8</td>
-                </tr>
-                <tr>
-                    <td>Shermuhammad</td>
-                    <td>1</td>
-                    <td>0</td>
-                    <td>0.5</td>
-                    <td>5</td>
-                    <td>50</td>
-                    <td>Wood</td>
-                    <td>0.8</td>
-                </tr>
+                {% endfor %}
+                
 
             </tbody>
         </table>
 
         <a href="https://docs.google.com/spreadsheets/d/13aPcjyMXeHoDP3VeYuTcN4DlKeJEvOr_2t3qR4TV_3w/edit#gid=1208225701">
-            <button>Table to Excel</button>
+            <button>Table to Kpi Google Sheet</button>
         </a>
         <button onclick="tableToGoogleSheet()">
             Table to Excel
