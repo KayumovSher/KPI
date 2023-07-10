@@ -1,11 +1,86 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ish</title>
+    <link rel="stylesheet" href="{% static 'css/index.css' %}">
+    <title>KPI</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    {% load static %}
 </head>
 <body>
-    <h1>Ish</h1>
+    <div class="container">
+        <h1>Work to Google Sheet KPI</h1>
+        <table class="table table-bordered">
+            <thead class="thead-dark">
+                <tr>
+                    <th>F.I.O</th>
+                    <th>
+                        03,07,2023
+                    </th>
+                    <th>
+                        10,07,2023
+                    </th>
+                    <th>
+                        17,072023
+                    </th>
+                    <th>
+                        24.07.2023
+                    </th>
+                    <th>
+                        31.07.2023
+                    </th>
+                    <th>
+                        07.08.2023
+                    </th>
+                    <th>
+                        14.08.2023
+                    </th>
+                    <th>
+                        21.03.2023
+                    </th>
+                    <th>
+                        28.08.2023
+                    </th>
+                    <th>
+                        28.08.2023
+                    </th>
+                    <th>
+                        28.08.2023
+                    </th>
+                    <th>
+                        28.08.2023
+                    </th>
+
+                </tr>
+            </thead>
+            <tbody>
+                
+                {% for i in kpi  %}  
+                <tr>
+                    <!--database ornatilingandan keyin ozgartirish kerak-->
+                    <td>{{i.name}}</td>
+                    <td>{{i.work}}</td>
+                    <td>{{i.work}}</td>
+                </tr>
+                {% endfor %}
+                
+
+            </tbody>
+        </table>
+
+        <a href="https://docs.google.com/spreadsheets/d/13aPcjyMXeHoDP3VeYuTcN4DlKeJEvOr_2t3qR4TV_3w/edit#gid=1208225701">
+            <button>Table to Kpi Google Sheet</button>
+        </a>
+        <button onclick="tableToGoogleSheet()">
+            Table to Excel
+        </button>
+
+    </div>
+    
+<script type="text/javascript" src="{% static 'js/table2excel.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/index.js' %}"></script>
 </body>
 </html>

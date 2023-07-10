@@ -18,8 +18,10 @@ def sport(request):
 
 
 def work(request):
-    return render(request, 'work.html')
+    kpi_models = KpiModel.objects.all()
+    return render(request, 'work.html', {"kpi":kpi_models})
 
 
 def eureka(request):
-    return render(request, 'eureka.html')
+    kpi_models = KpiModel.objects.all()
+    return render(request, 'eureka.html', {"kpi":kpi_models})
