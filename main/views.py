@@ -5,23 +5,31 @@ from .models import KpiModel
 
 def index(request):
     kpi_models = KpiModel.objects.all()
-    return render(request, 'index.html', {"kpi":kpi_models})
+    kpi_array = [x for x in kpi_models]
+    books = sum(x.score for x in BookModel.objects.filter(kpi__in=kpi_array))
+    sports = sum(x.score for x in SportModel.objects.filter(kpi__in=kpi_array))
+    evrikas = sum(x.score for x in EvrikaModel.objects.filter(kpi__in=kpi_array))
+    works = sum(x.score for x in WorkModel.objects.filter(kpi__in=kpi_array))
+    context = {"kpi":kpi_models, "books":books, "sports":sports, "evrikas":evrikas, "works":works}
+    return render(request, 'index.html', context)
 
 def book(request):
-    kpi_models = KpiModel.objects.all()
-    return render(request, 'book.html', {"kpi":kpi_models})
+    books = BookModel.objects.all()
+    return render(request, 'book.html', {"books":books})
 
 
 def sport(request):
-    return render(request, 'sport.html')
+    sports = SportModel.objects.all()
+    return render(request, 'sport.html', {"sports":sports})
 
 
 def work(request):
-    kpi_models = KpiModel.objects.all()
-    return render(request, 'work.html', {"kpi":kpi_models})
+    works = WorkModel.objects.all()
+    return render(request, 'work.html', {"works":works})
 
 
 def eureka(request):
-    kpi_models = KpiModel.objects.all()
-    return render(request, 'eureka.html', {"kpi":kpi_models})
+    evrikas = EvrikaModel.objects.all()
+    return render(request, 'eureka.html', {"evrikas":evrikas})
+
 

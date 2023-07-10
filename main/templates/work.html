@@ -58,12 +58,11 @@
             </thead>
             <tbody>
                 
-                {% for i in kpi  %}  
+                {% for i in works  %}  
                 <tr>
                     <!--database ornatilingandan keyin ozgartirish kerak-->
-                    <td>{{i.name}}</td>
-                    <td>{{i.work}}</td>
-                    <td>{{i.work}}</td>
+                    <td>{{i.kpi.name}}</td>
+                    <td>{{i.score}}</td>
                 </tr>
                 {% endfor %}
                 
