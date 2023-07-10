@@ -13,7 +13,7 @@ class KpiModel(models.Model):
     eureka = models.DecimalField(max_digits=10, decimal_places=2)
     general = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     league = models.CharField(max_length=255, null=True, blank=True)
-    koef = models.DecimalField(max_digits=10, decimal_places=2)
+    koef = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     book_comment = models.URLField(max_length=255, null=True)
 
     def calculate_general(self):
@@ -57,22 +57,9 @@ class KpiModel(models.Model):
             return "LEGEND"
 
     def get_koef(self):
-        if self.sport < 40:
-            return 0
-        elif self.sport < 60:
-            return 1
-        elif self.sport < 70:
-            return 0.8
-        elif self.sport < 80:
-            return 0.6
-        elif self.sport < 90:
-            return 0.4
-        elif self.sport < 100:
-            return 0.2
-        elif self.sport < 110:
-            return 0.15
-        else:
-            return 0.1
+        league_pairs = {"WOOD":1, "STONE":0.8, "BRONZE":0.6, "SILVER":0.4, "CRYSTAL":0.2, "ELITE":0.15, "LEGEND":0.1}
+        league = self.get_league()
+        return league_pairs[league]
 
     def save(self, *args, **kwargs):
         self.calculate_general()
@@ -87,6 +74,7 @@ class KpiModel(models.Model):
 
     def __str__(self):
         return f"{self.name} {self.book} {self.sport} {self.work} {self.eureka} {self.general} {self.league} {self.koef}"
+
 
 
 
