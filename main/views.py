@@ -9,7 +9,8 @@ def index(request):
 
 
 def book(request):
-    return render(request, 'book.html')
+    kpi_models = KpiModel.objects.all()
+    return render(request, 'book.html', {"kpi":kpi_models})
 
 
 def sport(request):
