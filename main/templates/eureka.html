@@ -12,26 +12,37 @@
 </head>
 <body>
     <div class="container">
-        <h1>Table to Google Sheet KPI</h1>
+        <h1>Eureka to Google Sheet KPI</h1>
         <table class="table table-bordered">
             <thead class="thead-dark">
                 <tr>
                     <th>F.I.O</th>
+
                     <th>
-                        <a href="book">Kitob</a>
+                        Ball
                     </th>
                     <th>
-                        <a href="sport">Sport</a>
+                        Eureka nimaligi
                     </th>
                     <th>
-                        <a href="#">Ish</a>
+                        Ball
                     </th>
                     <th>
-                        <a href="#">Eureka</a>
+                        Eureka nimaligi
                     </th>
-                    <th class="background-color:green;">Umumiy</th>
-                    <th>Liga</th>
-                    <th>Koef</th>
+                    <th>
+                        Ball
+                    </th>
+                    <th>
+                        Eureka nimaligi
+                    </th>
+                    <th>
+                        Ball
+                    </th>
+                    <th>
+                        Eureka nimaligi
+                    </th>
+
                 </tr>
             </thead>
             <tbody>
@@ -39,21 +50,15 @@
                 {% for i in kpi  %}  
                 <tr>
                     <td>{{i.name}}</td>
-                    <td>
-                        <a href="book">{{i.book}}</a>
-                    </td>
-                    <td>
-                        <a href="sport">{{i.sport}}</a>
-                    </td>
-                    <td>
-                        <a href="work">{{i.work}}</a>
-                    </td>
-                    <td>
-                        <a href="eureka">{{i.eureka}}</a>
-                    </td>
-                    <td>{{i.general}}</td>
-                    <td>{{i.league}}</td>
-                    <td>{{i.koef}}</td>
+                    
+                    <td>{{i.eureka}}</td>
+                    <td>{{i.eureka}}</td>
+                    <td>{{i.eureka}}</td>
+                    <td>{{i.eureka}}</td>
+                    <td>{{i.eureka}}</td>
+                    <td>{{i.eureka}}</td>
+                    <td>{{i.eureka}}</td>
+                    <td>{{i.eureka}}</td>
                 </tr>
                 {% endfor %}
                 

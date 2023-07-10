@@ -12,48 +12,58 @@
 </head>
 <body>
     <div class="container">
-        <h1>Table to Google Sheet KPI</h1>
+        <h1>Work to Google Sheet KPI</h1>
         <table class="table table-bordered">
             <thead class="thead-dark">
                 <tr>
                     <th>F.I.O</th>
                     <th>
-                        <a href="book">Kitob</a>
+                        03,07,2023
                     </th>
                     <th>
-                        <a href="sport">Sport</a>
+                        10,07,2023
                     </th>
                     <th>
-                        <a href="#">Ish</a>
+                        17,072023
                     </th>
                     <th>
-                        <a href="#">Eureka</a>
+                        24.07.2023
                     </th>
-                    <th class="background-color:green;">Umumiy</th>
-                    <th>Liga</th>
-                    <th>Koef</th>
+                    <th>
+                        31.07.2023
+                    </th>
+                    <th>
+                        07.08.2023
+                    </th>
+                    <th>
+                        14.08.2023
+                    </th>
+                    <th>
+                        21.03.2023
+                    </th>
+                    <th>
+                        28.08.2023
+                    </th>
+                    <th>
+                        28.08.2023
+                    </th>
+                    <th>
+                        28.08.2023
+                    </th>
+                    <th>
+                        28.08.2023
+                    </th>
+
                 </tr>
             </thead>
             <tbody>
                 
                 {% for i in kpi  %}  
                 <tr>
+                    <!--database ornatilingandan keyin ozgartirish kerak-->
                     <td>{{i.name}}</td>
-                    <td>
-                        <a href="book">{{i.book}}</a>
-                    </td>
-                    <td>
-                        <a href="sport">{{i.sport}}</a>
-                    </td>
-                    <td>
-                        <a href="work">{{i.work}}</a>
-                    </td>
-                    <td>
-                        <a href="eureka">{{i.eureka}}</a>
-                    </td>
-                    <td>{{i.general}}</td>
-                    <td>{{i.league}}</td>
-                    <td>{{i.koef}}</td>
+                    <td>{{i.work}}</td>
+                    <td>{{i.work}}</td>
                 </tr>
                 {% endfor %}
                 
