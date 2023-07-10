@@ -2,7 +2,7 @@ from django.contrib import admin
 from .models import *
 from django import forms
 from django.contrib import admin
-from .models import KpiModel
+from .models import KpiModel, WorkModel, SportModel, EvrikaModel, BookModel
 
 
 class KPIModelForm(forms.ModelForm):
@@ -19,7 +19,23 @@ class KPIModelForm(forms.ModelForm):
 
 class KPIAdmin(admin.ModelAdmin):
     form = KPIModelForm
-    list_display = ('name', 'book', 'sport', 'work', 'eureka', 'general', 'league', 'koef', 'book_comment')
-    
+    list_display = ('name', 'general', 'league', 'koef', 'book_comment')
+
+class WorkAdmin(admin.ModelAdmin):
+    list_display = ("deadline", "score")
+
+class SportAdmin(admin.ModelAdmin):
+    list_display = ("details", "score")
+
+class BookAdmin(admin.ModelAdmin):
+    list_display = ("title", "score")
+
+class EvrikaAdmin(admin.ModelAdmin):
+    list_display = ("details", "score")
+
 
 admin.site.register(KpiModel, KPIAdmin)
+admin.site.register(WorkModel, WorkAdmin)
+admin.site.register(SportModel, SportAdmin)
+admin.site.register(EvrikaModel, EvrikaAdmin)
+admin.site.register(BookModel, BookAdmin)
