@@ -5,3 +5,6 @@ migrations/
 env/
 venv/
 *.pyc
+.idea/
+.vs/
+.vscode/

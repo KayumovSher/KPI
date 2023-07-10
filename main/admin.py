@@ -15,8 +15,7 @@ class KPIModelForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
 
         self.fields['league'].widget.attrs['readonly'] = True
-
-    
+        self.fields['koef'].widget.attrs['readonly'] = True
 
 class KPIAdmin(admin.ModelAdmin):
     form = KPIModelForm
