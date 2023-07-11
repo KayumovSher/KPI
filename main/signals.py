@@ -14,6 +14,9 @@ from django.dispatch import receiver
 
 def update_kpi_overall(sender, instance, created, **kwargs):
     if created is None:
+        # kpi = instance.kpi
+        # kpi.calculate_general()
+        # kpi.save()
         pass
     else:
         kpi = instance.kpi

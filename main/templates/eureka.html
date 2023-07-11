@@ -18,51 +18,27 @@
                 <tr>
                     <th>F.I.O</th>
 
+                    {% for evrika in evrikas %}
                     <th>
                         Ball
                     </th>
                     <th>
                         Eureka nimaligi
                     </th>
-                    <th>
-                        Ball
-                    </th>
-                    <th>
-                        Eureka nimaligi
-                    </th>
-                    <th>
-                        Ball
-                    </th>
-                    <th>
-                        Eureka nimaligi
-                    </th>
-                    <th>
-                        Ball
-                    </th>
-                    <th>
-                        Eureka nimaligi
-                    </th>
+                    {% endfor %}
 
                 </tr>
             </thead>
             <tbody>
-                
-                {% for i in kpi  %}  
-                <tr>
-                    <td>{{i.name}}</td>
-                    
-                    <td>{{i.eureka}}</td>
-                    <td>{{i.eureka}}</td>
-                    <td>{{i.eureka}}</td>
-                    <td>{{i.eureka}}</td>
-                    <td>{{i.eureka}}</td>
-                    <td>{{i.eureka}}</td>
-                    <td>{{i.eureka}}</td>
-                    <td>{{i.eureka}}</td>
-                </tr>
+                {% for kpi in kpi_models %}
+                    <tr>
+                        <td>{{kpi.name}}</td>
+                        {% for x in evrikas %}
+                            <td>{{x.score}}</td>
+                            <td>{{x.details}}</td>
+                        {% endfor %}
+                    </tr>
                 {% endfor %}
-                
-
             </tbody>
         </table>
 

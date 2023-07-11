@@ -14,60 +14,27 @@
     <div class="container">
         <h1>Work to Google Sheet KPI</h1>
         <table class="table table-bordered">
-            <thead class="thead-dark">
-                <tr>
+            <thead class="thead-dark"> 
+                    <tr>
                     <th>F.I.O</th>
-                    <th>
-                        03,07,2023
-                    </th>
-                    <th>
-                        10,07,2023
-                    </th>
-                    <th>
-                        17,072023
-                    </th>
-                    <th>
-                        24.07.2023
-                    </th>
-                    <th>
-                        31.07.2023
-                    </th>
-                    <th>
-                        07.08.2023
-                    </th>
-                    <th>
-                        14.08.2023
-                    </th>
-                    <th>
-                        21.03.2023
-                    </th>
-                    <th>
-                        28.08.2023
-                    </th>
-                    <th>
-                        28.08.2023
-                    </th>
-                    <th>
-                        28.08.2023
-                    </th>
-                    <th>
-                        28.08.2023
-                    </th>
-
-                </tr>
+                    {% for x in works %}
+                    
+                        <th>{{x.deadline}}</th>
+                    {% endfor %}
+                    </tr>
             </thead>
-            <tbody>
+                </thead>
+                <tbody>
+                    {% for kpi in kpi_models %}
+                        <tr>
+                            <td>{{kpi.name}}</td>
+                            {% for x in works %}
+                                <td>{{x.score}}</td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
                 
-                {% for i in works  %}  
-                <tr>
-                    <!--database ornatilingandan keyin ozgartirish kerak-->
-                    <td>{{i.kpi.name}}</td>
-                    <td>{{i.score}}</td>
-                </tr>
-                {% endfor %}
-                
-
-            </tbody>
         </table>
 
         <a href="https://docs.google.com/spreadsheets/d/13aPcjyMXeHoDP3VeYuTcN4DlKeJEvOr_2t3qR4TV_3w/edit#gid=1208225701">

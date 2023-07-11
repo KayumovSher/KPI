@@ -17,63 +17,23 @@
             <thead class="thead-dark">
                 <tr>
                     <th>F.I.O</th>
+                    {% for x in books %}
                     <th>
-                        Noldan birga
+                        {{x.title}}
                     </th>
-                    <th>
-                        Latte omili
-                    </th>
-                    <th>
-                        Raqamli qa'la
-                    </th>
-                    <th>
-                        Molxona
-                    </th>
-                    <th>
-                        Farenheyt bo'yicha 451
-                    </th>
-                    <th>
-                        Factfullness
-                    </th>
-                    <th>
-                        Atom odatlar
-                    </th>
-                    <th>
-                        Deyl Karnegi
-                    </th>
-                    <th>
-                        Yalong'och iqtisodiyot
-                    </th>
-                    <th>
-                        Kodbuzar
-                    </th>
-                    <th>
-                        Diqqat
-                    </th>
-                    <th>
-                        Yuqumlilik
-                    </th>
+                    {% endfor %}
 
                 </tr>
             </thead>
             <tbody>
-                
-                {% for i in kpi  %}  
-                <tr>
-                    <td>{{i.name}}</td>
-                    
-                    <td>{{i.book}}</td>
-                    <td>{{i.book}}</td>
-                    <td>{{i.book}}</td>
-                    <td>{{i.book}}</td>
-                    <td>{{i.book}}</td>
-                    <td>{{i.book}}</td>
-                    <td>{{i.book}}</td>
-                    <td>{{i.book}}</td>
-                </tr>
+                {% for kpi in kpi_models %}
+                    <tr>
+                        <td>{{kpi.name}}</td>
+                        {% for x in books %}
+                            <td>{{x.score}}</td>
+                        {% endfor %}
+                    </tr>
                 {% endfor %}
-                
-
             </tbody>
         </table>
 

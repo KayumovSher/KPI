@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .models import KpiModel, SportModel, EvrikaModel, BookModel, WorkModel
 from .models import KpiModel
 # Create your views here.
@@ -15,21 +15,35 @@ def index(request):
 
 def book(request):
     books = BookModel.objects.all()
-    return render(request, 'book.html', {"books":books})
+    kpi_models = KpiModel.objects.all()
+    return render(request, 'book.html', {"books":books, "kpi_models":kpi_models})
 
 
 def sport(request):
-    sports = SportModel.objects.all()
-    return render(request, 'sport.html', {"sports":sports})
+    if request.method == 'GET':
+        sports = SportModel.objects.all()
+        kpi_models = KpiModel.objects.all()
 
+    else:
+        details = request.POST.get('details')
+        score = request.POST.get('score')
+        kpi_id = request.POST.get('kpi')
+        kpi = KpiModel.objects.get(id=kpi_id)
+        sport = SportModel.objects.create(kpi=kpi, details=details, score=score)
+        sport.save()
+        return redirect('sport')
+    return render(request, 'sport.html', {"sports":sports, 'kpi_models':kpi_models})
+    
 
 def work(request):
-    works = WorkModel.objects.all()
-    return render(request, 'work.html', {"works":works})
+    works = WorkModel.objects.all().order_by("deadline")
+    kpi_models = KpiModel.objects.all()
+    return render(request, 'work.html', {"works":works, 'kpi_models':kpi_models})
 
 
 def eureka(request):
     evrikas = EvrikaModel.objects.all()
-    return render(request, 'eureka.html', {"evrikas":evrikas})
+    kpi_models = KpiModel.objects.all()
+    return render(request, 'eureka.html', {"evrikas":evrikas, 'kpi_models':kpi_models})
 
 
