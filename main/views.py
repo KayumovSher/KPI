@@ -24,7 +24,13 @@ def sport(request):
 
 
 def work(request):
-    works = WorkModel.objects.all()
+    # id = 1
+    # kpi = KpiModel.objects.get(id=id)
+    # score = request.data.GET("score")
+    # deadline = request.data.GET("deadline")
+    # work = WorkModel.objects.create(score=score, deadline=deadline, kpi=kpi)
+    # work.save()
+    # works = WorkModel.objects.all()
     return render(request, 'work.html', {"works":works})
 
 

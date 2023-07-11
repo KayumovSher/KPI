@@ -19,7 +19,7 @@ class KPIModelForm(forms.ModelForm):
 
 class KPIAdmin(admin.ModelAdmin):
     form = KPIModelForm
-    list_display = ('name', 'general', 'league', 'koef', 'book_comment')
+    list_display = ('name', 'general', 'league', 'koef', 'book_comment', 'upwork')
 
 class WorkAdmin(admin.ModelAdmin):
     list_display = ("deadline", "score")
