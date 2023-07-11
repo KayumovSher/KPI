@@ -1,6 +1,5 @@
 from django.shortcuts import render, redirect
 from .models import KpiModel, SportModel, EvrikaModel, BookModel, WorkModel
-from .models import KpiModel
 # Create your views here.
 
 def index(request):
@@ -40,10 +39,22 @@ def work(request):
     kpi_models = KpiModel.objects.all()
     return render(request, 'work.html', {"works":works, 'kpi_models':kpi_models})
 
+    # id = 1
+    # kpi = KpiModel.objects.get(id=id)
+    # score = request.data.GET("score")
+    # deadline = request.data.GET("deadline")
+    # work = WorkModel.objects.create(score=score, deadline=deadline, kpi=kpi)
+    # work.save()
+    # works = WorkModel.objects.all()
+
 
 def eureka(request):
     evrikas = EvrikaModel.objects.all()
     kpi_models = KpiModel.objects.all()
     return render(request, 'eureka.html', {"evrikas":evrikas, 'kpi_models':kpi_models})
+
+
+def reminder(request):
+    return render(request, 'reminder.html')
 
 
