@@ -1,6 +1,5 @@
 from django.shortcuts import render
 from .models import KpiModel, SportModel, EvrikaModel, BookModel, WorkModel
-from .models import KpiModel
 # Create your views here.
 
 def index(request):
@@ -37,5 +36,9 @@ def work(request):
 def eureka(request):
     evrikas = EvrikaModel.objects.all()
     return render(request, 'eureka.html', {"evrikas":evrikas})
+
+
+def reminder(request):
+    return render(request, 'reminder.html')
 
 
