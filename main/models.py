@@ -82,7 +82,7 @@ class KpiModel(models.Model):
     league = models.CharField(max_length=255, null=True, blank=True)
     koef = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     book_comment = models.URLField(max_length=255, null=True)
-    upwork = models.URLField(max_length=200, null=True)
+    upwork = models.URLField(max_length=200, blank=True)
 
     def calculate_general(self):
         book = BookModel.objects.books_sum(self)
