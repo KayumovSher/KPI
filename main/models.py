@@ -18,9 +18,9 @@ class WorkModel(models.Model):
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
         self.kpi.calculate_general()
-    return str(self.score) + " " + str(self.deadline)
     
-
+    def __str__(self):
+        return str(self.score) + " " + str(self.deadline)
 
 class SportManager(models.Manager):
     def sport_sum(self, kpi):
