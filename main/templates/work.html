@@ -13,12 +13,14 @@
 <body>
     <div class="container">
         <h1>Work to Google Sheet KPI</h1>
-        {% for name in kpi_models %}
             <br>
-            <h2 style="text-align: center;">{{name.name}}</h2>
+            
+            <h2 style="text-align: center;">
+                {{kpi.name}} 
+            </h2>
             <br>
-        {% endfor %}
-        <table class="table table-bordered">
+
+            <table class="table table-bordered">
             <thead class="thead-dark"> 
                     <tr>
                     <th>Deadline</th>
