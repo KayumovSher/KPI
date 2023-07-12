@@ -11,16 +11,14 @@ class WorkManager(models.Manager):
 class WorkModel(models.Model):
     deadline = models.DateField()
     score = models.DecimalField(max_digits=10, decimal_places=2)
+    description = models.TextField(max_length=200, null=True, blank=True)
     kpi = models.ForeignKey("KpiModel", on_delete=models.CASCADE, related_name="work_items")
 
     objects = WorkManager()
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
         self.kpi.calculate_general()
-
-
-    def __str__(self):
-        return str(self.score) + " " + str(self.deadline)
+    return str(self.score) + " " + str(self.deadline)
     
 
 
