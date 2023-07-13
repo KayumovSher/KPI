@@ -75,7 +75,7 @@ def work(request, id=None):
         return redirect('/')
     
     elif request.method == 'DELETE':
-        work_id = request.POST.get('del_id')
+        work_id = request.POST.get('work_id')
         obj = get_object_or_404(WorkModel, id=work_id)
         obj.delete()
         return redirect('/')

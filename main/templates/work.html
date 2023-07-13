@@ -29,6 +29,7 @@
                     <th>Deadline</th>
                     <th>Score</th>
                     <th>Description</th>
+                    <th>Action</th>
                     </tr>
             </thead>
                 </thead>
@@ -40,9 +41,10 @@
                             <th> <input type="date" name="n_deadline" id="" value=""> </th>
                             <th> <input type="text" name="n_score" id="" value="0.00"> </th>
                             <th> <input type="text" name="n_description" id="" value=""> </th>
+                            
+                            <th> <input type="submit" name="create" id="" value="Create"> </th>
 
                         </tr>
-                        <input type="submit" name="create" id="" value="Create">
                         </form>
 
                         <form action="" method="post">
@@ -53,10 +55,11 @@
                             <th> <input type="text" name="score" id="" value="{{x.score}}"> </th>
                             <th> <input type="text" name="description" id="" value="{{x.description}}"> </th>
                             <input type="hidden" name="work_id" id="" value="{{x.id}}">
-                            <input type="submit" name="del_id" value="Delete">
+                            <th><input type="submit" name="del_id" value="Delete">
+                                <input type="submit" name="edit" id="" value="Edit"></th>
                             </tr>
                         {% endfor %}
-                        <input type="submit" name="edit" id="" value="Edit">
+                        
                         </form>
 
                 </tbody>
