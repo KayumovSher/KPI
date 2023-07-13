@@ -36,51 +36,54 @@ def sport(request, id=None):
     kpi = get_object_or_404(KpiModel, id=id)
     sports = SportModel.objects.filter(kpi=kpi)
     return render(request, 'sport.html', {"sports":sports, 'kpi':kpi})
-    # else:
-    #     details = request.POST.get('details', '')
-    #     score = request.POST.get('score', '')
-    #     kpi_id = request.POST.get('kpi')
-    #     kpi = KpiModel.objects.get(id=kpi_id)
-    #     sport = SportModel.objects.create(kpi=kpi, details=details, score=score)
-    #     sport.save()
-    #     return redirect('sport')
-    
 
 
-def work(request, id=None):
-    kpi = get_object_or_404(KpiModel, id=id)
-    works = WorkModel.objects.filter(kpi=kpi).order_by("deadline")
-    if request.method == 'POST':
-        #  edit the existing work
-        kpi = KpiModel.objects.get(id=id)
-        work_id = request.POST.get('work_id')
-        if work_id is not None:
-            work = WorkModel.objects.get(id=work_id)
+class WorkViews:
+    def edit_work(self, request, kpi_id, work_id):
+        # Retrieve the necessary objects
+        kpi = get_object_or_404(KpiModel, id=kpi_id)
+        work = get_object_or_404(WorkModel, id=work_id)
+
+        if request.method == 'POST':
+            # Process the form data and update the work object
             deadline = request.POST.get('deadline')
             score = request.POST.get('score')
             description = request.POST.get('description', '')
+
             work.deadline = deadline
             work.score = score
             work.description = description
             work.save()
 
-        #  new work creation
-        else:
-            n_deadline = request.POST.get('n_deadline')    
-            n_score = request.POST.get('n_score', )
-            n_description = request.POST.get('n_description', '')
-            
-            n_work = WorkModel(deadline=n_deadline, score=n_score, description=n_description, kpi=kpi)
-            n_work.save()
-        return redirect('/')
-    
-    elif request.method == 'DELETE':
-        work_id = request.POST.get('work_id')
-        obj = get_object_or_404(WorkModel, id=work_id)
-        obj.delete()
-        return redirect('/')
-    return render(request, 'work.html', {"works":works, 'kpi':kpi})
+            return redirect('/')
 
+        return render(request, 'edit_work.html', {'kpi': kpi, 'work': work})
+
+    def delete_work(self, request, kpi_id, work_id):
+        if request.method == 'POST':
+            # Delete the work object
+            work = get_object_or_404(WorkModel, id=work_id)
+            work.delete()
+
+        return redirect('/')
+
+    def create_work(self, request, kpi_id):
+        kpi = get_object_or_404(KpiModel, id=kpi_id)
+
+        if request.method == 'POST':
+            # Process the form data and create a new work object
+            deadline = request.POST.get('n_deadline')
+            score = request.POST.get('n_score', '')
+            description = request.POST.get('n_description', '')
+
+            new_work = WorkModel(deadline=deadline, score=score, description=description, kpi=kpi)
+            new_work.save()
+
+            return redirect('/')
+
+        return render(request, 'create_work.html', {'kpi': kpi})
+    
+    return render(request, 'work.html', {"works": works, 'kpi': kpi})
 
 def eureka(request, id=None):
     kpi = get_object_or_404(KpiModel, id=id)

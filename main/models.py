@@ -10,28 +10,22 @@ class WorkManager(models.Manager):
 
 class WorkModel(models.Model):
     deadline = models.DateField(null=True)
-<<<<<<< HEAD
-    score = models.DecimalField(max_digits=10, decimal_places=2)
-=======
     score = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
->>>>>>> eedc90b13f810c42349d054230666af59423e67d
     description = models.TextField(max_length=200, null=True, blank=True)
     kpi = models.ForeignKey("KpiModel", on_delete=models.CASCADE, related_name="work_items")
-
     objects = WorkManager()
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
         self.kpi.calculate_general()
-<<<<<<< HEAD
+
     def __str__(self):
         return str(self.score) + " " + str(self.deadline)
-=======
->>>>>>> eedc90b13f810c42349d054230666af59423e67d
-    
+
     def __str__(self):
         return str(self.score) + " " + str(self.deadline)
 
 class SportManager(models.Manager):
+
     def sport_sum(self, kpi):
         sports = self.filter(kpi=kpi)
         return sum(x.score for x in sports)
@@ -41,6 +35,7 @@ class SportModel(models.Model):
     score = models.DecimalField(max_digits=10, decimal_places=2)
     kpi = models.ForeignKey("KpiModel", on_delete=models.CASCADE, related_name="sport_items")
     objects = SportManager()
+
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
         self.kpi.calculate_general()
