@@ -11,6 +11,8 @@
     {% load static %}
 </head>
 <body>
+    
+    
     <div class="container">
         <h1>Work to Google Sheet KPI</h1>
             <br>
@@ -30,19 +32,37 @@
             </thead>
                 </thead>
                 <tbody>
-                    
+
+                    <form action="" method="post">
+                        {% csrf_token %}
+                            <tr>
+                            <th> <input type="date" name="n_deadline" id="" value=""> </th>
+                            <th> <input type="text" name="n_score" id="" value="0.00"> </th>
+                            <th> <input type="text" name="n_description" id="" value=""> </th>
+
+                        </tr>
+                        <input type="submit" name="create" id="" value="Create">
+                        </form>
+
+                        <form action="" method="post">
+                        {% csrf_token %}
                         {% for x in works %}
                             <tr>
-                            <th>{{x.deadline}}</th>
-                            <th>{{x.score}}</th>
-                            <td>{{x.description}}</t>
+                            <th> <input type="date" name="deadline" id="" value="{{ x.deadline|date:'Y-m-d'}}"> </th>
+                            <th> <input type="text" name="score" id="" value="{{x.score}}"> </th>
+                            <th> <input type="text" name="description" id="" value="{{x.description}}"> </th>
+                            <input type="hidden" name="work_id" id="" value="{{x.id}}">
+                            <input type="submit" name="del_id" value="Delete">
                             </tr>
                         {% endfor %}
-                
-                
+                        <input type="submit" name="edit" id="" value="Edit">
+                        </form>
+
                 </tbody>
                 
         </table>
+
+
 
         <a href="https://docs.google.com/spreadsheets/d/13aPcjyMXeHoDP3VeYuTcN4DlKeJEvOr_2t3qR4TV_3w/edit#gid=1208225701">
             <button>Table to Kpi Google Sheet</button>
@@ -50,10 +70,12 @@
         <button onclick="tableToGoogleSheet()">
             Table to Excel
         </button>
+        
 
     </div>
     
 <script type="text/javascript" src="{% static 'js/table2excel.js' %}"></script>
 <script type="text/javascript" src="{% static 'js/index.js' %}"></script>
+
 </body>
 </html>

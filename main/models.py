@@ -9,7 +9,7 @@ class WorkManager(models.Manager):
         return sum(x.score for x in work)
 
 class WorkModel(models.Model):
-    deadline = models.DateField()
+    deadline = models.DateField(null=True)
     score = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     description = models.TextField(max_length=200, null=True, blank=True)
     kpi = models.ForeignKey("KpiModel", on_delete=models.CASCADE, related_name="work_items")
