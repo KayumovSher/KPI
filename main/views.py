@@ -25,11 +25,65 @@ def LoginPage(request):
     return render(request, 'login.html')
 
 
-def book(request, id=None):
-    kpi = get_object_or_404(KpiModel, id=id)
-    books = BookModel.objects.filter(kpi=kpi)
-    return render(request, 'book.html', {"books":books, "kpi":kpi})
+# Book
 
+
+
+def edit_book(request, kpi_id, book_id):
+    kpi = get_object_or_404(KpiModel, id=kpi_id)
+    book = get_object_or_404(BookModel, id=book_id)
+
+    if request.method == 'POST':
+        title = request.POST.get('title')
+        score = request.POST.get('score')
+
+        book.title = title
+        book.score = score
+        book.save()
+
+        return redirect(f'/book/{kpi_id}/')
+
+    
+    return render(request, 'book.html', {'kpi': kpi, 'book': book})
+
+
+def delete_book(request, kpi_id, book_id):
+    if request.method == 'POST':
+        book = get_object_or_404(BookModel, id=book_id)
+        book.delete()
+        return redirect(f'/book/{kpi_id}/')
+    
+
+
+def create_book(request, kpi_id):
+    kpi = get_object_or_404(BookModel, id=kpi_id)
+
+    if request.method == 'POST':
+        title = request.POST.get('n_title')
+        score = request.POST.get('n_score', '')
+        print(request.POST)
+        new_book = BookModel.objects.create(title=title, score=score, kpi=kpi)
+        new_book.save()
+
+        return redirect(f'/book/{kpi_id}/')
+    
+    return render(request, 'book.html', {'kpi': kpi})
+
+def work(request, id=None):
+    kpi = get_object_or_404(KpiModel, id=id)
+    books = WorkModel.objects.filter(kpi=kpi)
+
+    if request.method == 'POST':
+        if 'edit_book' in request.POST:
+            book_id = request.POST.get('book_id')
+            return redirect('edit_book', kpi_id=id, book_id=book_id)
+        elif 'delete_book' in request.POST:
+            book_id = request.POST.get('book_id')
+            return redirect('delete_book', kpi_id=id, book_id=book_id)
+        elif 'create_book' in request.POST:
+            return redirect('create_book', kpi_id=id)
+
+    return render(request, 'book.html', {"books": books, 'kpi': kpi})
 
 
 def sport(request, id=None):
@@ -37,53 +91,69 @@ def sport(request, id=None):
     sports = SportModel.objects.filter(kpi=kpi)
     return render(request, 'sport.html', {"sports":sports, 'kpi':kpi})
 
-
-class WorkViews:
-    def edit_work(self, request, kpi_id, work_id):
-        # Retrieve the necessary objects
-        kpi = get_object_or_404(KpiModel, id=kpi_id)
-        work = get_object_or_404(WorkModel, id=work_id)
-
-        if request.method == 'POST':
-            # Process the form data and update the work object
-            deadline = request.POST.get('deadline')
-            score = request.POST.get('score')
-            description = request.POST.get('description', '')
-
-            work.deadline = deadline
-            work.score = score
-            work.description = description
-            work.save()
-
-            return redirect('/')
-
-        return render(request, 'edit_work.html', {'kpi': kpi, 'work': work})
-
-    def delete_work(self, request, kpi_id, work_id):
-        if request.method == 'POST':
-            # Delete the work object
-            work = get_object_or_404(WorkModel, id=work_id)
-            work.delete()
-
-        return redirect('/')
-
-    def create_work(self, request, kpi_id):
-        kpi = get_object_or_404(KpiModel, id=kpi_id)
-
-        if request.method == 'POST':
-            # Process the form data and create a new work object
-            deadline = request.POST.get('n_deadline')
-            score = request.POST.get('n_score', '')
-            description = request.POST.get('n_description', '')
-
-            new_work = WorkModel(deadline=deadline, score=score, description=description, kpi=kpi)
-            new_work.save()
-
-            return redirect('/')
-
-        return render(request, 'create_work.html', {'kpi': kpi})
     
+
+
+def edit_work(request, kpi_id, work_id):
+    kpi = get_object_or_404(KpiModel, id=kpi_id)
+    work = get_object_or_404(WorkModel, id=work_id)
+
+    if request.method == 'POST':
+        deadline = request.POST.get('deadline')
+        score = request.POST.get('score')
+        description = request.POST.get('description', '')
+
+        work.deadline = deadline
+        work.score = score
+        work.description = description
+        work.save()
+
+        return redirect(f'/work/{kpi_id}/')
+
+    
+    return render(request, 'edit_work.html', {'kpi': kpi, 'work': work})
+
+
+def delete_work(request, kpi_id, work_id):
+    if request.method == 'POST':
+        work = get_object_or_404(WorkModel, id=work_id)
+        work.delete()
+        return redirect(f'/work/{kpi_id}/')
+    
+
+
+def create_work(request, kpi_id):
+    kpi = get_object_or_404(KpiModel, id=kpi_id)
+
+    if request.method == 'POST':
+        deadline = request.POST.get('n_deadline')
+        score = request.POST.get('n_score', '')
+        description = request.POST.get('n_description', '')
+
+        new_work = WorkModel.objects.create(deadline=deadline, score=score, description=description, kpi=kpi)
+        new_work.save()
+
+        return redirect(f'/work/{kpi_id}/')
+    
+    return render(request, 'work.html', {'kpi': kpi})
+
+
+def work(request, id=None):
+    kpi = get_object_or_404(KpiModel, id=id)
+    works = WorkModel.objects.filter(kpi=kpi).order_by("deadline")
+
+    if request.method == 'POST':
+        if 'edit_work' in request.POST:
+            work_id = request.POST.get('work_id')
+            return redirect('edit_work', kpi_id=id, work_id=work_id)
+        elif 'delete_work' in request.POST:
+            work_id = request.POST.get('work_id')
+            return redirect('delete_work', kpi_id=id, work_id=work_id)
+        elif 'create_work' in request.POST:
+            return redirect('create_work', kpi_id=id)
+
     return render(request, 'work.html', {"works": works, 'kpi': kpi})
+
 
 def eureka(request, id=None):
     kpi = get_object_or_404(KpiModel, id=id)

@@ -16,62 +16,66 @@
     {% load static %}
     <div class="container">
         <h1 class="headerone">Work to Google Sheet KPI</h1>
+
             <br>
-            
+
             <h2 class="nameCenter">
                 {{kpi.name}} 
             </h2>
+
             <br>
 
             <table class="table table-bordered">
             <thead class="thead-dark"> 
                     <tr>
-                        <th>Deadline</th>
-                        <th>Score</th>
-                        <th>Description</th>
-                        <th>Action</th>
+                    <th>Deadline</th>
+                    <th>Score</th>
+                    <th>Description</th>
+                    <th>Action</th>
                     </tr>
             </thead>
                 </thead>
                 <tbody>
-                    
-                    <form action="" method="post">
+
+                    <form action="{% url 'create_work' kpi.id %}" method="post">
                         {% csrf_token %}
                         <tr>
-                            <th><input type="date" name="n_deadline" value=""></th>
-                            <th><input type="text" name="n_score" value="0.00"></th>
-                            <th><input type="text" name="n_description" value=""></th>
-                            <th><input type="submit" name="create_work" value="Create"></th>
+                            <th> <input type="date" name="n_deadline" id="" value=""> </th>
+                            <th> <input type="text" name="n_score" id="" value="0.00"> </th>
+                            <th> <input type="text" name="n_description" id="" value=""> </th>
+                            
+                            <th> <input type="submit" name="create" id="" value="Create"> </th>
                         </tr>
                     </form>
 
-                    <form action="" method="post">
-                        {% csrf_token %}
-                        {% for x in works %}
-                        <tr>
-                            <th><input type="date" name="deadline" id="" value="{{ x.deadline|date:'Y-m-d' }}"></th>
-                            <th><input type="text" name="score" id="" value="{{ x.score }}"></th>
-                            <th><input type="text" name="description" id="" value="{{ x.description }}"></th>
-                            <input type="hidden" name="work_id" value="{{ x.id }}">
+                    {% for work in works %}
+                    <tr>
+                        <form action="{% url 'edit_work' kpi_id=kpi.id work_id=work.id %}" method="post">
+                            {% csrf_token %}
+                            <th> <input type="date" name="deadline" id="" value="{{ work.deadline|date:'Y-m-d' }}"> </th>
+                            <th> <input type="text" name="score" id="" value="{{ work.score }}"> </th>
+                            <th> <input type="text" name="description" id="" value="{{ work.description }}"> </th>
+                            
                             <th>
                                 <input type="submit" name="edit_work" value="Edit">
-                                <input type="submit" name="delete_work" value="Delete">
+                                <button type="submit" name="delete_work" formaction="{% url 'delete_work' kpi_id=kpi.id work_id=work.id %}">Delete</button>
+                                
+                                
                             </th>
-                        </tr>
-                        {% endfor %}
-                    </form>
-                    
-                    
-                    
-                </tbody>  
+                        </form>
+                    </tr>
+                    {% endfor %}
+
+                </tbody>
+                
         </table>
 
 
 
         <a href="https://docs.google.com/spreadsheets/d/13aPcjyMXeHoDP3VeYuTcN4DlKeJEvOr_2t3qR4TV_3w/edit#gid=1208225701">
+
             <button>Table to Kpi Google Sheet</button>
         </a>
-        
         <button onclick="tableToGoogleSheet()">
             Table to Excel
         </button>

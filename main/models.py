@@ -51,7 +51,7 @@ class BooksManager(models.Manager):
 
 class BookModel(models.Model):
     title = models.CharField(max_length=200)
-    score = models.DecimalField(max_digits=10, decimal_places=2)
+    score = models.DecimalField(max_digits=10, decimal_places=2, null=True)
     kpi = models.ForeignKey("KpiModel", on_delete=models.CASCADE, related_name="book_items")
     objects = BooksManager()
     def save(self, *args, **kwargs):
