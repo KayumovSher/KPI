@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{% static 'css/index.css' %}">
+    <link rel="stylesheet" href="{% static 'css/work.css' %}">
     <title>KPI</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
     {% load static %}
@@ -13,11 +13,12 @@
 <body>
     
     
+    {% load static %}
     <div class="container">
-        <h1>Work to Google Sheet KPI</h1>
+        <h1 class="headerone">Work to Google Sheet KPI</h1>
             <br>
             
-            <h2 style="text-align: center;">
+            <h2 class="nameCenter">
                 {{kpi.name}} 
             </h2>
             <br>

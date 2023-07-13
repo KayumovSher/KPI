@@ -16,6 +16,15 @@ def index(request):
     
     return render(request, 'index.html', context={"results":result})
 
+
+def SignupPage(request):
+    return render(request, 'signup.html')
+
+
+def LoginPage(request):
+    return render(request, 'login.html')
+
+
 def book(request, id=None):
     kpi = get_object_or_404(KpiModel, id=id)
     books = BookModel.objects.filter(kpi=kpi)
