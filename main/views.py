@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from .models import KpiModel, SportModel, EvrikaModel, BookModel, WorkModel
 from django.shortcuts import get_object_or_404
-from decimal import Decimal
+
 # Create your views here.
 
 def index(request):
@@ -15,13 +15,46 @@ def index(request):
         result.append({"kpi":x, "sports":sports, "evrikas":evrikas, "works":works, "books":books})
     
     return render(request, 'index.html', context={"results":result})
-
+ 
 
 def SignupPage(request):
+    if request.method=='POST':
+        uname=request.POST.get('username')
+        email=request.POST.get('email')
+        pass1=request.POST.get('password1')
+        pass2=request.POST.get('password2')
+        
+        if User.objects.filter(email=email).exists():
+            error_message = 'Email is already taken.'
+            print(error_message)
+            return render(request, 'signup.html', {'error_message': error_message})
+
+        # Check if passwords match
+        if pass1 != pass2:
+            error_message = "Passwords don't match."
+            print(error_message)
+            return render(request, 'signup.html', {'error_message': error_message})
+
+        # Create a new user account
+        User.objects.create_user(username=uname, email=email, password=pass1)
+
+        return redirect('login')  # Redirect to the login page after successful sign-up
+
     return render(request, 'signup.html')
 
 
 def LoginPage(request):
+    if request.method=='POST':
+        username=request.POST.get('username')
+        pass1=request.POST.get('password')
+        user=authenticate(request, username=username, password=pass1)
+                          
+        if user is not None:
+            login(request, user)
+            return redirect('index')
+        else:
+            return HttpResponse("Username or Password is incorrect")
+   
     return render(request, 'login.html')
 
 
