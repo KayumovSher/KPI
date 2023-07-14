@@ -1,10 +1,14 @@
 from django.shortcuts import render, redirect
 from .models import KpiModel, SportModel, EvrikaModel, BookModel, WorkModel
 from django.shortcuts import get_object_or_404
+<<<<<<< HEAD
 from django.shortcuts import render,HttpResponse
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate,login
 
+=======
+from decimal import Decimal
+>>>>>>> 42d21635f1f06e1fad57746c39cfa4a043646bda
 # Create your views here.
 
 def index(request):
@@ -61,48 +65,252 @@ def LoginPage(request):
     return render(request, 'login.html')
 
 
+# Book
+
+
+
+
+def edit_book(request, kpi_id, book_id):
+    kpi = get_object_or_404(KpiModel, id=kpi_id)
+    book = get_object_or_404(BookModel, id=book_id)
+
+    if request.method == 'POST':
+        title = request.POST.get('title')
+        score = request.POST.get('score')
+
+        book.title = title
+        book.score = score
+        book.save()
+
+        return redirect(f'/book/{kpi_id}/')
+
+    
+    return render(request, 'edit_book.html', {'kpi': kpi, 'book': book})
+
+
+def delete_book(request, kpi_id, book_id):
+    if request.method == 'POST':
+        book = get_object_or_404(BookModel, id=book_id)
+        book.delete()
+        return redirect(f'/book/{kpi_id}/')
+
+
+def create_book(request, kpi_id):
+    kpi = get_object_or_404(KpiModel, id=kpi_id)
+
+    if request.method == 'POST':
+        title = request.POST.get('n_title')
+        score = request.POST.get('n_score', '')
+
+        new_book = BookModel.objects.create(title=title, score=score, kpi=kpi)
+        new_book.save()
+
+        return redirect(f'/book/{kpi_id}/')
+    
+    return render(request, 'book.html', {'kpi': kpi})
+
+
 def book(request, id=None):
     kpi = get_object_or_404(KpiModel, id=id)
     books = BookModel.objects.filter(kpi=kpi)
-    return render(request, 'book.html', {"books":books, "kpi":kpi})
+
+    if request.method == 'POST':
+        if 'edit_book' in request.POST:
+            book_id = request.POST.get('book_id')
+            return redirect('edit_book', kpi_id=id, book_id=book_id)
+        elif 'delete_book' in request.POST:
+            book_id = request.POST.get('book_id')
+            return redirect('delete_book', kpi_id=id, book_id=book_id)
+        elif 'create_book' in request.POST:
+            return redirect('create_book', kpi_id=id)
+
+    return render(request, 'book.html', {"books": books, 'kpi': kpi})
+
+
+
+
+
+
+def edit_work(request, kpi_id, work_id):
+    kpi = get_object_or_404(KpiModel, id=kpi_id)
+    work = get_object_or_404(WorkModel, id=work_id)
+
+    if request.method == 'POST':
+        deadline = request.POST.get('deadline')
+        score = request.POST.get('score')
+        description = request.POST.get('description', '')
+
+        work.deadline = deadline
+        work.score = score
+        work.description = description
+        work.save()
+
+        return redirect(f'/work/{kpi_id}/')
+
+    
+    return render(request, 'edit_work.html', {'kpi': kpi, 'work': work})
+
+
+def delete_work(request, kpi_id, work_id):
+    if request.method == 'POST':
+        work = get_object_or_404(WorkModel, id=work_id)
+        work.delete()
+        return redirect(f'/work/{kpi_id}/')
+    
+
+
+def create_work(request, kpi_id):
+    kpi = get_object_or_404(KpiModel, id=kpi_id)
+
+    if request.method == 'POST':
+        deadline = request.POST.get('n_deadline')
+        score = request.POST.get('n_score', '')
+        description = request.POST.get('n_description', '')
+
+        new_work = WorkModel.objects.create(deadline=deadline, score=score, description=description, kpi=kpi)
+        new_work.save()
+
+        return redirect(f'/work/{kpi_id}/')
+    
+    return render(request, 'work.html', {'kpi': kpi})
+
+
+def work(request, id=None):
+    kpi = get_object_or_404(KpiModel, id=id)
+    works = WorkModel.objects.filter(kpi=kpi).order_by("deadline")
+
+    if request.method == 'POST':
+        if 'edit_work' in request.POST:
+            work_id = request.POST.get('work_id')
+            return redirect('edit_work', kpi_id=id, work_id=work_id)
+        elif 'delete_work' in request.POST:
+            work_id = request.POST.get('work_id')
+            return redirect('delete_work', kpi_id=id, work_id=work_id)
+        elif 'create_work' in request.POST:
+            return redirect('create_work', kpi_id=id)
+
+    return render(request, 'work.html', {"works": works, 'kpi': kpi})
+
+
+def reminder(request):
+    return render(request, 'reminder.html')
 
 
 
 def sport(request, id=None):
     kpi = get_object_or_404(KpiModel, id=id)
     sports = SportModel.objects.filter(kpi=kpi)
-    return render(request, 'sport.html', {"sports":sports, 'kpi':kpi})
-    # else:
-    #     details = request.POST.get('details')
-    #     score = request.POST.get('score')
-    #     kpi_id = request.POST.get('kpi')
-    #     kpi = KpiModel.objects.get(id=kpi_id)
-    #     sport = SportModel.objects.create(kpi=kpi, details=details, score=score)
-    #     sport.save()
-    #     return redirect('sport')
+
+    if request.method == 'POST':
+        if 'edit_sport' in request.POST:
+            sport_id = request.POST.get('sport_id')
+            return redirect('edit_sport', kpi_id=id, sport_id=sport_id)
+        elif 'delete_book' in request.POST:
+            sport_id = request.POST.get('sport_id')
+            return redirect('delete_sport', kpi_id=id, sport_id=sport_id)
+        elif 'create_sport' in request.POST:
+            return redirect('create_sport', kpi_id=id)
+
+    return render(request, 'sport.html', {"sports": sports, 'kpi': kpi})
+
+
+def edit_sport(request, kpi_id, sport_id):
+    kpi = get_object_or_404(KpiModel, id=kpi_id)
+    sport = get_object_or_404(SportModel, id=sport_id)
+
+    if request.method == 'POST':
+        details = request.POST.get('details')
+        score = request.POST.get('score')
+
+        sport.details = details
+        sport.score = score
+        sport.save()
+
+        return redirect(f'/sport/{kpi_id}/')
+
+    
+    return render(request, 'edit_sport.html', {'kpi': kpi, 'sport': sport})
+
+
+def delete_sport(request, kpi_id, sport_id):
+    if request.method == 'POST':
+        sport = get_object_or_404(SportModel, id=sport_id)
+        sport.delete()
+        return redirect(f'/sport/{kpi_id}/')
     
 
-def work(request, id=None):
-    kpi = get_object_or_404(KpiModel, id=id)
-    works = WorkModel.objects.filter(kpi=kpi).order_by("deadline")
-    return render(request, 'work.html', {"works":works, 'kpi':kpi})
 
-    # id = 1
-    # kpi = KpiModel.objects.get(id=id)
-    # score = request.data.GET("score")
-    # deadline = request.data.GET("deadline")
-    # work = WorkModel.objects.create(score=score, deadline=deadline, kpi=kpi)
-    # work.save()
-    # works = WorkModel.objects.all()
+def create_sport(request, kpi_id):
+    kpi = get_object_or_404(KpiModel, id=kpi_id)
+
+    if request.method == 'POST':
+        details = request.POST.get('n_details')
+        score = request.POST.get('n_score', '')
+
+        new_sport = SportModel.objects.create(details=details, score=score, kpi=kpi)
+        new_sport.save()
+
+        return redirect(f'/sport/{kpi_id}/')
+    
+    return render(request, 'sport.html', {'kpi': kpi})
 
 
-def eureka(request, id=None):
+
+
+def edit_evrika(request, kpi_id, evrika_id):
+    kpi = get_object_or_404(KpiModel, id=kpi_id)
+    evrika = get_object_or_404(EvrikaModel, id=evrika_id)
+
+    if request.method == 'POST':
+        details = request.POST.get('details')
+        score = request.POST.get('score', None) 
+
+        evrika.details = details
+        evrika.score = score
+        evrika.save()
+
+        return redirect(f'/evrika/{kpi_id}/')
+
+    
+    return render(request, 'edit_evrika.html', {'kpi': kpi, 'evrika': evrika})
+
+
+def delete_evrika(request, kpi_id, evrika_id):
+    if request.method == 'POST':
+        evrika = get_object_or_404(EvrikaModel, id=evrika_id)
+        evrika.delete()
+        return redirect(f'/evrika/{kpi_id}/')
+    
+
+def create_evrika(request, kpi_id):
+    kpi = get_object_or_404(KpiModel, id=kpi_id)
+
+    if request.method == 'POST':
+        details = request.POST.get('n_details')
+        score = request.POST.get('n_score', '')
+
+        new_evrika = EvrikaModel.objects.create(details=details, score=score, kpi=kpi)
+        new_evrika.save()
+
+        return redirect(f'/evrika/{kpi_id}/')
+    
+    return render(request, 'evrika.html', {'kpi': kpi})
+
+
+def evrika(request, id=None):
     kpi = get_object_or_404(KpiModel, id=id)
     evrikas = EvrikaModel.objects.filter(kpi=kpi)
-    return render(request, 'eureka.html', {"evrikas":evrikas, 'kpi':kpi})
 
+    if request.method == 'POST':
+        if 'edit_evrika' in request.POST:
+            evrika_id = request.POST.get('evrika_id')
+            return redirect('edit_evrika', kpi_id=id, evrika_id=evrika_id)
+        elif 'delete_evrika' in request.POST:
+            evrika_id = request.POST.get('evrika_id')
+            return redirect('delete_evrika', kpi_id=id, evrika_id=evrika_id)
+        elif 'create_evrika' in request.POST:
+            return redirect('create_evrika', kpi_id=id)
 
-def reminder(request):
-    return render(request, 'reminder.html')
+    return render(request, 'evrika.html', {"evrikas": evrikas, 'kpi': kpi})
 
 

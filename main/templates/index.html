@@ -9,7 +9,6 @@
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.4.0/fonts/remixicon.css" rel="stylesheet">
     <title>KPI</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
-    {% load static %}
 </head>
 <body>
     <div class="container">
@@ -38,39 +37,32 @@
                 </tr>
             </thead>
             <tbody>
-                
                 {% for i in results  %}  
                 <tr>
-                    <td>{{i.kpi.name}}</td>
+                    <td>{{ i.kpi.name }}</td>
                     <td>
-                        <a href="{% url 'book_detail' i.kpi.id %}">{{i.books}}</a>
+                        <a href="{% url 'book_detail' i.kpi.id %}">{{ i.books }}</a>
                     </td>
                     <td>
-                        <a href="{% url 'sport_detail' i.kpi.id %}">{{i.sports}}</a>
-
+                        <a href="{% url 'sport_detail' i.kpi.id %}">{{ i.sports }}</a>
                     </td>
                     <td>
-                        <a href="{% url 'work_detail' i.kpi.id %}">{{i.works}}</a>
+                        <a href="{% url 'work_detail' i.kpi.id %}">{{ i.works }}</a>
                     </td>
                     <td>
-                        <a href="{% url 'evrika_detail' i.kpi.id %}">{{i.evrikas}}</a>
+                        <a href="{% url 'evrika_detail' i.kpi.id %}">{{ i.evrikas }}</a>
                     </td>
-                    <td>{{i.kpi.general}}</td>
-                    <td>{{i.kpi.league}}</td>   
-                    <td>{{i.kpi.koef}}</td>
+                    <td>{{ i.kpi.general }}</td>
+                    <td>{{ i.kpi.league }}</td>   
+                    <td>{{ i.kpi.koef }}</td>
                     <td>
-                        <a href="{{i.kpi.book_comment}}">{{i.kpi.book_comment}}</a>
+                        <a href="{{ i.kpi.book_comment }}">{{ i.kpi.book_comment }}</a>
                     </td>
                     <td>
-                        <a href="{{i.kpi.upwork}}">{{i.kpi.upwork}}</a>
+                        <a href="{{ i.kpi.upwork }}">{{ i.kpi.upwork }}</a>
                     </td>
-                    
-                    
-                    {% endfor %}
-                    
                 </tr>
-                
-
+                {% endfor %}
             </tbody>
         </table>
 
@@ -80,13 +72,7 @@
         <button onclick="tableToGoogleSheet()">
             Table to Excel
         </button>
-
-
     </div>
-    
-
-
-    
     
 <script type="text/javascript" src="{% static 'js/table2excel.js' %}"></script>
 <script type="text/javascript" src="{% static 'js/index.js' %}"></script>
