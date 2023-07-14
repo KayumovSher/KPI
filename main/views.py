@@ -274,3 +274,33 @@ def evrika(request, id=None):
     return render(request, 'evrika.html', {"evrikas": evrikas, 'kpi': kpi})
 
 
+
+def all_works(request):
+    kpis = KpiModel.objects.all()
+    result = []
+    for x in kpis:
+        result.append({"kpi_works":x.work_items.all().order_by("deadline"), "kpi":x})
+
+    return render(request, 'all_works.html', {"result":result})
+
+
+def all_books(request):
+    kpis = KpiModel.objects.all()
+    result = []
+    for x in kpis:
+        result.append({"kpi_books":x.book_items.all(), "kpi":x})
+
+    return render(request, 'all_books.html', {"result":result})
+
+def all_evrikas(request):
+    evrikas = EvrikaModel.objects.all()
+    return render(request, 'all_evrikas.html', {'evrikas':evrikas})
+
+def all_sports(request):
+    kpis = KpiModel.objects.all()
+    result = []
+    for x in kpis:
+        result.append({"kpi_sports":x.sport_items.all(), "kpi":x})
+
+    return render(request, 'all_sports.html', {"result":result})
+

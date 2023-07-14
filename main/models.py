@@ -148,6 +148,6 @@ class KpiModel(models.Model):
 
 
     def __str__(self):
-        return f"{self.name} {self.general} {self.league} {self.koef} {self.book_comment} {self.upwork}"
+        return f"{self.name}"
 
 

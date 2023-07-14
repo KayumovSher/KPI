@@ -38,6 +38,10 @@ urlpatterns = [
     path('evrika/<int:kpi_id>/edit/<int:evrika_id>/', views.edit_evrika, name='edit_evrika'),
     path('evrika/<int:kpi_id>/delete/<int:evrika_id>/', views.delete_evrika, name='delete_evrika'),
     
+    path("all_works/", views.all_works, name='all_works'),
+    path("all_books/", views.all_books, name='all_books'),
+    path("all_evrika/", views.all_evrikas, name='all_evrika'),
+    path("all_sports/", views.all_sports, name='all_sports'),
 
     path('reminder/', views.reminder),
     
