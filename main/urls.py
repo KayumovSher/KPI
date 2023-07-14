@@ -3,19 +3,16 @@ from . import views
 
 
 urlpatterns = [
-<<<<<<< HEAD
     path('', views.index, name="index"),
     path('signup/', views.SignupPage, name="signup"),
     path('login/', views.LoginPage, name="login"),
     path('book/<int:id>/', views.book, name="book_detail"),
-=======
     path('', views.index, name="home"),
     path('signup/', views.SignupPage),
     path('login/', views.LoginPage),
 
 
 
->>>>>>> 42d21635f1f06e1fad57746c39cfa4a043646bda
     path('sport/<int:id>/', views.sport, name='sport_detail'),
     
 
