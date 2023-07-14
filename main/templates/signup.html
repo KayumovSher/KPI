@@ -14,26 +14,32 @@
     <div class="container">
         <div class="form-box">
             <h1 id="title">Sign Up</h1>
-            <form action="">
+            <form action="" method="POST">
+                {% csrf_token %}
                 <div class="input-group">
                     <div class="input-field" id="nameField">
                         <i class="ri-user-fill"></i>
-                        <input type="text" placeholder="Name">
+                        <input type="text" placeholder="Name" name="username" id="username">
                     </div>
 
                     <div class="input-field">
                         <i class="ri-mail-fill"></i>
-                        <input type="email" placeholder="Email">
+                        <input type="email" placeholder="Email" name="email" id="email">
                     </div>
 
                     <div class="input-field">
                         <i class="ri-lock-fill"></i>
-                        <input type="password" placeholder="Password">
+                        <input type="password" placeholder="Password" name="password1" id="password1">
                     </div>
-                    <p>Lost password <a href="#">Clock Here!</a></p>
+
+                    <div class="input-field">
+                        <i class="ri-lock-fill"></i>
+                        <input type="password" placeholder="Confirm Password" name="password2" id="password2">
+                    </div>
+                    <p>Lost password <a href="#">Click Here!</a></p>
                 </div>
                 <div class="btn-field">
-                    <button type="button" id="signupBtn">Sign Up</button>
+                    <button type="submit" id="signupBtn">Sign Up</button>
                     <button type="button" id="signinBtn class="disable">Sign in</button>
                 </div>
             </form>
@@ -41,30 +47,6 @@
 
     </div>
 
-<script>
 
-let signupBtn = document.getElementById("signupBtn");
-let signinBtn = document.getElementById("signinBtn");
-let nameField = document.getElementById("nameField");
-let title = document.getElementById("title");
-
-
-signinBtn.onclick = function(){
-    nameField.style.maxHeight = "0";
-    title.innerHTML = "Sign In";
-    signupBtn.classList.add("disable");
-    signinBtn.classList.remove("disable");
-}
-
-
-signupBtn.onclick = function(){
-    nameField.style.maxHeight = "60px";
-    title.innerHTML = "Sign Up";
-    signupBtn.classList.remove("disable");
-    signinBtn.classList.add("disable");
-}
-
-
-</script>
 </body>
 </html>
