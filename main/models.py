@@ -13,7 +13,7 @@ class WorkModel(models.Model):
         (0.5, 0.5), (-1, -1)
     )
     deadline = models.DateField(null=True)
-    score = models.IntegerField(null=True, blank=True, choices=WORK_CHOICES)
+    score = models.DecimalField(max_digits=3, decimal_places=1, choices=WORK_CHOICES)
     description = models.TextField(max_length=200, null=True, blank=True)
     kpi = models.ForeignKey("KpiModel", on_delete=models.CASCADE, related_name="work_items")
     created_at = models.DateTimeField(auto_now=True)

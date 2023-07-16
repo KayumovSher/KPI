@@ -49,8 +49,13 @@
                                 {% endfor %}
                               </select>   </th>
 
-                            <th> <input type="text" name="n_score" id="" value="0.00"> </th>
-                            
+                              <th>
+                                <select name="n_score" id="" class="form-control">
+                                    <option value="0">0</option>
+                                    <option value="1">1</option>
+                                </select>
+                              </th>
+
                             <th> <input type="submit" name="create" id="" value="Create"> </th>
                         </tr>
                     </form>
@@ -59,15 +64,20 @@
                     <tr>
                         <form action="{% url 'edit_book' kpi_id=kpi.id book_id=i.id %}" method="post">
                             {% csrf_token %}
+                            
                             <th> <select name="book" class="form-control"> 
                                 <option value="{{i.book.id}}"> {{i.book.title}} </option>
                                 {% for book in bookitems %}
                                   <option value="{{book.id}}"> {{book}} </option>
                                 {% endfor %}
                               </select>   </th>
-
-                            <th> <input type="text" name="score" id="" value="{{ i.score }}"> </th>
                             
+                            <th> <select name="score" class="form-control"> 
+                                <option value="{{i.score}}"> {{i.score}} </option>
+                                  <option value="0"> 0 </option>
+                                  <option value="1"> 1 </option>
+                              </select>   </th>
+
                             <th>
                                 <input type="submit" name="edit_book" value="Edit">
                                 <button type="submit" name="delete_book" formaction="{% url 'delete_book' kpi_id=kpi.id book_id=i.id %}">Delete</button>

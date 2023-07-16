@@ -67,7 +67,6 @@ def edit_book(request, kpi_id, book_id):
     if request.method == 'POST':
         n_book = request.POST.get('book')
         score = request.POST.get('score')
-        print(request.POST)
         bookitem = BookItem.objects.get(id=n_book)
         book.book = bookitem
         book.score = score
@@ -133,7 +132,7 @@ def edit_work(request, kpi_id, work_id):
         description = request.POST.get('description', '')
 
         work.deadline = deadline
-        work.score = score
+        work.score = int(score)
         work.description = description
         work.save()
 
