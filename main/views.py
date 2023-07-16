@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from .models import KpiModel, SportModel, EvrikaModel, BookModel, WorkModel
 from django.shortcuts import get_object_or_404
-
+from django.contrib.auth.models import User
 # Create your views here.
 
 def index(request):

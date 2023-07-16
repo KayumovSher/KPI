@@ -40,7 +40,7 @@
                     <form action="{% url 'create_work' kpi.id %}" method="post">
                         {% csrf_token %}
                         <tr>
-                            <th> <input type="date" name="n_deadline" id="" value=""> </th>
+                            <th> <input type="date" name="n_deadline" id="" value="" required> </th>
                             <th> <input type="text" name="n_score" id="" value="0.00"> </th>
                             <th> <input type="text" name="n_description" id="" value=""> </th>
                             
