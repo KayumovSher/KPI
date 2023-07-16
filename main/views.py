@@ -1,7 +1,9 @@
 from django.shortcuts import render, redirect
-from .models import KpiModel, SportModel, EvrikaModel, BookModel, WorkModel
+from .models import KpiModel, SportModel, EvrikaModel, BookModel, WorkModel, BookItem
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login, logout
+from django.http import HttpResponse
 # Create your views here.
 
 def index(request):
@@ -26,13 +28,11 @@ def SignupPage(request):
         
         if User.objects.filter(email=email).exists():
             error_message = 'Email is already taken.'
-            print(error_message)
             return render(request, 'signup.html', {'error_message': error_message})
 
         # Check if passwords match
         if pass1 != pass2:
             error_message = "Passwords don't match."
-            print(error_message)
             return render(request, 'signup.html', {'error_message': error_message})
 
         # Create a new user account
@@ -60,18 +60,16 @@ def LoginPage(request):
 
 # Book
 
-
-
-
 def edit_book(request, kpi_id, book_id):
     kpi = get_object_or_404(KpiModel, id=kpi_id)
     book = get_object_or_404(BookModel, id=book_id)
 
     if request.method == 'POST':
-        title = request.POST.get('title')
+        n_book = request.POST.get('book')
         score = request.POST.get('score')
-
-        book.title = title
+        print(request.POST)
+        bookitem = BookItem.objects.get(id=n_book)
+        book.book = bookitem
         book.score = score
         book.save()
 
@@ -92,10 +90,10 @@ def create_book(request, kpi_id):
     kpi = get_object_or_404(KpiModel, id=kpi_id)
 
     if request.method == 'POST':
-        title = request.POST.get('n_title')
+        book_id = request.POST.get('book')
         score = request.POST.get('n_score', '')
-
-        new_book = BookModel.objects.create(title=title, score=score, kpi=kpi)
+        book = BookItem.objects.get(id=book_id)
+        new_book = BookModel.objects.create(score=score, book=book, kpi=kpi)
         new_book.save()
 
         return redirect(f'/book/{kpi_id}/')
@@ -106,6 +104,7 @@ def create_book(request, kpi_id):
 def book(request, id=None):
     kpi = get_object_or_404(KpiModel, id=id)
     books = BookModel.objects.filter(kpi=kpi)
+    bookitems = BookItem.objects.all()
 
     if request.method == 'POST':
         if 'edit_book' in request.POST:
@@ -117,7 +116,7 @@ def book(request, id=None):
         elif 'create_book' in request.POST:
             return redirect('create_book', kpi_id=id)
 
-    return render(request, 'book.html', {"books": books, 'kpi': kpi})
+    return render(request, 'book.html', {"books": books, 'kpi': kpi, 'bookitems':bookitems})
 
 
 

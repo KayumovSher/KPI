@@ -11,8 +11,9 @@
     {% load static %}
 </head>
 <body>
-    
-    
+    <h2>
+        <a href="{% url 'index' %}"> Home </a>
+    </h2>
     {% load static %}
     <div class="container">
         <h1 class="headerone">Work to Google Sheet KPI</h1>
@@ -20,9 +21,9 @@
             <br>
 
             <h2 class="nameCenter">
-
+                All Books
             </h2>
-
+            
             <br>
 
             <table class="table table-bordered">
@@ -33,7 +34,7 @@
                         {% for x in result %}
                         {% for book in x.kpi_books %}
                         <td>
-                            {{book.title}}
+                            {{book.book.title}}
                         </td>
                         {% endfor %}
                         {% endfor %}
