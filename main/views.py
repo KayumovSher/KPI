@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from .models import KpiModel, SportModel, EvrikaModel, BookModel, WorkModel
 from django.shortcuts import get_object_or_404
-from decimal import Decimal
+
 # Create your views here.
 
 def index(request):
@@ -15,18 +15,50 @@ def index(request):
         result.append({"kpi":x, "sports":sports, "evrikas":evrikas, "works":works, "books":books})
     
     return render(request, 'index.html', context={"results":result})
-
+ 
 
 def SignupPage(request):
+    if request.method=='POST':
+        uname=request.POST.get('username')
+        email=request.POST.get('email')
+        pass1=request.POST.get('password1')
+        pass2=request.POST.get('password2')
+        
+        if User.objects.filter(email=email).exists():
+            error_message = 'Email is already taken.'
+            print(error_message)
+            return render(request, 'signup.html', {'error_message': error_message})
+
+        # Check if passwords match
+        if pass1 != pass2:
+            error_message = "Passwords don't match."
+            print(error_message)
+            return render(request, 'signup.html', {'error_message': error_message})
+
+        # Create a new user account
+        User.objects.create_user(username=uname, email=email, password=pass1)
+
+        return redirect('login')  # Redirect to the login page after successful sign-up
+
     return render(request, 'signup.html')
 
 
 def LoginPage(request):
+    if request.method=='POST':
+        username=request.POST.get('username')
+        pass1=request.POST.get('password')
+        user=authenticate(request, username=username, password=pass1)
+                          
+        if user is not None:
+            login(request, user)
+            return redirect('index')
+        else:
+            return HttpResponse("Username or Password is incorrect")
+   
     return render(request, 'login.html')
 
 
 # Book
-
 
 def edit_book(request, kpi_id, book_id):
     kpi = get_object_or_404(KpiModel, id=kpi_id)
@@ -51,21 +83,22 @@ def delete_book(request, kpi_id, book_id):
         book = get_object_or_404(BookModel, id=book_id)
         book.delete()
         return redirect(f'/book/{kpi_id}/')
-    
 
 
 def create_book(request, kpi_id):
-    kpi = get_object_or_404(BookModel, id=kpi_id)
+    kpi = get_object_or_404(KpiModel, id=kpi_id)
 
     if request.method == 'POST':
         title = request.POST.get('n_title','')
         score = request.POST.get('n_score', '')
+
         new_book = BookModel.objects.create(title=title, score=score, kpi=kpi)
         new_book.save()
 
         return redirect(f'/book/{kpi_id}/')
     
     return render(request, 'book.html', {'kpi': kpi})
+
 
 def book(request, id=None):
     kpi = get_object_or_404(KpiModel, id=id)
@@ -84,12 +117,8 @@ def book(request, id=None):
     return render(request, 'book.html', {"books": books, 'kpi': kpi})
 
 
-def sport(request, id=None):
-    kpi = get_object_or_404(KpiModel, id=id)
-    sports = SportModel.objects.filter(kpi=kpi)
-    return render(request, 'sport.html', {"sports":sports, 'kpi':kpi})
 
-    
+
 
 
 def edit_work(request, kpi_id, work_id):
@@ -154,7 +183,73 @@ def work(request, id=None):
 
 
 
+
 # Evrika
+
+def reminder(request):
+    return render(request, 'reminder.html')
+
+
+
+def sport(request, id=None):
+    kpi = get_object_or_404(KpiModel, id=id)
+    sports = SportModel.objects.filter(kpi=kpi)
+
+    if request.method == 'POST':
+        if 'edit_sport' in request.POST:
+            sport_id = request.POST.get('sport_id')
+            return redirect('edit_sport', kpi_id=id, sport_id=sport_id)
+        elif 'delete_book' in request.POST:
+            sport_id = request.POST.get('sport_id')
+            return redirect('delete_sport', kpi_id=id, sport_id=sport_id)
+        elif 'create_sport' in request.POST:
+            return redirect('create_sport', kpi_id=id)
+
+    return render(request, 'sport.html', {"sports": sports, 'kpi': kpi})
+
+
+def edit_sport(request, kpi_id, sport_id):
+    kpi = get_object_or_404(KpiModel, id=kpi_id)
+    sport = get_object_or_404(SportModel, id=sport_id)
+
+    if request.method == 'POST':
+        details = request.POST.get('details')
+        score = request.POST.get('score')
+
+        sport.details = details
+        sport.score = score
+        sport.save()
+
+        return redirect(f'/sport/{kpi_id}/')
+
+    
+    return render(request, 'edit_sport.html', {'kpi': kpi, 'sport': sport})
+
+
+def delete_sport(request, kpi_id, sport_id):
+    if request.method == 'POST':
+        sport = get_object_or_404(SportModel, id=sport_id)
+        sport.delete()
+        return redirect(f'/sport/{kpi_id}/')
+    
+
+
+def create_sport(request, kpi_id):
+    kpi = get_object_or_404(KpiModel, id=kpi_id)
+
+    if request.method == 'POST':
+        details = request.POST.get('n_details')
+        score = request.POST.get('n_score', '')
+
+        new_sport = SportModel.objects.create(details=details, score=score, kpi=kpi)
+        new_sport.save()
+
+        return redirect(f'/sport/{kpi_id}/')
+    
+    return render(request, 'sport.html', {'kpi': kpi})
+
+
+
 
 
 def edit_evrika(request, kpi_id, evrika_id):
@@ -163,7 +258,10 @@ def edit_evrika(request, kpi_id, evrika_id):
 
     if request.method == 'POST':
         details = request.POST.get('details')
+
         score = request.POST.get('score')
+        score = request.POST.get('score', None) 
+
 
         evrika.details = details
         evrika.score = score
@@ -183,20 +281,23 @@ def delete_evrika(request, kpi_id, evrika_id):
     
 
 
+
 def create_evrika(request, kpi_id):
     kpi = get_object_or_404(EvrikaModel, id=kpi_id)
+def create_evrika(request, kpi_id):
+    kpi = get_object_or_404(KpiModel, id=kpi_id)
+
 
     if request.method == 'POST':
         details = request.POST.get('n_details')
         score = request.POST.get('n_score', '')
-
         new_evrika = WorkModel.objects.create(details=details, score=score, kpi=kpi)
+        new_evrika = EvrikaModel.objects.create(details=details, score=score, kpi=kpi)
         new_evrika.save()
 
         return redirect(f'/evrika/{kpi_id}/')
     
     return render(request, 'evrika.html', {'kpi': kpi})
-
 
 
 def evrika(request, id=None):
@@ -216,5 +317,33 @@ def evrika(request, id=None):
     return render(request, 'eureka.html', {"evrikas": evrikas, 'kpi': kpi})
 
 
-def reminder(request):
-    return render(request, 'reminder.html')
+
+def all_works(request):
+    kpis = KpiModel.objects.all()
+    result = []
+    for x in kpis:
+        result.append({"kpi_works":x.work_items.all().order_by("deadline"), "kpi":x})
+
+    return render(request, 'all_works.html', {"result":result})
+
+
+def all_books(request):
+    kpis = KpiModel.objects.all()
+    result = []
+    for x in kpis:
+        result.append({"kpi_books":x.book_items.all(), "kpi":x})
+
+    return render(request, 'all_books.html', {"result":result})
+
+def all_evrikas(request):
+    evrikas = EvrikaModel.objects.all()
+    return render(request, 'all_evrikas.html', {'evrikas':evrikas})
+
+def all_sports(request):
+    kpis = KpiModel.objects.all()
+    result = []
+    for x in kpis:
+        result.append({"kpi_sports":x.sport_items.all(), "kpi":x})
+
+    return render(request, 'all_sports.html', {"result":result})
+
