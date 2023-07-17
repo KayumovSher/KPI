@@ -119,6 +119,11 @@ def book(request, id=None):
 
 
 
+def BookItems(request):
+    return render(request, 'book_items.html')
+
+
+
 
 
 
