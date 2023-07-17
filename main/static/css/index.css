@@ -34,6 +34,6 @@ h1{
     text-align: center;
 }
 
-a {
+table thead th a {
     text-decoration: none;
 }
