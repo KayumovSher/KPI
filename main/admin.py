@@ -27,8 +27,13 @@ class WorkAdmin(admin.ModelAdmin):
 class SportAdmin(admin.ModelAdmin):
     list_display = ("details", "score")
 
-class BookAdmin(admin.ModelAdmin):
-    list_display = ("title", "score")
+class BookModelAdmin(admin.ModelAdmin):
+    def get_book_title(self, obj):
+        return obj.book.title
+    list_display = ("get_book_title", "score")
+    
+class BookItemAdmin(admin.ModelAdmin):
+    list_display = ("title",)
 
 class EvrikaAdmin(admin.ModelAdmin):
     list_display = ("details", "score")
@@ -38,4 +43,7 @@ admin.site.register(KpiModel, KPIAdmin)
 admin.site.register(WorkModel, WorkAdmin)
 admin.site.register(SportModel, SportAdmin)
 admin.site.register(EvrikaModel, EvrikaAdmin)
-admin.site.register(BookModel, BookAdmin)
+admin.site.register(BookItem, BookItemAdmin)
+admin.site.register(BookModel, BookModelAdmin)
+
+

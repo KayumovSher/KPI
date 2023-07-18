@@ -18,7 +18,7 @@ body{
 }
 
 .button{
-    padding: 15 15;
+    padding: 100 15;
     display: block;
     text-align: center;
     width: 300px;
@@ -34,6 +34,6 @@ h1{
     text-align: center;
 }
 
-a {
+table thead th a {
     text-decoration: none;
 }

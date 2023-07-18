@@ -6,13 +6,18 @@ from django.contrib.auth.models import User
 class WorkManager(models.Manager):
     def work_sum(self, kpi):
         work = self.filter(kpi=kpi)
-        return sum(x.score for x in work)
+        return sum(float(x.score) for x in work)
 
 class WorkModel(models.Model):
+    WORK_CHOICES = (
+        ("0.5", "0.5"), ("-1", "-1")
+    )
     deadline = models.DateField(null=True)
-    score = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    score = models.CharField(max_length=100, choices=WORK_CHOICES)
     description = models.TextField(max_length=200, null=True, blank=True)
     kpi = models.ForeignKey("KpiModel", on_delete=models.CASCADE, related_name="work_items")
+    created_at = models.DateTimeField(auto_now=True)
+    
     objects = WorkManager()
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
@@ -31,9 +36,13 @@ class SportManager(models.Manager):
         return sum(x.score for x in sports)
 
 class SportModel(models.Model):
+    SPORT_CHOICES = (
+        (0, 0), (-1, -1)
+    )
     details = models.CharField(max_length=200)
-    score = models.DecimalField(max_digits=10, decimal_places=2)
+    score = models.IntegerField(choices=SPORT_CHOICES)
     kpi = models.ForeignKey("KpiModel", on_delete=models.CASCADE, related_name="sport_items")
+    created_at = models.DateTimeField(auto_now=True)
     objects = SportManager()
 
     def save(self, *args, **kwargs):
@@ -49,17 +58,28 @@ class BooksManager(models.Manager):
         return sum(x.score for x in books)
 
 
-class BookModel(models.Model):
+class BookItem(models.Model):
     title = models.CharField(max_length=200)
-    score = models.DecimalField(max_digits=10, decimal_places=2, null=True)
+    def __str__(self):
+        return self.title    
+class BookModel(models.Model):
+    BOOK_CHOICES = (
+        (1,1), (0,0)
+    )
+    book = models.ForeignKey(BookItem, on_delete=models.CASCADE, related_name="book_title")
+    score = models.IntegerField(null=True, choices=BOOK_CHOICES)
     kpi = models.ForeignKey("KpiModel", on_delete=models.CASCADE, related_name="book_items")
+    created_at = models.DateTimeField(auto_now=True)
     objects = BooksManager()
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
         self.kpi.calculate_general()
 
     def __str__(self):
-        return self.title + " " + str(self.score)
+        return self.book.title + " " + str(self.score)
+    
+# Book class => title, BookScore class => book - foreignkey(Book), 
+# and kpi - foreignkey(Kpi)    
     
 class EvrikaManager(models.Manager):
     def evrika_sum(self, kpi):
@@ -67,9 +87,13 @@ class EvrikaManager(models.Manager):
         return sum(x.score for x in evrikas)
 
 class EvrikaModel(models.Model):
+    EVRIKA_CHOICES = (
+        (5, 5), (0,0)
+    )
     details = models.CharField(max_length=200)
-    score = models.DecimalField(max_digits=10, decimal_places=2)
+    score = models.IntegerField(choices=EVRIKA_CHOICES)
     kpi = models.ForeignKey("KpiModel", on_delete=models.CASCADE, related_name="evrika_items")
+    created_at = models.DateTimeField(auto_now=True)
     objects = EvrikaManager()
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
@@ -85,6 +109,7 @@ class KpiModel(models.Model):
     koef = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     book_comment = models.URLField(max_length=255, null=True)
     upwork = models.URLField(max_length=200, blank=True)
+    created_at = models.DateTimeField(auto_now=True)
 
     def calculate_general(self):
         book = BookModel.objects.books_sum(self)
@@ -149,5 +174,19 @@ class KpiModel(models.Model):
 
     def __str__(self):
         return f"{self.name}"
+
+# users = [
+#     {
+#         "kpi": "samandar",
+#        "kpi_works":{
+#            work1: deadline, score
+#        }
+#     },
+#     {
+#         name: "samandar",
+#         "July 17, 2023": 0.5,
+#         "July 12, 2023": 0.6
+#     }
+# ]
 
 

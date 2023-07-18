@@ -11,7 +11,9 @@
     {% load static %}
 </head>
 <body>
-    
+    <h2>
+        <a href="{% url 'index' %}"> Home </a>
+    </h2>
     
     {% load static %}
     <div class="container">
@@ -39,9 +41,15 @@
                     <form action="{% url 'create_evrika' kpi.id %}" method="post">
                         {% csrf_token %}
                         <tr>
-                            <th> <input type="text" name="n_details" id="" value=""> </th>
-                            <th> <input type="text" name="n_score" id="" value="0.00"> </th>
+                            <th> <input type="text" name="n_details" id="" value="" required> </th>
                             
+                            <th>
+                                <select name="n_score" id="" class="form-control">
+                                    <option value="0">0</option>
+                                    <option value="5">5</option>
+                                </select>
+                            </th>
+                          
                             <th> <input type="submit" name="create" id="" value="Create"> </th>
                         </tr>
                     </form>
@@ -51,8 +59,13 @@
                         <form action="{% url 'edit_evrika' kpi_id=kpi.id evrika_id=evrika.id %}" method="post">
                             {% csrf_token %}
                             <th> <input type="text" name="details" id="" value="{{ evrika.details}}"> </th>
-                            <th> <input type="text" name="score" id="" value="{{ evrika.score }}"> </th>
                             
+                            <th> <select name="score" class="form-control"> 
+                                <option value="{{evrika.score}}"> {{evrika.score}} </option>
+                                  <option value="0"> 0 </option>
+                                  <option value="5"> 5 </option>
+                              </select>   </th>
+
                             <th>
                                 <input type="submit" name="edit_evrika" value="Edit">
                                 <button type="submit" name="delete_evrika" formaction="{% url 'delete_evrika' kpi_id=kpi.id evrika_id=evrika.id %}">Delete</button>
