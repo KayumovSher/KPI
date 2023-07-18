@@ -2,7 +2,6 @@ from django.shortcuts import render, redirect
 from .models import KpiModel, SportModel, EvrikaModel, BookModel, WorkModel
 from django.shortcuts import get_object_or_404
 
-# Create your views here.
 
 def index(request):
     kpi_models = KpiModel.objects.all()
@@ -117,9 +116,7 @@ def book(request, id=None):
     return render(request, 'book.html', {"books": books, 'kpi': kpi})
 
 
-
-
-
+# Work
 
 def edit_work(request, kpi_id, work_id):
     kpi = get_object_or_404(KpiModel, id=kpi_id)
@@ -184,7 +181,7 @@ def work(request, id=None):
 
 
 
-# Evrika
+# Sport
 
 def reminder(request):
     return render(request, 'reminder.html')
@@ -249,8 +246,7 @@ def create_sport(request, kpi_id):
     return render(request, 'sport.html', {'kpi': kpi})
 
 
-
-
+# Evrika
 
 def edit_evrika(request, kpi_id, evrika_id):
     kpi = get_object_or_404(KpiModel, id=kpi_id)
@@ -281,13 +277,8 @@ def delete_evrika(request, kpi_id, evrika_id):
     
 
 
-
-def create_evrika(request, kpi_id):
-    kpi = get_object_or_404(EvrikaModel, id=kpi_id)
 def create_evrika(request, kpi_id):
     kpi = get_object_or_404(KpiModel, id=kpi_id)
-
-
     if request.method == 'POST':
         details = request.POST.get('n_details')
         score = request.POST.get('n_score', '')
@@ -316,8 +307,6 @@ def evrika(request, id=None):
 
     return render(request, 'eureka.html', {"evrikas": evrikas, 'kpi': kpi})
 
-
-
 def all_works(request):
     kpis = KpiModel.objects.all()
     result = []
@@ -325,7 +314,6 @@ def all_works(request):
         result.append({"kpi_works":x.work_items.all().order_by("deadline"), "kpi":x})
 
     return render(request, 'all_works.html', {"result":result})
-
 
 def all_books(request):
     kpis = KpiModel.objects.all()
@@ -335,9 +323,11 @@ def all_books(request):
 
     return render(request, 'all_books.html', {"result":result})
 
+
 def all_evrikas(request):
     evrikas = EvrikaModel.objects.all()
     return render(request, 'all_evrikas.html', {'evrikas':evrikas})
+
 
 def all_sports(request):
     kpis = KpiModel.objects.all()
