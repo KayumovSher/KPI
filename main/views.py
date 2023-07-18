@@ -309,12 +309,44 @@ def evrika(request, id=None):
 
 
 def all_works(request):
-    kpis = KpiModel.objects.all().order_by("-created_at")
-    result = []
-    for x in kpis:
-        result.append({"kpi_works":x.work_items.all().order_by("deadline"), "kpi":x})
-    
-    return render(request, 'all_works.html', {"result":result})
+    kpis = KpiModel.objects.all()
+
+    deadlines = []
+    names = []
+    for i in kpis:
+        for j in i.work_items.all():
+            deadlines.append(j.deadline)
+        names.append(i.name)
+    deadlines = sorted(set(deadlines))
+    names = set(names)
+    # print(deadlines, names)
+
+    scores = {}
+    for i in names:
+        scores[i] = {}
+        for j in deadlines:
+            scores[i][j] = 0
+
+    for i in kpis:
+        for j in i.work_items.all():
+            scores[i.name][j.deadline] = j.score
+
+    scores2 = []
+    for i in names:
+        scores2.append({"name": i, "score": [scores[i][j] for j in deadlines]})
+
+    # result = []
+    # for x in kpis:
+    #     result.append({"kpi_works":x.work_items.all().order_by("deadline"), "kpi":x})
+    # print(result)
+    # print(scores2)
+    return render(request, 'all_works.html', {"deadlines" : deadlines, "names": names, "scores2": scores2})
+
+    # result = []
+    # for x in kpis:
+    #     result.append({"kpi_works":x.work_items.all().order_by("deadline"), "kpi":x})
+    # print(result)
+    # return render(request, 'all_works.html', {"result":result})
 
 
 def all_books(request):
