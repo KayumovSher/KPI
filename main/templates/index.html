@@ -11,7 +11,55 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
 </head>
 <body>
+
+
+    <nav class="shadow navbar navbar-expand-lg bg-light">
+        <div class="container">
+          <a class="navbar-brand" href="/">E-Shop</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarContent">
+            
+              
+            </ul>
+              <div class="btn-group">
+                <form class="d-flex " role="search">
+                  <input class="form-control me-2" name="q" type="search" placeholder="Search" aria-label="Search">
+                  <button class="btn btn-outline-success" type="submit">Search</button>
+                </form>
+
+                {% if request.user.is_authenticated %}
+
+                <button type="button" class="btn  dropdown-toggle" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
+                  <img src="{{ request.user.avatar.url }}" width="35" height="35" class=" rounded" alt="">
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-lg">
+                  <li><a class="dropdown-item" href="#">Profile</af/li>
+                  <li><a class="dropdown-item" href="{% url 'password_change' %}">Change password</a></li>
+                  <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+                </ul>
+                {% else %}
+                <a href="{% url 'login' %}" class="btn btn-primary">Login</a>
+                <a href="{% url 'users:singup' %}" class="btn btn-primary">SingUp</a>
+                {% endif %}
+                
+              </div>
+          </div>
+        </div>
+    </nav>
+    <!-- Navbar End -->
+    
+
     <div class="container">
+    
+    <h4>    {% if request.user.is_authenticated %}
+    <p>Welcome, {{ request.user.username }}!</p>
+    {% else %}
+        <p><a href="{% url 'login' %}">Login</a></p>
+    {% endif %}
+    </h4>   
+
         <h1>Table to Google Sheet KPI <i class="ri-arrow-right-line"></i><a href="reminder">Remind!</a></h1>
         <table class="table table-bordered">
             <thead class="thead-dark">
@@ -72,6 +120,12 @@
         <button onclick="tableToGoogleSheet()">
             Table to Excel
         </button>
+        {% if request.user.is_staff %}
+        <a href="{% url 'kpi_detail' %}">
+            <button>Kpi Users</button>
+        </a>
+        {% endif %}
+
     </div>
     
 <script type="text/javascript" src="{% static 'js/table2excel.js' %}"></script>

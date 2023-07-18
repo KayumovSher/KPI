@@ -4,6 +4,7 @@ from django.shortcuts import get_object_or_404
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse
+from django.contrib.auth.decorators import login_required
 
 
 def index(request):
@@ -124,7 +125,6 @@ def BookItems(request):
     return render(request, 'book_items.html')
 
 
-# Work
 
 def edit_work(request, kpi_id, work_id):
     kpi = get_object_or_404(KpiModel, id=kpi_id)
@@ -339,4 +339,65 @@ def all_evrikas(request):
 def all_sports(request):
     sports = SportModel.objects.all().order_by("-created_at")
     return render(request, 'all_sports.html', {'sports':sports})
+
+
+
+
+
+
+@login_required(login_url="login")
+def edit_kpi(request, kpi_id):
+    kpi = get_object_or_404(KpiModel, id=kpi_id)
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        book_comment = request.POST.get('book_comment', None) 
+        upwork = request.POST.get('upwork', None) 
+
+        kpi.name = name
+        kpi.book_comment = book_comment
+        kpi.upwork = upwork
+        kpi.save()
+
+        return redirect(f'/kpi/')
+
+    
+    return render(request, 'edit_kpi.html')
+
+
+@login_required(login_url="login")
+def delete_kpi(request, kpi_id):
+    kpi = get_object_or_404(KpiModel, id=kpi_id)
+    if request.method == 'POST':
+        kpi.delete()
+        return redirect(f'/kpi/')
+    
+@login_required(login_url="login")
+def create_kpi(request):
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        book_comment = request.POST.get('book_comment', '')
+        upwork = request.POST.get('upwork', '')
+
+        new_kpi = KpiModel.objects.create(name=name, book_comment=book_comment, upwork=upwork)
+        new_kpi.save()
+
+        return redirect(f'/kpi/')
+    
+    return render(request, 'kpi.html')
+
+@login_required(login_url="login")
+def kpi_view(request):
+    kpi_models = KpiModel.objects.all()
+
+    if request.method == 'POST':
+        if 'edit_kpi' in request.POST:
+            kpi_id = request.POST.get('kpi_id')
+            return redirect('edit_kpi', kpi_id=kpi_id)
+        elif 'delete_kpi' in request.POST:
+            kpi_id = request.POST.get('kpi_id')
+            return redirect('delete_kpi', kpi_id=kpi_id)
+        elif 'create_kpi' in request.POST:
+            return redirect('create_kpi')
+
+    return render(request, 'kpi.html', {"kpi_models": kpi_models})
 
