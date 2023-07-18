@@ -48,5 +48,6 @@ urlpatterns = [
     path("all_sports/", views.all_sports, name='all_sports'),
 
     path('reminder/', views.reminder),
+    path('all_books/book_items/', views.BookItems, name='book_items')
     
 ]
