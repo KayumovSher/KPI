@@ -24,7 +24,6 @@
             <h2 class="nameCenter">
 
             </h2>
-
             <br>
 
             <table class="table table-bordered">
@@ -32,29 +31,21 @@
                     
                     <tr>
                         <th>F.I.O</th>
-                        {% for x in result %}
-                        {% for sport in x.kpi_sports %}
-                        <td>
-                            {{sport.details}}
-                        </td>
-                        {% endfor %}
-                        {% endfor %}
+                        <th>Details</th>
+                        <th>Score</th>
                     </tr>
                     
                 </thead>
                 <tbody>
-                    {% for i in result  %}  
+                    {% for i in sports  %}  
                     <tr>
                         <td>{{ i.kpi.name }}</td>
-                        {% for sport in i.kpi_sports %}
-                        <td> {{sport.score}} </td>
-                        {% endfor %}
+                        <td> {{i.details}} </td>
+                        <td> {{i.score}} </td>
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
-
-
 
         <a href="https://docs.google.com/spreadsheets/d/13aPcjyMXeHoDP3VeYuTcN4DlKeJEvOr_2t3qR4TV_3w/edit#gid=1208225701">
 

@@ -13,7 +13,7 @@ def index(request):
         books = sum(x.score for x in BookModel.objects.filter(kpi=x))
         sports = sum(x.score for x in SportModel.objects.filter(kpi=x))
         evrikas = sum(x.score for x in EvrikaModel.objects.filter(kpi=x))
-        works = sum(x.score for x in WorkModel.objects.filter(kpi=x))
+        works = sum(float(x.score) for x in WorkModel.objects.filter(kpi=x))
         result.append({"kpi":x, "sports":sports, "evrikas":evrikas, "works":works, "books":books})
     
     return render(request, 'index.html', context={"results":result})
@@ -137,7 +137,7 @@ def edit_work(request, kpi_id, work_id):
         description = request.POST.get('description', '')
 
         work.deadline = deadline
-        work.score = int(score)
+        work.score = score
         work.description = description
         work.save()
 
@@ -312,31 +312,26 @@ def evrika(request, id=None):
 
 
 def all_works(request):
-    kpis = KpiModel.objects.all()
+    kpis = KpiModel.objects.all().order_by("-created_at")
     result = []
     for x in kpis:
         result.append({"kpi_works":x.work_items.all().order_by("deadline"), "kpi":x})
     
-    print(result)
     return render(request, 'all_works.html', {"result":result})
 
 
 def all_books(request):
-    kpis = KpiModel.objects.all()
+    kpis = KpiModel.objects.all().order_by("-created_at")
     result = []
     for x in kpis:
         result.append({"kpi_books":x.book_items.all(), "kpi":x})
     return render(request, 'all_books.html', {"result":result})
 
 def all_evrikas(request):
-    evrikas = EvrikaModel.objects.all()
+    evrikas = EvrikaModel.objects.all().order_by("-created_at")
     return render(request, 'all_evrikas.html', {'evrikas':evrikas})
 
 def all_sports(request):
-    kpis = KpiModel.objects.all()
-    result = []
-    for x in kpis:
-        result.append({"kpi_sports":x.sport_items.all(), "kpi":x})
-
-    return render(request, 'all_sports.html', {"result":result})
+    sports = SportModel.objects.all().order_by("-created_at")
+    return render(request, 'all_sports.html', {'sports':sports})
 

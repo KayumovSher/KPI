@@ -6,14 +6,14 @@ from django.contrib.auth.models import User
 class WorkManager(models.Manager):
     def work_sum(self, kpi):
         work = self.filter(kpi=kpi)
-        return sum(x.score for x in work)
+        return sum(float(x.score) for x in work)
 
 class WorkModel(models.Model):
     WORK_CHOICES = (
-        (0.5, 0.5), (-1, -1)
+        ("0.5", "0.5"), ("-1", "-1")
     )
     deadline = models.DateField(null=True)
-    score = models.DecimalField(max_digits=3, decimal_places=1, choices=WORK_CHOICES)
+    score = models.CharField(max_length=100, choices=WORK_CHOICES)
     description = models.TextField(max_length=200, null=True, blank=True)
     kpi = models.ForeignKey("KpiModel", on_delete=models.CASCADE, related_name="work_items")
     created_at = models.DateTimeField(auto_now=True)
