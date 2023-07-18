@@ -33,24 +33,27 @@
                     <tr>
                         <th>F.I.O</th>
                         {% for x in result %}
-                        {% for work in x.kpi_works %}
-                        <td>
-                            {{work.deadline}}
-                        </td>
-                        {% endfor %}
+                            {% for work in x.kpi_works %}
+                                <td>
+                                    {{work.deadline}}
+                                </td>
+                            {% endfor %}
                         {% endfor %}
                     </tr>
                     
                 </thead>
                 <tbody>
-                    {% for i in result  %}  
-                    <tr>
-                        <td>{{ i.kpi.name }}</td>
-                        {% for work in i.kpi_works %}
-                        <td> {{work.score}} </td>
-                        {% endfor %}
-                    </tr>
-                    {% endfor %}
+
+                        <tr>
+                            {% for i in result %}
+                            {% for work in i.kpi_works %}
+                          <!-- <th scope="row">1</th> -->
+                          <td>{{i.kpi.name}}</td>
+                          <td>{{i.work.score}}</td>
+                          {% endfor %}
+                          {% endfor %}
+                        </tr>
+                    
                 </tbody>
             </table>
 

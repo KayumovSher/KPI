@@ -311,7 +311,8 @@ def all_works(request):
     result = []
     for x in kpis:
         result.append({"kpi_works":x.work_items.all().order_by("deadline"), "kpi":x})
-
+    
+    print(result)
     return render(request, 'all_works.html', {"result":result})
 
 
@@ -320,7 +321,6 @@ def all_books(request):
     result = []
     for x in kpis:
         result.append({"kpi_books":x.book_items.all(), "kpi":x})
-
     return render(request, 'all_books.html', {"result":result})
 
 def all_evrikas(request):
