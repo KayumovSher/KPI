@@ -59,6 +59,13 @@ def LoginPage(request):
     return render(request, 'login.html')
 
 
+def LogoutPage(request):
+    return render(request, "logout.html")
+
+
+def Navbar(request):
+    return render(request, 'navbar.html')
+
 # Book
 
 def edit_book(request, kpi_id, book_id):

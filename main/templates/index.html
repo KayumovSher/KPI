@@ -11,6 +11,11 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
 </head>
 <body>
+    
+    {% comment %} {% block content %}
+
+    {% endblock %} {% endcomment %}
+    
 
     
 
@@ -19,12 +24,12 @@
     <h4>    {% if request.user.is_authenticated %}
     <p>Welcome, {{ request.user.username }}!</p>
     {% else %}
-        <p><a href="{% url 'login' %}">Login</a></p>
+    <p><a href="{% url 'signup' %}">Signup</a></p> <p><a href="{% url 'login' %}">Login</a></p>
     {% endif %}
     </h4>   
 
         <h1>Table to Google Sheet KPI <i class="ri-arrow-right-line"></i><a href="reminder">Remind!</a></h1>
-        <table class="table table-bordered">
+        <table class="table table-bordered" >
             <thead class="thead-dark">
                 <tr>
                     <th>F.I.O</th>
