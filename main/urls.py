@@ -12,12 +12,8 @@ urlpatterns = [
     path('login/', views.LoginPage),
 
 
-
     path('sport/<int:id>/', views.sport, name='sport_detail'),
     
-
-
-
 
     path('work_create/<int:kpi_id>/', views.create_work, name='create_work'),
     path('work/<int:id>/', views.work, name='work_detail'),
