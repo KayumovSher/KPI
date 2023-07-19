@@ -4,6 +4,7 @@ from django.shortcuts import get_object_or_404
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse
+from django.contrib.auth.decorators import login_required
 # Create your views here.
 
 def index(request):
@@ -121,10 +122,6 @@ def book(request, id=None):
 
 def BookItems(request):
     return render(request, 'book_items.html')
-
-
-
-
 
 
 def edit_work(request, kpi_id, work_id):
@@ -312,20 +309,66 @@ def evrika(request, id=None):
 
 
 def all_works(request):
-    kpis = KpiModel.objects.all().order_by("-created_at")
-    result = []
-    for x in kpis:
-        result.append({"kpi_works":x.work_items.all().order_by("deadline"), "kpi":x})
-    
-    return render(request, 'all_works.html', {"result":result})
+    kpis = KpiModel.objects.all()
+
+    deadlines = []
+    names = []
+    for i in kpis:
+        for j in i.work_items.all():
+            deadlines.append(j.deadline)
+        names.append(i.name)
+    deadlines = sorted(set(deadlines))
+    names = set(names)
+    print(deadlines, names)
+
+    scores = {}
+    for i in names:
+        scores[i] = {}
+        for j in deadlines:
+            scores[i][j] = 0
+
+    for i in kpis:
+        for j in i.work_items.all():
+            scores[i.name][j.deadline] = j.score
+
+    scores2 = []
+    print(deadlines)
+    for i in names:
+        scores2.append({"name": i, "score": [scores[i][j] for j in deadlines]})
+    print(scores2)
+    return render(request, 'all_works.html', {"deadlines" : deadlines, "names": names, "scores2": scores2})
+
+    # result = []
+    # for x in kpis:
+    #     result.append({"kpi_works":x.work_items.all().order_by("deadline"), "kpi":x})
+    # print(result)
+    # return render(request, 'all_works.html', {"result":result})
 
 
 def all_books(request):
-    kpis = KpiModel.objects.all().order_by("-created_at")
-    result = []
+    kpis = KpiModel.objects.all()
+    book_titles = []
+    names = []
     for x in kpis:
-        result.append({"kpi_books":x.book_items.all(), "kpi":x})
-    return render(request, 'all_books.html', {"result":result})
+        names.append(x.name)
+        for y in x.book_items.all():
+            book_titles.append(y.book.title)
+    names = set(names)
+    book_titles = set(book_titles)
+    scores = {}
+    for i in names:
+        scores[i] = {}
+        for j in book_titles:
+            scores[i][j] = 0
+    for i in kpis:
+        for j in i.book_items.all():
+            scores[i.name][j.book.title] = j.score
+    scores2 = []
+    for i in names:
+        scores2.append({"name":i, "score":[scores[i][j] for j in book_titles]})
+
+    print(scores2)
+    return render(request, 'all_books.html', {"book_titles":book_titles, "names":names, "scores":scores2})
 
 def all_evrikas(request):
     evrikas = EvrikaModel.objects.all().order_by("-created_at")
@@ -334,4 +377,65 @@ def all_evrikas(request):
 def all_sports(request):
     sports = SportModel.objects.all().order_by("-created_at")
     return render(request, 'all_sports.html', {'sports':sports})
+
+
+
+
+
+
+@login_required(login_url="login")
+def edit_kpi(request, kpi_id):
+    kpi = get_object_or_404(KpiModel, id=kpi_id)
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        book_comment = request.POST.get('book_comment', None) 
+        upwork = request.POST.get('upwork', None) 
+
+        kpi.name = name
+        kpi.book_comment = book_comment
+        kpi.upwork = upwork
+        kpi.save()
+
+        return redirect(f'/kpi/')
+
+    
+    return render(request, 'edit_kpi.html')
+
+
+@login_required(login_url="login")
+def delete_kpi(request, kpi_id):
+    kpi = get_object_or_404(KpiModel, id=kpi_id)
+    if request.method == 'POST':
+        kpi.delete()
+        return redirect(f'/kpi/')
+    
+@login_required(login_url="login")
+def create_kpi(request):
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        book_comment = request.POST.get('book_comment', '')
+        upwork = request.POST.get('upwork', '')
+
+        new_kpi = KpiModel.objects.create(name=name, book_comment=book_comment, upwork=upwork)
+        new_kpi.save()
+
+        return redirect(f'/kpi/')
+    
+    return render(request, 'kpi.html')
+
+@login_required(login_url="login")
+def kpi_view(request):
+    kpi_models = KpiModel.objects.all()
+
+    if request.method == 'POST':
+        if 'edit_kpi' in request.POST:
+            kpi_id = request.POST.get('kpi_id')
+            return redirect('edit_kpi', kpi_id=kpi_id)
+        elif 'delete_kpi' in request.POST:
+            kpi_id = request.POST.get('kpi_id')
+            return redirect('delete_kpi', kpi_id=kpi_id)
+        elif 'create_kpi' in request.POST:
+            return redirect('create_kpi')
+
+    return render(request, 'kpi.html', {"kpi_models": kpi_models})
 
