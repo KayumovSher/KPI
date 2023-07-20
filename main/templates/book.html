@@ -11,13 +11,12 @@
     {% load static %}
 </head>
 <body>
+    {% include 'navbar.html' %}
     
-    <h2>
-        <a href="{% url 'index' %}"> Home </a>
-    </h2>
+    
     {% load static %}
     <div class="container">
-        <h1 class="headerone">Book to Google Sheet KPI</h1>
+        <h1 class="headerone">Book to Google Sheet KPI <i class="ri-arrow-right-line"></i><a href="{% url 'book_items' %}">Create book items!</a></h1>
 
             <br>
 
