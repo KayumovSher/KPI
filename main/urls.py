@@ -6,7 +6,13 @@ urlpatterns = [
     path('', views.index, name="index"),
     path('signup/', views.SignupPage, name="signup"),
     path('login/', views.LoginPage, name="login"),
+    path('logout/', views.LogoutPage, name="logout"),
     path('book/<int:id>/', views.book, name="book_detail"),
+   
+
+
+    path('sport/<int:id>/', views.sport, name='sport_detail'),
+    
 
     path('work_create/<int:kpi_id>/', views.create_work, name='create_work'),
     path('work/<int:id>/', views.work, name='work_detail'),
@@ -44,5 +50,8 @@ urlpatterns = [
     path('kpi/', views.kpi_view, name='kpi_detail'),
     path('kpi/<int:kpi_id>/edit/', views.edit_kpi, name='edit_kpi'),
     path('kpi/<int:kpi_id>/delete/', views.delete_kpi, name='delete_kpi'),
+    
+    
+    path('navbar/', views.Navbar, name='navbar')
 
 ]
