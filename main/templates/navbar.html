@@ -1,15 +1,27 @@
 {% comment %} {% extends 'index.html' %} {% endcomment %}
 
 {% block content %}
+
+<style>
+    .nav-item{
+        padding-left: 10px auto fixed;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        position: relative;/* Move the element 20 pixels down from its normal position */
+        left: 1300px; 
+    }
+    
+</style>
         
-<nav class="navber navbar-expand-lg navber-dark bg-dark">
+<nav class="navbar navbar-expand-lg navber-dark bg-dark">
     <div class="container-fluid">
         <a class="navbar-brand" href="{% url 'index' %}"></a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="#navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0" style="padding: 10px;">
                 <li class="nav-item" >
                     <a class="nav-link" href="{% url 'index' %}">Home</a>
                 </li>
