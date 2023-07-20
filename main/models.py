@@ -115,27 +115,27 @@ class KpiModel(models.Model):
         evrika = EvrikaModel.objects.evrika_sum(self)
 
         total = float(sport) + float(book) + float(evrika) + float(work_sum)
-        result = self.general
-        for i in range(int(total*2)):
-            print(result)
-            result += [0.5,0.4,0.3,0.2,0.1,0.075,0.05][0 if result<60 else 7 if result>=110 else int(result//10-5)]
+        # result = self.general
+        # for i in range(int(total*2)):
+        #     print(result)
+        #     result += [0.5,0.4,0.3,0.2,0.1,0.075,0.05][0 if result<60 else 7 if result>=110 else int(result//10-5)]
 
-        # if total <= 10:
-        #     result = 50 + total
-        # elif total <= 23:
-        #     result = 50 + 10 + 0.8 * (total - 10)
-        # elif total <= 39:
-        #     result = 50 + 10 + 10.4 + 0.6 * (total - 23)
-        # elif total <= 64:
-        #     result = 50 + 10 + 10.4 + 9.6 + 0.4 * (total - 39)
-        # elif total <= 114:
-        #     result = 50 + 10 + 10.4 + 9.6 + 10 + 0.2 * (total - 64)
-        # elif total <= 181:
-        #     result = 50 + 10 + 10.4 + 9.6 + 10 + 10.05 + 0.15 * (total - 114)
-        # elif total < 281:
-        #     result = 50 + 10 + 10.4 + 9.6 + 10 + 10.05 + 9.95 + 0.1 * (total - 181)
-        # else:
-        #     result = 50 + 10 + 10.4 + 9.6 + 10 + 10.05 + 9.95 + 10
+        if total <= 10:
+            result = 50 + total
+        elif total <= 23:
+            result = 50 + 10 + 0.8 * (total - 10)
+        elif total <= 39:
+            result = 50 + 10 + 10.4 + 0.6 * (total - 23)
+        elif total <= 64:
+            result = 50 + 10 + 10.4 + 9.6 + 0.4 * (total - 39)
+        elif total <= 114:
+            result = 50 + 10 + 10.4 + 9.6 + 10 + 0.2 * (total - 64)
+        elif total <= 181:
+            result = 50 + 10 + 10.4 + 9.6 + 10 + 10.05 + 0.15 * (total - 114)
+        elif total < 281:
+            result = 50 + 10 + 10.4 + 9.6 + 10 + 10.05 + 9.95 + 0.1 * (total - 181)
+        else:
+            result = 50 + 10 + 10.4 + 9.6 + 10 + 10.05 + 9.95 + 10
 
         self.general = result
 
