@@ -311,64 +311,28 @@ def evrika(request, id=None):
 def all_works(request):
     kpis = KpiModel.objects.all()
 
-    deadlines = []
-    names = []
-    for i in kpis:
-        for j in i.work_items.all():
-            deadlines.append(j.deadline)
-        names.append(i.name)
-    deadlines = sorted(set(deadlines))
-    names = set(names)
-    print(deadlines, names)
+    deadlines = list(sorted(set([j.deadline for i in kpis for j in i.work_items.all()])))
+    scores = [['' for j in range(len(deadlines)+1)] for i in kpis]
 
-    scores = {}
-    for i in names:
-        scores[i] = {}
-        for j in deadlines:
-            scores[i][j] = 0
+    for i,x in enumerate(kpis):
+        scores[i][0] = x.name
+        for j,y in enumerate(x.work_items.all()):
+            scores[i][deadlines.index(y.deadline)+1] = y.score
 
-    for i in kpis:
-        for j in i.work_items.all():
-            scores[i.name][j.deadline] = j.score
-
-    scores2 = []
-    print(deadlines)
-    for i in names:
-        scores2.append({"name": i, "score": [scores[i][j] for j in deadlines]})
-    print(scores2)
-    return render(request, 'all_works.html', {"deadlines" : deadlines, "names": names, "scores2": scores2})
-
-    # result = []
-    # for x in kpis:
-    #     result.append({"kpi_works":x.work_items.all().order_by("deadline"), "kpi":x})
-    # print(result)
-    # return render(request, 'all_works.html', {"result":result})
-
+    return render(request, 'all_works.html', {"deadlines" : deadlines, "scores": scores})
 
 def all_books(request):
     kpis = KpiModel.objects.all()
-    book_titles = []
-    names = []
-    for x in kpis:
-        names.append(x.name)
-        for y in x.book_items.all():
-            book_titles.append(y.book.title)
-    names = set(names)
-    book_titles = set(book_titles)
-    scores = {}
-    for i in names:
-        scores[i] = {}
-        for j in book_titles:
-            scores[i][j] = 0
-    for i in kpis:
-        for j in i.book_items.all():
-            scores[i.name][j.book.title] = j.score
-    scores2 = []
-    for i in names:
-        scores2.append({"name":i, "score":[scores[i][j] for j in book_titles]})
 
-    print(scores2)
-    return render(request, 'all_books.html', {"book_titles":book_titles, "names":names, "scores":scores2})
+    book_titles = list(set([j.book.title for i in kpis for j in i.book_items.all()]))
+    scores = [['' for j in range(len(book_titles)+1)] for i in kpis]
+    for i,x in enumerate(kpis):
+        scores[i][0] = x.name
+        for j,y in enumerate(x.book_items.all()):
+            scores[i][book_titles.index(y.book.title)+1] = y.score
+    return render(request, 'all_books.html', {"book_titles" : book_titles, "scores": scores})
+
+# [{'name': 'okang', 'score': [0, 1]}, {'name': 'user-1ede2d', 'score': [0, 1]}, {'name': 'sadriddin', 'score': [0, 0]}, {'name': 'Samandar', 'score': [1, 1]}]
 
 def all_evrikas(request):
     evrikas = EvrikaModel.objects.all().order_by("-created_at")

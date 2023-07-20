@@ -42,9 +42,9 @@
                 <tbody>
                     {% for i in scores  %}  
                     <tr>
-                        <td>{{ i.name }}</td>
-                        {% for y in i.score %}
-                        <td> {{y}} </td>
+                        <!-- <td>{{ i.name }}</td> -->
+                        {% for j in i %}
+                        <td> {{j}} </td>
                         {% endfor %}
                     </tr>
                     {% endfor %}
