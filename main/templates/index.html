@@ -11,35 +11,12 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
 </head>
 <body>
-     <!-- Navbar Start -->
-    <nav class="shadow navbar navbar-expand-lg bg-light ">
-        <div class="container">
-          <a class="navbar-brand" href="/">KPI</a>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-+
-            toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarContent">
 
-                {% if request.user.is_authenticated %}
+    
+    {% comment %} {% block content %}
 
-                <button type="button" class="btn  dropdown-toggle" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
-                  <img src="{{ request.user.avatar.url }}" width="35" height="35" class=" rounded" alt="">
-                </button>
-                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-lg">
-                  <li><a class="dropdown-item" href="#">Profile</af/li>
-                  <li><a class="dropdown-item" href="">Change password</a></li>
-                  <li><a class="dropdown-item" href="">Logout</a></li>
-                </ul>
-                {% else %}
-                <a href="{% url 'login' %}" class="btn btn-primary">Login</a>
-                <a href="{% url 'users:singup' %}" class="btn btn-primary">SingUp</a>
-                {% endif %}
-                
-            </div>
-          </div>
-    </nav>
-    <!-- Navbar End -->
+    {% endblock %} {% endcomment %}
+    
     
 
     <div class="container">
@@ -47,12 +24,12 @@
     <h4>    {% if request.user.is_authenticated %}
     <p>Welcome, {{ request.user.username }}!</p>
     {% else %}
-        <p><a href="{% url 'login' %}">Login</a></p>
+    <p><a href="{% url 'signup' %}">Signup</a></p> <p><a href="{% url 'login' %}">Login</a></p>
     {% endif %}
     </h4>   
 
         <h1>Table to Google Sheet KPI <i class="ri-arrow-right-line"></i><a href="reminder">Remind!</a></h1>
-        <table class="table table-bordered">
+        <table class="table table-bordered" >
             <thead class="thead-dark">
                 <tr>
                     <th>F.I.O</th>

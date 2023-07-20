@@ -59,31 +59,37 @@
                     
                     <tr>
                         <th>F.I.O</th>
-                        {% for x in result %}
-                            {% for work in x.kpi_works %}
-                                <td>
-                                    {{work.deadline}}
-                                </td>
-                            {% endfor %}
+                        {% for i in deadlines %}
+                            <td>
+                                {{i}}
+                            </td>
                         {% endfor %}
                     </tr>
                     
                 </thead>
                 <tbody>
 
+                    {% for i in scores %}
                         <tr>
-                            {% for i in result %}
-                            {% for work in i.kpi_works %}
-                          <!-- <th scope="row">1</th> -->
-                          <td>{{i.kpi.name}}</td>
-                          <td>{{i.work.score}}</td>
-                          {% endfor %}
-                          {% endfor %}
+                            <!-- <td>
+                                {{i.name}}
+                            </td> -->
+                            {% for j in i %}
+                                <td>
+                                    {{j}}
+                                </td>
+                            {% endfor %}
                         </tr>
+
 
                 </tbody>
               </table>
               
+                    {% endfor %}
+                    
+                </tbody>
+            </table>
+
 
         <a href="https://docs.google.com/spreadsheets/d/13aPcjyMXeHoDP3VeYuTcN4DlKeJEvOr_2t3qR4TV_3w/edit#gid=1208225701">
 

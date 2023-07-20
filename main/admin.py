@@ -22,7 +22,9 @@ class KPIAdmin(admin.ModelAdmin):
     list_display = ('name', 'general', 'league', 'koef', 'book_comment', 'upwork')
 
 class WorkAdmin(admin.ModelAdmin):
-    list_display = ("deadline", "score")
+    def kpi_users(self, obj):
+        return obj.kpi.name
+    list_display = ("deadline", "score", "kpi_users")
 
 class SportAdmin(admin.ModelAdmin):
     list_display = ("details", "score")
@@ -30,7 +32,9 @@ class SportAdmin(admin.ModelAdmin):
 class BookModelAdmin(admin.ModelAdmin):
     def get_book_title(self, obj):
         return obj.book.title
-    list_display = ("get_book_title", "score")
+    def kpi_users(self, obj):
+        return obj.kpi.name
+    list_display = ("get_book_title", "score", "kpi_users")
     
 class BookItemAdmin(admin.ModelAdmin):
     list_display = ("title",)

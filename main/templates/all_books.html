@@ -31,22 +31,20 @@
                     
                     <tr>
                         <th>F.I.O</th>
-                        {% for x in result %}
-                        {% for book in x.kpi_books %}
+                        {% for x in book_titles %}
                         <td>
-                            {{book.book.title}}
+                            {{x}}
                         </td>
-                        {% endfor %}
                         {% endfor %}
                     </tr>
                     
                 </thead>
                 <tbody>
-                    {% for i in result  %}  
+                    {% for i in scores  %}  
                     <tr>
-                        <td>{{ i.kpi.name }}</td>
-                        {% for book in i.kpi_books %}
-                        <td> {{book.score}} </td>
+                        <!-- <td>{{ i.name }}</td> -->
+                        {% for j in i %}
+                        <td> {{j}} </td>
                         {% endfor %}
                     </tr>
                     {% endfor %}

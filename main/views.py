@@ -59,6 +59,13 @@ def LoginPage(request):
     return render(request, 'login.html')
 
 
+def LogoutPage(request):
+    return render(request, "logout.html")
+
+
+def Navbar(request):
+    return render(request, 'navbar.html')
+
 # Book
 
 def edit_book(request, kpi_id, book_id):
@@ -309,20 +316,30 @@ def evrika(request, id=None):
 
 
 def all_works(request):
-    kpis = KpiModel.objects.all().order_by("-created_at")
-    result = []
-    for x in kpis:
-        result.append({"kpi_works":x.work_items.all().order_by("deadline"), "kpi":x})
-    
-    return render(request, 'all_works.html', {"result":result})
+    kpis = KpiModel.objects.all()
 
+    deadlines = list(sorted(set([j.deadline for i in kpis for j in i.work_items.all()])))
+    scores = [['' for j in range(len(deadlines)+1)] for i in kpis]
+
+    for i,x in enumerate(kpis):
+        scores[i][0] = x.name
+        for j,y in enumerate(x.work_items.all()):
+            scores[i][deadlines.index(y.deadline)+1] = y.score
+
+    return render(request, 'all_works.html', {"deadlines" : deadlines, "scores": scores})
 
 def all_books(request):
-    kpis = KpiModel.objects.all().order_by("-created_at")
-    result = []
-    for x in kpis:
-        result.append({"kpi_books":x.book_items.all(), "kpi":x})
-    return render(request, 'all_books.html', {"result":result})
+    kpis = KpiModel.objects.all()
+
+    book_titles = list(set([j.book.title for i in kpis for j in i.book_items.all()]))
+    scores = [['' for j in range(len(book_titles)+1)] for i in kpis]
+    for i,x in enumerate(kpis):
+        scores[i][0] = x.name
+        for j,y in enumerate(x.book_items.all()):
+            scores[i][book_titles.index(y.book.title)+1] = y.score
+    return render(request, 'all_books.html', {"book_titles" : book_titles, "scores": scores})
+
+# [{'name': 'okang', 'score': [0, 1]}, {'name': 'user-1ede2d', 'score': [0, 1]}, {'name': 'sadriddin', 'score': [0, 0]}, {'name': 'Samandar', 'score': [1, 1]}]
 
 def all_evrikas(request):
     evrikas = EvrikaModel.objects.all().order_by("-created_at")
