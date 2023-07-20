@@ -12,9 +12,7 @@
 </head>
 <body>
     
-    {% comment %} {% block content %}
-
-    {% endblock %} {% endcomment %}
+    {% include 'navbar.html' %}
     
 
     
@@ -28,6 +26,7 @@
      <p><a href="{% url 'login' %}">Login</a></p>
     {% endif %}
     </h4>   
+         
 
         <h1>Table to Google Sheet KPI <i class="ri-arrow-right-line"></i><a href="reminder">Remind!</a></h1>
         <table class="table table-bordered" >

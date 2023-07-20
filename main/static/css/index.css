@@ -7,14 +7,21 @@
 body{
     font-family: arial;
     font-size: 16px;
-    margin: 0;
     background: #008e51;
     color: #000;
 
+    justify-content: left;
+    align-items: left;
+    margin: 0;
+    padding: 0;
+
+}
+
+.container{
+    /* height: 100vh;
     display: flex;
-    justify-content: center;
     align-items: center;
-    min-height: 100vh;
+    justify-content: center; */
 }
 
 .button{
@@ -36,4 +43,10 @@ h1{
 
 table thead th a {
     text-decoration: none;
+}
+
+.table table-bordered{
+    border-collapse: collapse;
+    margin: auto; 
+
 }
