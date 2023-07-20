@@ -60,7 +60,8 @@ def LoginPage(request):
 
 
 def LogoutPage(request):
-    return render(request, "logout.html")
+    logout(request)
+    return redirect("/")
 
 
 def Navbar(request):
@@ -128,7 +129,9 @@ def book(request, id=None):
 
 
 def BookItems(request):
-    return render(request, 'book_items.html')
+    bookitems = BookItem.objects.all()
+
+    return render(request, 'book_items.html', {"bookitems":bookitems})
 
 
 def edit_work(request, kpi_id, work_id):
