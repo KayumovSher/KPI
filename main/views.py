@@ -128,9 +128,13 @@ def book(request, id=None):
 
 
 
-def BookItems(request):
+def bookItems(request):
     bookitems = BookItem.objects.all()
-
+    if request.method == 'POST':
+        title = request.POST.get("title")
+        bookitem = BookItem.objects.create(title=title)
+        bookitem.save()
+        return redirect('/')
     return render(request, 'book_items.html', {"bookitems":bookitems})
 
 
