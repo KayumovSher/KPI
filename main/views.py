@@ -339,7 +339,6 @@ def all_books(request):
             scores[i][book_titles.index(y.book.title)+1] = y.score
     return render(request, 'all_books.html', {"book_titles" : book_titles, "scores": scores})
 
-# [{'name': 'okang', 'score': [0, 1]}, {'name': 'user-1ede2d', 'score': [0, 1]}, {'name': 'sadriddin', 'score': [0, 0]}, {'name': 'Samandar', 'score': [1, 1]}]
 
 def all_evrikas(request):
     evrikas = EvrikaModel.objects.all().order_by("-created_at")
