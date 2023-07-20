@@ -7,15 +7,6 @@ urlpatterns = [
     path('signup/', views.SignupPage, name="signup"),
     path('login/', views.LoginPage, name="login"),
     path('book/<int:id>/', views.book, name="book_detail"),
-    path('', views.index, name="home"),
-    path('signup/', views.SignupPage),
-    path('login/', views.LoginPage),
-
-
-    path('evrika_create/<int:kpi_id>/', views.create_evrika, name='create_evrika'),
-    path('evrika/<int:id>/', views.evrika, name='evrika_detail'),
-    path('evrika/<int:kpi_id>/edit/<int:evrika_id>/', views.edit_evrika, name='edit_evrika'),
-    path('evrika/<int:kpi_id>/delete/<int:evrika_id>/', views.delete_evrika, name='delete_evrika'),
 
     path('work_create/<int:kpi_id>/', views.create_work, name='create_work'),
     path('work/<int:id>/', views.work, name='work_detail'),

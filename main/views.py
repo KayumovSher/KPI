@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
-
+# Create your views here.
 
 def index(request):
     kpi_models = KpiModel.objects.all()
@@ -90,7 +90,6 @@ def create_book(request, kpi_id):
     kpi = get_object_or_404(KpiModel, id=kpi_id)
 
     if request.method == 'POST':
-        title = request.POST.get('n_title','')
         book_id = request.POST.get('book')
         score = request.POST.get('n_score', '')
         book = BookItem.objects.get(id=book_id)
@@ -123,7 +122,6 @@ def book(request, id=None):
 
 def BookItems(request):
     return render(request, 'book_items.html')
-
 
 
 def edit_work(request, kpi_id, work_id):
@@ -186,10 +184,6 @@ def work(request, id=None):
 
     return render(request, 'work.html', {"works": works, 'kpi': kpi})
 
-
-
-
-# Sport
 
 def reminder(request):
     return render(request, 'reminder.html')
@@ -254,7 +248,7 @@ def create_sport(request, kpi_id):
     return render(request, 'sport.html', {'kpi': kpi})
 
 
-# Evrika
+
 
 def edit_evrika(request, kpi_id, evrika_id):
     kpi = get_object_or_404(KpiModel, id=kpi_id)
@@ -262,10 +256,7 @@ def edit_evrika(request, kpi_id, evrika_id):
 
     if request.method == 'POST':
         details = request.POST.get('details')
-
-        score = request.POST.get('score')
         score = request.POST.get('score', None) 
-
 
         evrika.details = details
         evrika.score = score
@@ -284,13 +275,13 @@ def delete_evrika(request, kpi_id, evrika_id):
         return redirect(f'/evrika/{kpi_id}/')
     
 
-
 def create_evrika(request, kpi_id):
     kpi = get_object_or_404(KpiModel, id=kpi_id)
+
     if request.method == 'POST':
         details = request.POST.get('n_details')
         score = request.POST.get('n_score', '')
-        new_evrika = WorkModel.objects.create(details=details, score=score, kpi=kpi)
+
         new_evrika = EvrikaModel.objects.create(details=details, score=score, kpi=kpi)
         new_evrika.save()
 
@@ -313,15 +304,18 @@ def evrika(request, id=None):
         elif 'create_evrika' in request.POST:
             return redirect('create_evrika', kpi_id=id)
 
-    return render(request, 'eureka.html', {"evrikas": evrikas, 'kpi': kpi})
+    return render(request, 'evrika.html', {"evrikas": evrikas, 'kpi': kpi})
+
+
 
 def all_works(request):
     kpis = KpiModel.objects.all().order_by("-created_at")
     result = []
     for x in kpis:
-        result.append({"kpi_works":x.work_items.all().order_by("deadline"), "kpi":x.work_items.all().order})
+        result.append({"kpi_works":x.work_items.all().order_by("deadline"), "kpi":x})
     
     return render(request, 'all_works.html', {"result":result})
+
 
 def all_books(request):
     kpis = KpiModel.objects.all().order_by("-created_at")
@@ -330,11 +324,9 @@ def all_books(request):
         result.append({"kpi_books":x.book_items.all(), "kpi":x})
     return render(request, 'all_books.html', {"result":result})
 
-
 def all_evrikas(request):
     evrikas = EvrikaModel.objects.all().order_by("-created_at")
     return render(request, 'all_evrikas.html', {'evrikas':evrikas})
-
 
 def all_sports(request):
     sports = SportModel.objects.all().order_by("-created_at")
@@ -400,4 +392,3 @@ def kpi_view(request):
             return redirect('create_kpi')
 
     return render(request, 'kpi.html', {"kpi_models": kpi_models})
-

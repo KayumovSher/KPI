@@ -175,18 +175,3 @@ class KpiModel(models.Model):
     def __str__(self):
         return f"{self.name}"
 
-# users = [
-#     {
-#         "kpi": "samandar",
-#        "kpi_works":{
-#            work1: deadline, score
-#        }
-#     },
-#     {
-#         name: "samandar",
-#         "July 17, 2023": 0.5,
-#         "July 12, 2023": 0.6
-#     }
-# ]
-
-
