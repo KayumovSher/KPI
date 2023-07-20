@@ -19,6 +19,13 @@
 
     <div class="container">
     
+    <h4>    {% if request.user.is_authenticated %}
+    <p>Welcome, {{ request.user.username }}!</p>
+    <p><a href="{% url 'logout' %}">Logout</a></p>
+    {% else %}
+     <p><a href="{% url 'login' %}">Login</a></p>
+    {% endif %}
+    </h4>   
          
 
         <h1>Table to Google Sheet KPI <i class="ri-arrow-right-line"></i><a href="reminder">Remind!</a></h1>
