@@ -10,6 +10,8 @@
     <link rel="stylesheet" href="{% static 'css/signup.css' %}">
 </head>
 <body>
+    {% include 'navbar.html' %}
+
     {% comment %} <img src="{% static 'img/background.png' %}" alt="home_img" class="background_img"> {% endcomment %}
     <div class="container">
         <div class="form-box">
@@ -30,10 +32,10 @@
                     </div>
 
 
-                    <p>Lost password <a href="#">Click Here!</a></p>
+                    <!-- <p>Lost password <a href="#">Click Here!</a></p> -->
                 </div>
                 <div class="btn-field">
-                    <button type="button" id="signupBtn">Sign Up</button>
+                    <a href="{% url 'signup' %}">SignUp</a>
                     <button type="submit" id="signinBtn class="disable">Sign in</button>
                 </div>
             </form>
