@@ -8,7 +8,7 @@ from django.contrib.auth.decorators import login_required
 # Create your views here.
 
 def index(request):
-    kpi_models = KpiModel.objects.all()
+    kpi_models = KpiModel.objects.all().order_by('-created_at')
     result = []
     for x in kpi_models:
         books = sum(x.score for x in BookModel.objects.filter(kpi=x))
