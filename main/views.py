@@ -68,7 +68,6 @@ def Navbar(request):
     return render(request, 'navbar.html')
 
 # Book
-
 def edit_book(request, kpi_id, book_id):
     kpi = get_object_or_404(KpiModel, id=kpi_id)
     book = get_object_or_404(BookModel, id=book_id)
@@ -108,7 +107,7 @@ def create_book(request, kpi_id):
     
     return render(request, 'book.html', {'kpi': kpi})
 
-
+@login_required(login_url='login')
 def book(request, id=None):
     kpi = get_object_or_404(KpiModel, id=id)
     books = BookModel.objects.filter(kpi=kpi)
@@ -127,7 +126,7 @@ def book(request, id=None):
     return render(request, 'book.html', {"books": books, 'kpi': kpi, 'bookitems':bookitems})
 
 
-
+@login_required(login_url='login')
 def bookItems(request):
     bookitems = BookItem.objects.all()
     if request.method == 'POST':
@@ -181,7 +180,7 @@ def create_work(request, kpi_id):
     
     return render(request, 'work.html', {'kpi': kpi})
 
-
+@login_required(login_url='login')
 def work(request, id=None):
     kpi = get_object_or_404(KpiModel, id=id)
     works = WorkModel.objects.filter(kpi=kpi).order_by("deadline")
@@ -203,7 +202,7 @@ def reminder(request):
     return render(request, 'reminder.html')
 
 
-
+@login_required(login_url='login')
 def sport(request, id=None):
     kpi = get_object_or_404(KpiModel, id=id)
     sports = SportModel.objects.filter(kpi=kpi)
@@ -303,7 +302,7 @@ def create_evrika(request, kpi_id):
     
     return render(request, 'evrika.html', {'kpi': kpi})
 
-
+@login_required(login_url='login')
 def evrika(request, id=None):
     kpi = get_object_or_404(KpiModel, id=id)
     evrikas = EvrikaModel.objects.filter(kpi=kpi)
