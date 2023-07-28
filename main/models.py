@@ -137,9 +137,28 @@ class KpiModel(models.Model):
 
 
     def get_league(self):
+
         leagues = ['REJECTED','WOOD','STONE','BRONZE','SILVER','CRYSTAL','ELITE','LEGEND']
         return leagues[0 if self.general<40 else 7 if self.general>=110 else int(self.general//10-4)]
 
+        # leagues = ['REJECTED','WOOD','STONE','BRONZE','SILVER','CRYSTAL','ELITE','LEGEND']
+        # return leagues[0 if self.general<40 else 7 if self.general>=110 else int(self.general//10-4)]
+        if self.general < 40:
+            return "REJECTED"
+        elif self.general < 60:
+            return "WOOD"
+        elif self.general < 70:
+            return "STONE"
+        elif self.general < 80:
+            return "BRONZE"
+        elif self.general < 90:
+            return "SILVER"
+        elif self.general < 100:
+            return "CRYSTAL"
+        elif self.general < 110:
+            return "ELITE"
+        else:
+            return "LEGEND"
 
     def get_koef(self):
         league_pairs = {"REJECTED":1, "WOOD":1, "STONE":0.8, "BRONZE":0.6, "SILVER":0.4, "CRYSTAL":0.2, "ELITE":0.15, "LEGEND":0.1}

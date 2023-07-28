@@ -8,7 +8,7 @@ from django.contrib.auth.decorators import login_required
 # Create your views here.
 
 def index(request):
-    kpi_models = KpiModel.objects.all()
+    kpi_models = KpiModel.objects.all().order_by('-created_at')
     result = []
     for x in kpi_models:
         books = sum(x.score for x in BookModel.objects.filter(kpi=x))
@@ -60,14 +60,14 @@ def LoginPage(request):
 
 
 def LogoutPage(request):
-    return render(request, "logout.html")
+    logout(request)
+    return redirect("/")
 
 
 def Navbar(request):
     return render(request, 'navbar.html')
 
 # Book
-
 def edit_book(request, kpi_id, book_id):
     kpi = get_object_or_404(KpiModel, id=kpi_id)
     book = get_object_or_404(BookModel, id=book_id)
@@ -107,7 +107,7 @@ def create_book(request, kpi_id):
     
     return render(request, 'book.html', {'kpi': kpi})
 
-
+@login_required(login_url='login')
 def book(request, id=None):
     kpi = get_object_or_404(KpiModel, id=id)
     books = BookModel.objects.filter(kpi=kpi)
@@ -126,9 +126,15 @@ def book(request, id=None):
     return render(request, 'book.html', {"books": books, 'kpi': kpi, 'bookitems':bookitems})
 
 
-
-def BookItems(request):
-    return render(request, 'book_items.html')
+@login_required(login_url='login')
+def bookItems(request):
+    bookitems = BookItem.objects.all()
+    if request.method == 'POST':
+        title = request.POST.get("title")
+        bookitem = BookItem.objects.create(title=title)
+        bookitem.save()
+        return redirect('/')
+    return render(request, 'book_items.html', {"bookitems":bookitems})
 
 
 def edit_work(request, kpi_id, work_id):
@@ -174,7 +180,7 @@ def create_work(request, kpi_id):
     
     return render(request, 'work.html', {'kpi': kpi})
 
-
+@login_required(login_url='login')
 def work(request, id=None):
     kpi = get_object_or_404(KpiModel, id=id)
     works = WorkModel.objects.filter(kpi=kpi).order_by("deadline")
@@ -196,7 +202,7 @@ def reminder(request):
     return render(request, 'reminder.html')
 
 
-
+@login_required(login_url='login')
 def sport(request, id=None):
     kpi = get_object_or_404(KpiModel, id=id)
     sports = SportModel.objects.filter(kpi=kpi)
@@ -296,7 +302,7 @@ def create_evrika(request, kpi_id):
     
     return render(request, 'evrika.html', {'kpi': kpi})
 
-
+@login_required(login_url='login')
 def evrika(request, id=None):
     kpi = get_object_or_404(KpiModel, id=id)
     evrikas = EvrikaModel.objects.filter(kpi=kpi)

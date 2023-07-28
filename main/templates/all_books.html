@@ -11,12 +11,12 @@
     {% load static %}
 </head>
 <body>
-    <h2>
-        <a href="{% url 'index' %}"> Home </a>
-    </h2>
+    {% include 'navbar.html' %}
+    
+
     {% load static %}
     <div class="container">
-        <h1 class="headerone">Book to Google Sheet KPI <i class="ri-arrow-right-line"></i><a href="book_items">Create book items!</a></h1>
+        <h1 class="headerone">Book to Google Sheet KPI </h1>
 
             <br>
 
@@ -42,7 +42,6 @@
                 <tbody>
                     {% for i in scores  %}  
                     <tr>
-                        <!-- <td>{{ i.name }}</td> -->
                         {% for j in i %}
                         <td> {{j}} </td>
                         {% endfor %}

@@ -17,12 +17,18 @@ body{
 
 }
 
-.container{
-    /* height: 100vh;
+/* .div__container{
+    justify-content: center;
+    align-items: center;
+    display: flex;
+} */
+
+/* .container{
+    height: 100vh;
     display: flex;
     align-items: center;
-    justify-content: center; */
-}
+    justify-content: center;
+} */
 
 .button{
     padding: 100 15;
@@ -47,6 +53,8 @@ table thead th a {
 
 .table table-bordered{
     border-collapse: collapse;
-    margin: auto; 
-
+    margin: left; 
+    position: left;
+    align-items: left;
+    padding-left: 0;
 }

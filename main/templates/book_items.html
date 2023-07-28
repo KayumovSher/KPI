@@ -1,81 +1,21 @@
-{% load static %}
-<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=\, initial-scale=1.0">
-    {% comment %} <link rel="stylesheet" href="{% static 'css/index.css' %}"> {% endcomment %}
-    <title>Book Items</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
 </head>
 <body>
-    <div class="content">
-        <div class="container-fluid">
-            <section id="content" class="content">
-                <div class="row">
-                    <div id="content-main" class="col-12">
-                        <form action="" method="post" id="bookitem_form" novalidate="">
-                            {% csrf_token %}
-                            <input type="hidden" name="csrfmiddlewaretoken" value="JUW3FiXkBCoQex8wFspQ2b0e8OlNoS3uwDFIvKO7151Xsu4XAmMWDSti8XQF4ty6">
-                                <div class="row">
-                                    <div class="col-12 col-lg-9">
-                                        <div class="card">
-                                            <div class="card-body">
-                                                <div class="form-group field-title">
-                                                    <div class="row">
-    
-                                                        <label class="col-sm-3 text-left" for="id_title">
-                                                            Create New Book Title                                      
-                                                            <span class="text-red">* </span>
-                                                        </label>
-                                                        <div class=" col-sm-7 field-title">
-            
-                                                            <input type="text" name="title" class="vTextField" id="id_title">
-            
-                                                            <div class="help-block red">
-                
-                                                            </div>
-            
-                                                            <div class="help-block text-red">
-                
-                                                            </div>
-                                                        </div>
-    
-                                                    </div>
-                                                </div>
 
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-12 col-lg-3">
-                                        <div id="jazzy-actions" class="">
-                                    <div>
+  <div>
+    {% for x in bookitems %}
+      {{x.title}} <br>
+    {% endfor %}
+  </div>
 
-                                        <div class="form-group">
-                                            <input type="submit" value="Save" class="btn btn-success form-control" name="_save">
-                                        </div>
-                                        <div class="form-group">
-                                            <input type="submit" class="btn btn-info form-control" value="Save and add another" name="_addanother">
-                                        </div>
-                                        
-                                    </div>
-                                </div>
-                            </div>
-
-        
-                            <script type="text/javascript" id="django-admin-form-add-constants" src="/static/admin/js/change_form.js" data-model-name="bookitem"></script>
-
-
-
-                            <script id="django-admin-prepopulated-fields-constants" src="/static/admin/js/prepopulate_init.js" data-prepopulated-fields="[]"></script>
-
-                        </div>
-                    </form>
-                </div>
-
-
-            </div>
-        </section>
-    </div>
-</div>
+  <form action="" method="post">
+    {% csrf_token %}
+    <input type="text" name="title">
+    <input type="submit" name="Save">
+  </form>
 </body>
-</html>
+</html> 
