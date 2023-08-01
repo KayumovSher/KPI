@@ -115,11 +115,7 @@ class KpiModel(models.Model):
         evrika = EvrikaModel.objects.evrika_sum(self)
 
         total = float(sport) + float(book) + float(evrika) + float(work_sum)
-        # result = self.general
-        # for i in range(int(total*2)):
-        #     print(result)
-        #     result += [0.5,0.4,0.3,0.2,0.1,0.075,0.05][0 if result<60 else 7 if result>=110 else int(result//10-5)]
-
+        
         if total <= 10:
             result = 50 + total
         elif total <= 23:
@@ -141,6 +137,10 @@ class KpiModel(models.Model):
 
 
     def get_league(self):
+
+        leagues = ['REJECTED','WOOD','STONE','BRONZE','SILVER','CRYSTAL','ELITE','LEGEND']
+        return leagues[0 if self.general<40 else 7 if self.general>=110 else int(self.general//10-4)]
+
         # leagues = ['REJECTED','WOOD','STONE','BRONZE','SILVER','CRYSTAL','ELITE','LEGEND']
         # return leagues[0 if self.general<40 else 7 if self.general>=110 else int(self.general//10-4)]
         if self.general < 40:
@@ -178,19 +178,4 @@ class KpiModel(models.Model):
 
     def __str__(self):
         return f"{self.name}"
-
-# users = [
-#     {
-#         "kpi": "samandar",
-#        "kpi_works":{
-#            work1: deadline, score
-#        }
-#     },
-#     {
-#         name: "samandar",
-#         "July 17, 2023": 0.5,
-#         "July 12, 2023": 0.6
-#     }
-# ]
-
 

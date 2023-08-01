@@ -12,6 +12,7 @@
 </head>
 <body>
     {% include 'navbar.html' %}
+    {% if request.user.is_staff %}
     
     {% load static %}
     <div class="container">
@@ -77,7 +78,7 @@
                 </tbody>
                 
         </table>
-
+        {% endif %}
 
 
         <a href="https://docs.google.com/spreadsheets/d/13aPcjyMXeHoDP3VeYuTcN4DlKeJEvOr_2t3qR4TV_3w/edit#gid=1208225701">

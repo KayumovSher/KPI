@@ -15,14 +15,14 @@
     
     {% load static %}
     <div class="container">
+
+
         <h1 class="headerone">Work to Google Sheet KPI</h1>
+
 
             <br>
 
-            <h2 class="nameCenter">
-
-            </h2>
-
+            
             <br>
 
             <table class="table table-bordered">
@@ -30,21 +30,29 @@
                     
                     <tr>
                         <th>F.I.O</th>
-                        <th>Details</th>
-                        <th>Score</th>
+                        {% for x in result %}
+                        {% for evrika in x.kpi_evrikas %}
+                        <td>
+                            {{evrika.details}}
+                        </td>
+                        {% endfor %}
+                        {% endfor %}
                     </tr>
                     
                 </thead>
                 <tbody>
-                    {% for i in evrikas  %}  
+                    {% for i in result  %}  
                     <tr>
                         <td>{{ i.kpi.name }}</td>
-                        <td> {{i.details}} </td>
-                        <td> {{i.score}} </td>
+                        {% for evrika in i.kpi_evrikas %}
+                        <td> {{evrika.score}} </td>
+                        {% endfor %}
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
+
+
 
 
 
