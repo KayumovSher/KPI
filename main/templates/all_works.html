@@ -53,7 +53,7 @@
                         {% endfor %}
                         <form action="{% url 'all_works' %}" method="post">
                             {% csrf_token %}
-                            <td> <input type="date" name="new_deadline"> 
+                            <td> <input type="date" name="new_deadline" required> 
                             <input type="submit" name="create_deadline" value="Create">  </td>
                         </form>
                     </tr>
