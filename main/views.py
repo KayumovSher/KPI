@@ -1,10 +1,11 @@
 from django.shortcuts import render, redirect
-from .models import KpiModel, SportModel, EvrikaModel, BookModel, WorkModel, BookItem
+from .models import KpiModel, SportModel, EvrikaModel, BookModel, WorkModel, BookItem, DeadlineModel
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
 # Create your views here.
 
 def index(request):
@@ -261,8 +262,6 @@ def create_sport(request, kpi_id):
     return render(request, 'sport.html', {'kpi': kpi})
 
 
-
-
 def edit_evrika(request, kpi_id, evrika_id):
     kpi = get_object_or_404(KpiModel, id=kpi_id)
     evrika = get_object_or_404(EvrikaModel, id=evrika_id)
@@ -322,21 +321,52 @@ def evrika(request, id=None):
 
 
 def all_works(request):
-    kpis = KpiModel.objects.all()
+    if 'save_work' in request.POST:
+        n_score, work_id = request.POST.get('n_score'), request.POST.get('work_item_id')
+        deadline_id, kpi_id = request.POST.get('deadline_id'), request.POST.get('kpi_id')
+        kpi_user, dead_obj = KpiModel.objects.get(id=kpi_id), DeadlineModel.objects.get(id=deadline_id)
+        if work_id == 'None':
+            WorkModel.objects.create(deadline=dead_obj, score=n_score, kpi=kpi_user).save()
+            return redirect('/all_works/')
+        obj = WorkModel.objects.get(id=work_id)
+        obj.score = n_score
+        obj.deadline = dead_obj
+        obj.kpi = kpi_user
+        obj.save()
+        return redirect('/all_works/')
+    data = []
+    kpi_objects = KpiModel.objects.all()
+    deadlines = list(x.date for x in DeadlineModel.objects.all().order_by('created_at'))
+    deadline_pairs = {x.date:x.id for x in DeadlineModel.objects.all().order_by('created_at')}
 
-    deadlines = list(sorted(set([j.deadline for i in kpis for j in i.work_items.all()])))
-    scores = [['' for j in range(len(deadlines)+1)] for i in kpis]
-
-    for i,x in enumerate(kpis):
-        scores[i][0] = x.name
-        for j,y in enumerate(x.work_items.all()):
-            scores[i][deadlines.index(y.deadline)+1] = y.score
-
-    return render(request, 'all_works.html', {"deadlines" : deadlines, "scores": scores})
+    for kpi_obj in kpi_objects:
+        kpi_data = {kpi_obj: []}
+        work_dic = {}
+        
+    # Iterate through each WorkModel object and add to the kpi_data dictionary
+        for work_item in kpi_obj.work_items.all():
+            work_dic[work_item.deadline.date] = {'score': work_item.score, 'work_id': work_item.id, "deadline_id":work_item.deadline.id}
+        for i in range(len(deadlines)):
+            if deadlines[i] in work_dic:
+                kpi_data[kpi_obj].append({
+                    'date': deadlines[i].strftime('%Y-%m-%d'),
+                    'score': work_dic[deadlines[i]]['score'],
+                    'work_id': work_dic[deadlines[i]]['work_id'],
+                    'deadline_id':work_dic[deadlines[i]]['deadline_id']
+                })
+            else:
+                kpi_data[kpi_obj].append({
+                    'date': deadlines[i].strftime('%Y-%m-%d'),
+                    'score': 0,
+                    'work_id': None,
+                    'deadline_id':deadline_pairs[deadlines[i]]
+                })
+        
+        data.append(kpi_data) 
+    return render(request, 'all_works.html', {"deadlines" : deadlines, "data": data})
 
 def all_books(request):
     kpis = KpiModel.objects.all()
-
     book_titles = list(set([j.book.title for i in kpis for j in i.book_items.all()]))
     scores = [['' for j in range(len(book_titles)+1)] for i in kpis]
     for i,x in enumerate(kpis):
@@ -345,20 +375,33 @@ def all_books(request):
             scores[i][book_titles.index(y.book.title)+1] = y.score
     return render(request, 'all_books.html', {"book_titles" : book_titles, "scores": scores})
 
-# [{'name': 'okang', 'score': [0, 1]}, {'name': 'user-1ede2d', 'score': [0, 1]}, {'name': 'sadriddin', 'score': [0, 0]}, {'name': 'Samandar', 'score': [1, 1]}]
-
 def all_evrikas(request):
     evrikas = EvrikaModel.objects.all().order_by("-created_at")
     return render(request, 'all_evrikas.html', {'evrikas':evrikas})
 
 def all_sports(request):
     sports = SportModel.objects.all().order_by("-created_at")
-    return render(request, 'all_sports.html', {'sports':sports})
+    kpi_users = KpiModel.objects.all()
+    if request.method == 'POST':
+        if 'edit_sport' in request.POST:
+            sport_id = request.POST.get('sport_id')
+            kpi_sport = request.POST.get('kpi_sport')
+            obj = SportModel.objects.get(id=sport_id)
+            obj.details = request.POST.get('details')
+            obj.score = request.POST.get('score')
+            obj.save()
+            return redirect('/all_sports/')
 
-
-
-
-
+        elif 'create_sport' in request.POST:
+            print(request.POST)
+            kpi_user = request.POST.get('kpi_user')
+            kpi = KpiModel.objects.get(id=kpi_user)
+            n_score = request.POST.get('n_score')
+            n_details = request.POST.get('n_details')
+            obj = SportModel.objects.create(details=n_details, score=n_score, kpi=kpi)
+            obj.save()
+            return redirect('/all_sports/')
+    return render(request, 'all_sports.html', {'sports':sports, 'kpi_users':kpi_users})
 
 @login_required(login_url="login")
 def edit_kpi(request, kpi_id):
@@ -416,3 +459,22 @@ def kpi_view(request):
 
     return render(request, 'kpi.html', {"kpi_models": kpi_models})
 
+def get_data(request):
+    data = []
+    kpi_objects = KpiModel.objects.all()
+    deadlines = list(x.date for x in DeadlineModel.objects.all().order_by('created_at'))
+
+    for kpi_obj in kpi_objects:
+        kpi_data = {kpi_obj.name: []}
+        work_dic = {}
+        for x in kpi_obj.work_items.all():
+            work_dic[x.deadline.date] = x.score
+        
+        # Iterate through each WorkModel object and add to the kpi_data dictionary
+        for i in range(len(deadlines)):
+            if deadlines[i]  in work_dic:
+                kpi_data[kpi_obj.name].append({deadlines[i].strftime('%Y-%m-%d'): work_dic[deadlines[i]]})
+            else:
+                kpi_data[kpi_obj.name].append({deadlines[i].strftime('%Y-%m-%d'):0})
+        data.append(kpi_data)  
+    return JsonResponse(data, safe=False)

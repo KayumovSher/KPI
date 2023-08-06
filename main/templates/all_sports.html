@@ -36,13 +36,41 @@
                     
                 </thead>
                 <tbody>
-                    {% for i in sports  %}  
-                    <tr>
-                        <td>{{ i.kpi.name }}</td>
-                        <td> {{i.details}} </td>
-                        <td> {{i.score}} </td>
-                    </tr>
+                  
+                        <form action="{% url 'all_sports' %}" method="post">
+                            {% csrf_token %}
+                        {% for sport in sports %}
+                        <tr>
+                            <th> {{ sport.kpi.name}} </th>
+
+                            <th> <input type="text" name="details" id="" value="{{ sport.details}}"> </th>
+                            
+                            <th> <select name="score" class="form-control"> 
+                                <option value="{{sport.score}}"> {{sport.score}} </option>
+                                  <option value="0"> 0 </option>
+                                  <option value="-1"> -1 </option>
+                              </select>   </th>
+                              <input type="hidden" name="sport_id" value="{{sport.id}}">
+                              <input type="hidden" name="kpi_sport" value="{{sport.kpi}}">
+                            <th>
+                                <input type="submit" name="edit_sport" value="Edit">
+                            </th>
+                        </tr>
                     {% endfor %}
+
+                        <tr>
+                            <th> <select name="kpi_user" class="form-control"> 
+                                {% for kpi_user in kpi_users %}
+                                <option value="{{kpi_user.id}}"> {{kpi_user}} </option>
+                                {% endfor %}
+                                </select>   </th>
+
+                            <td> <input type="text" name="n_details"> </td>
+                            <td> <input type="text" name="n_score" id="">  </td>
+                            <th> <input type="submit" name="create_sport" value="Save"> </th>
+                        </tr>
+                        </form>
+    
                 </tbody>
             </table>
 

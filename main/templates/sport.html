@@ -29,9 +29,11 @@
             <table class="table table-bordered">
             <thead class="thead-dark"> 
                     <tr>
-                    <th>Details</th>
-                    <th>Score</th>
-                    <th>Action</th>
+
+                        <th>Details</th>
+                        <th>Score</th>
+                        <th>Action</th>
+                        
                     </tr>
             </thead>
                 </thead>
@@ -57,18 +59,24 @@
                     <tr>
                         <form action="{% url 'edit_sport' kpi_id=kpi.id sport_id=sport.id %}" method="post">
                             {% csrf_token %}
-                            <th> <input type="text" name="details" id="" value="{{ sport.details}}"> </th>
+                            <th> 
+                                
+                                <input type="text" name="details" id="" value="{{ sport.details}}"> </th>
                             
-                            <th> <select name="score" class="form-control"> 
+                            <th> 
+                                
+                                <select name="score" class="form-control"> 
                                 <option value="{{sport.score}}"> {{sport.score}} </option>
                                   <option value="0"> 0 </option>
                                   <option value="-1"> -1 </option>
-                              </select>   </th>
+                              </select>   
+                            
+                            </th>
 
                             <th>
+
                                 <input type="submit" name="edit_sport" value="Edit">
-                                <button type="submit" name="delete_sport" formaction="{% url 'delete_sport' kpi_id=kpi.id sport_id=sport.id %}">Delete</button>
-                                
+                                <button type="submit" name="delete_sport" formaction="{% url 'delete_sport' kpi_id=kpi.id sport_id=sport.id %}">Delete</button>                               
                                 
                             </th>
                         </form>

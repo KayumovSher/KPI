@@ -1,19 +1,25 @@
 from typing import Iterable, Optional
 from django.db import models
 from django.contrib.auth.models import User
-
+from datetime import datetime, date
 
 class WorkManager(models.Manager):
     def work_sum(self, kpi):
         work = self.filter(kpi=kpi)
         return sum(float(x.score) for x in work)
+    
+class DeadlineModel(models.Model):
+    date = models.DateField(null=True)
+    created_at = models.DateTimeField(auto_now=True)
 
+    def __str__(self):
+        return self.date.strftime('%Y-%m-%d')
 class WorkModel(models.Model):
     WORK_CHOICES = (
-        ("0.5", "0.5"), ("-1", "-1")
+        ("0.5", "0.5"), ("-1", "-1"), ('0', '0')
     )
-    deadline = models.DateField(null=True)
-    score = models.CharField(max_length=100, choices=WORK_CHOICES)
+    deadline = models.ForeignKey(DeadlineModel, on_delete=models.CASCADE)
+    score = models.CharField(max_length=100, choices=WORK_CHOICES, default='0', null=True, blank=True)
     description = models.TextField(max_length=200, null=True, blank=True)
     kpi = models.ForeignKey("KpiModel", on_delete=models.CASCADE, related_name="work_items")
     created_at = models.DateTimeField(auto_now=True)
@@ -24,7 +30,7 @@ class WorkModel(models.Model):
         self.kpi.calculate_general()
 
     def __str__(self):
-        return str(self.score) + " " + str(self.deadline)
+        return str(self.score) + " " + str(self.kpi.name)
 
 class SportManager(models.Manager):
 

@@ -33,18 +33,24 @@
                         <th>F.I.O</th>
                         {% for x in book_titles %}
                         <td>
-                            {{x}}
+                          <!-- <input type="text" name="" value="{{x}}">   -->
+                          <!-- <input type="submit" name="edit" value="Save"> -->
+                          {{x}}
                         </td>
                         {% endfor %}
+                        <td> <input type="text" name="new_book">
+                            <input type="submit" name="Create_book" value="Create">
+                        </td>
+                        
                     </tr>
                     
                 </thead>
-                <tbody>
+                <tbody> 
                     {% for i in scores  %}  
                     <tr>
                         <!-- <td>{{ i.name }}</td> -->
                         {% for j in i %}
-                        <td> {{j}} </td>
+                        <td> <input type="text" value="{{j}}" name="score">  </td>
                         {% endfor %}
                     </tr>
                     {% endfor %}

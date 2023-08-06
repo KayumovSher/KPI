@@ -33,28 +33,39 @@
                     <tr>
                         <th>F.I.O</th>
                         {% for i in deadlines %}
-                            <td>
+                            <th>
                                 {{i}}
-                            </td>
+                            </th>
                         {% endfor %}
                     </tr>
                     
                 </thead>
                 <tbody>
-
-                    {% for i in scores %}
+                        {% for kpi_dict in data %}
+                        {% for kpi, work_items in kpi_dict.items %}
                         <tr>
-                            <!-- <td>
-                                {{i.name}}
-                            </td> -->
-                            {% for j in i %}
-                                <td>
-                                    {{j}}
-                                </td>
+                            <td> {{kpi.name}}</td>
+                            {% for work_item in work_items %}
+                            <form action="{% url 'all_works' %}" method="POST">
+                                {% csrf_token %}
+                                <td> <select name="n_score" class="form-control"> 
+                                    <option value="{{work_item.score}}"> {{work_item.score}} </option>
+                                      <option value="-1"> -1 </option>
+                                      <option value="0.5"> 0.5 </option>
+                                      <option value="0"> 0 </option>
+                                  </select> <input type="submit" name="save_work" value="Save">  </td>
+
+                            <!-- <td> <input type="text" name="n_score" id="" value="{{work_item.score}}"> 
+                                <input type="submit" name="save_work" value="Save"> </td> -->
+                                <input type="hidden" name="deadline_date" id="" value="{{work_item.date}}">
+                                <input type="hidden" name="work_item_id" id="" value="{{work_item.work_id}}">
+                                <input type="hidden" name="deadline_id" id="" value="{{work_item.deadline_id}}">
+                                <input type="hidden" name="kpi_id" value="{{kpi.id}}">
+                            </form>
                             {% endfor %}
                         </tr>
                     {% endfor %}
-                    
+                    {% endfor %}
                 </tbody>
             </table>
 

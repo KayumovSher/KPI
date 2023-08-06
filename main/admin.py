@@ -2,14 +2,13 @@ from django.contrib import admin
 from .models import *
 from django import forms
 from django.contrib import admin
-from .models import KpiModel, WorkModel, SportModel, EvrikaModel, BookModel
+from .models import KpiModel, WorkModel, SportModel, EvrikaModel, BookModel, DeadlineModel
 
 
 class KPIModelForm(forms.ModelForm):
     class Meta:
         models = KpiModel 
         fields = '__all__'
-
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -24,11 +23,13 @@ class KPIAdmin(admin.ModelAdmin):
 class WorkAdmin(admin.ModelAdmin):
     def kpi_users(self, obj):
         return obj.kpi.name
-    list_display = ("deadline", "score", "kpi_users")
+    list_display = ("score", "kpi_users")
 
 class SportAdmin(admin.ModelAdmin):
     list_display = ("details", "score")
 
+class DeadlineModelAdmin(admin.ModelAdmin):
+    list_display = ['date']
 class BookModelAdmin(admin.ModelAdmin):
     def get_book_title(self, obj):
         return obj.book.title
@@ -50,4 +51,4 @@ admin.site.register(EvrikaModel, EvrikaAdmin)
 admin.site.register(BookItem, BookItemAdmin)
 admin.site.register(BookModel, BookModelAdmin)
 
-
+admin.site.register(DeadlineModel, DeadlineModelAdmin)
