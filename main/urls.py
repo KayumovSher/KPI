@@ -42,9 +42,8 @@ urlpatterns = [
 
     path('reminder/', views.reminder),
     path('book_items/', views.bookItems, name='book_items'),
+
     path('test/', views.get_data, name='test'),
-    # path("kpi/", views.createKpi, name="kpi")
-    
 
     path('kpi_create/', views.create_kpi, name='create_kpi'),
     path('kpi/', views.kpi_view, name='kpi_detail'),

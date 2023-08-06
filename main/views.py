@@ -456,7 +456,6 @@ def kpi_view(request):
             return redirect('delete_kpi', kpi_id=kpi_id)
         elif 'create_kpi' in request.POST:
             return redirect('create_kpi')
-
     return render(request, 'kpi.html', {"kpi_models": kpi_models})
 
 def get_data(request):
