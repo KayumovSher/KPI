@@ -51,6 +51,11 @@
                                 {{i}}
                             </th>
                         {% endfor %}
+                        <form action="{% url 'all_works' %}" method="post">
+                            {% csrf_token %}
+                            <td> <input type="date" name="new_deadline"> 
+                            <input type="submit" name="create_deadline" value="Create">  </td>
+                        </form>
                     </tr>
                     
                 </thead>
@@ -77,8 +82,7 @@
                             {% endfor %}
                         </tr>
          
-              
-                    {% endfor %}
+                        {% endfor %}
                     {% endfor %}
                 </tbody>
             </table>

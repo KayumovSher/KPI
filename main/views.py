@@ -321,7 +321,11 @@ def evrika(request, id=None):
 
 
 def all_works(request):
-    if 'save_work' in request.POST:
+    if 'create_deadline' in request.POST:
+        deadline = DeadlineModel.objects.create(date=request.POST.get('new_deadline'))
+        deadline.save()
+        return redirect('/all_works/')
+    elif 'save_work' in request.POST:
         n_score, work_id = request.POST.get('n_score'), request.POST.get('work_item_id')
         deadline_id, kpi_id = request.POST.get('deadline_id'), request.POST.get('kpi_id')
         kpi_user, dead_obj = KpiModel.objects.get(id=kpi_id), DeadlineModel.objects.get(id=deadline_id)
