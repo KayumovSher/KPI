@@ -11,6 +11,7 @@ from django.dispatch import receiver
 @receiver(post_save, sender=BookModel)
 @receiver(post_save, sender=WorkModel)
 @receiver(post_save, sender=EvrikaModel)
+@receiver(post_save, sender=MeetingModel)
 
 def update_kpi_overall(sender, instance, created, **kwargs):
     if created is None:

@@ -1,0 +1,92 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/work.css' %}">
+    <title>KPI</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    {% load static %}
+</head>
+<body>
+
+
+    {% include 'navbar.html' %}
+    
+   
+    {% load static %}
+    <div class="container">
+        <h1 class="headerone">Work to Google Sheet KPI</h1>
+
+          <br>
+
+          <h2 class="nameCenter">
+            
+          </h2>
+              
+          <br>
+
+            <table class="table table-bordered">
+                <thead class="thead-dark">            
+
+                    <tr>
+                        <th>F.I.O</th>
+                        {% for i in deadlines %}
+                            <th>
+                                {{i}}
+                            </th>
+                        {% endfor %}
+                        <form action="{% url 'all_meetings' %}" method="post">
+                            {% csrf_token %}
+                            <td> <input type="date" name="meeting_date" required> 
+                            <input type="submit" name="create_date" value="Create">  </td>
+                        </form>
+                    </tr>
+                    
+                </thead>
+                <tbody>
+                        {% for kpi_dict in data %}
+                        {% for kpi, meet_items in kpi_dict.items %}
+                        <tr>
+                            <td> {{kpi.name}}</td>
+                            {% for meeting in meet_items %}
+                            <form action="{% url 'all_meetings' %}" method="POST">
+                                {% csrf_token %}
+                                <td> <select name="n_score" class="form-control"> 
+                                    <option value="{{meeting.score}}"> {{meeting.score}} </option>
+                                      <option value="-5"> -5 </option>
+                                      <option value="0"> 0 </option>
+                                  </select> <input type="submit" name="save_meeting" value="Save">  </td>
+
+                                <input type="hidden" name="meeting_date" id="" value="{{meeting.meeting_date.date}}">
+                                <input type="hidden" name="meeting_id" id="" value="{{meeting.meeting_id}}">
+                                <input type="hidden" name="meeting_date_id" id="" value="{{meeting.meeting_date_id}}">
+                                <input type="hidden" name="kpi_id" value="{{kpi.id}}">
+                            </form>
+                            {% endfor %}
+                        </tr>
+         
+                        {% endfor %}
+                    {% endfor %}
+                </tbody>
+            </table>
+
+
+        <a href="https://docs.google.com/spreadsheets/d/13aPcjyMXeHoDP3VeYuTcN4DlKeJEvOr_2t3qR4TV_3w/edit#gid=1208225701">
+
+            <button>Table to Kpi Google Sheet</button>
+        </a>
+        <button onclick="tableToGoogleSheet()">
+            Table to Excel
+        </button>
+        
+
+    </div>
+    
+<script type="text/javascript" src="{% static 'js/table2excel.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/index.js' %}"></script>
+
+</body>
+</html>

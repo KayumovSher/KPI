@@ -119,6 +119,7 @@ class KpiModel(models.Model):
         sport = SportModel.objects.sport_sum(self)
         work_sum = WorkModel.objects.work_sum(self)
         evrika = EvrikaModel.objects.evrika_sum(self)
+        meeting_sum = MeetingModel.objects.meeting_score(self)
 
         total = float(sport) + float(book) + float(evrika) + float(work_sum)
         
@@ -139,13 +140,13 @@ class KpiModel(models.Model):
         else:
             result = 50 + 10 + 10.4 + 9.6 + 10 + 10.05 + 9.95 + 10
 
-        self.general = result
+        self.general = result + meeting_sum
 
 
     def get_league(self):
 
-        leagues = ['REJECTED','WOOD','STONE','BRONZE','SILVER','CRYSTAL','ELITE','LEGEND']
-        return leagues[0 if self.general<40 else 7 if self.general>=110 else int(self.general//10-4)]
+        # leagues = ['REJECTED','WOOD','STONE','BRONZE','SILVER','CRYSTAL','ELITE','LEGEND']
+        # return leagues[0 if self.general<40 else 7 if self.general>=110 else int(self.general//10-4)]
 
         # leagues = ['REJECTED','WOOD','STONE','BRONZE','SILVER','CRYSTAL','ELITE','LEGEND']
         # return leagues[0 if self.general<40 else 7 if self.general>=110 else int(self.general//10-4)]
@@ -184,4 +185,33 @@ class KpiModel(models.Model):
 
     def __str__(self):
         return f"{self.name}"
+    
+
+class MeetingManager(models.Manager):
+    def meeting_score(self, kpi):
+        meetings = self.filter(kpi=kpi)
+        return sum(x.score for x in meetings)
+    
+class MeetingDateModel(models.Model):
+    date = models.DateField()
+    created_at = models.DateTimeField(auto_now=True)
+    
+    def __str__(self):
+        return self.date.strftime('%Y-%m-%d')
+class MeetingModel(models.Model):
+    CHOICES = (
+        (0,0),(-5,-5)
+    )
+    meeting_date = models.ForeignKey(MeetingDateModel, on_delete=models.CASCADE)
+    score = models.IntegerField(choices=CHOICES, default=0)
+    kpi = models.ForeignKey(KpiModel, on_delete=models.CASCADE, related_name='meeting_items')
+    created_at = models.DateTimeField(auto_now=True)
+
+    objects = MeetingManager()
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        self.kpi.calculate_general()
+
+    def __str__(self):
+        return self.kpi.name + str(self.score) + "meeting"
 

@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import KpiModel, SportModel, EvrikaModel, BookModel, WorkModel, BookItem, DeadlineModel
+from .models import KpiModel, SportModel, EvrikaModel, BookModel, WorkModel, BookItem, DeadlineModel, MeetingModel, MeetingDateModel
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
@@ -16,10 +16,63 @@ def index(request):
         sports = sum(x.score for x in SportModel.objects.filter(kpi=x))
         evrikas = sum(x.score for x in EvrikaModel.objects.filter(kpi=x))
         works = sum(float(x.score) for x in WorkModel.objects.filter(kpi=x))
-        result.append({"kpi":x, "sports":sports, "evrikas":evrikas, "works":works, "books":books})
+        meetings = sum(x.score for x in MeetingModel.objects.filter(kpi=x))
+        result.append({"kpi":x, "sports":sports, "evrikas":evrikas, "works":works, "books":books, 'meetings':meetings})
     
     return render(request, 'index.html', context={"results":result})
  
+def all_meetings(request):
+    if 'create_date' in request.POST:
+        meet_date = MeetingDateModel.objects.create(date=request.POST.get('meeting_date'))
+        meet_date.save()
+        return redirect('/all_meetings/')
+    elif 'save_meeting' in request.POST:
+        n_score, meeting_id = request.POST.get('n_score'), request.POST.get('meeting_id')
+        meeting_date_id, kpi_id = request.POST.get('meeting_date_id'), request.POST.get('kpi_id')
+        kpi_user, meeting_date_obj = KpiModel.objects.get(id=kpi_id), MeetingDateModel.objects.get(id=meeting_date_id)
+        print(meeting_id)
+        print(n_score, 'score')
+        if meeting_id == 'None':
+            MeetingModel.objects.create(meeting_date=meeting_date_obj, score=n_score, kpi=kpi_user).save()
+            return redirect('/all_meetings/')
+        
+        obj = MeetingModel.objects.get(id=meeting_id)
+        obj.score = n_score
+        obj.meeting_date = meeting_date_obj
+        # obj.kpi = kpi_user
+        obj.save()
+        return redirect('/all_meetings/')
+    
+    data = []
+    kpi_objects = KpiModel.objects.all()
+    deadlines = list(x.date for x in MeetingDateModel.objects.all().order_by('created_at'))
+    deadline_pairs = {x.date:x.id for x in MeetingDateModel.objects.all().order_by('created_at')}
+
+    for kpi_obj in kpi_objects:
+        kpi_data = {kpi_obj: []}
+        work_dic = {}
+        
+    # Iterate through each WorkModel object and add to the kpi_data dictionary
+        for meeting_item in kpi_obj.meeting_items.all():
+            work_dic[meeting_item.meeting_date.date] = {'score': meeting_item.score, 'meeting_id': meeting_item.id, "meeting_date_id":meeting_item.meeting_date.id}
+        for i in range(len(deadlines)):
+            if deadlines[i] in work_dic:
+                kpi_data[kpi_obj].append({
+                    'date': deadlines[i].strftime('%Y-%m-%d'),
+                    'score': work_dic[deadlines[i]]['score'],
+                    'meeting_id': work_dic[deadlines[i]]['meeting_id'],
+                    'meeting_date_id':work_dic[deadlines[i]]['meeting_date_id']
+                })
+            else:
+                kpi_data[kpi_obj].append({
+                    'date': deadlines[i].strftime('%Y-%m-%d'),
+                    'score': 0,
+                    'meeting_id': None,
+                    'meeting_date_id':deadline_pairs[deadlines[i]]
+                })
+        
+        data.append(kpi_data) 
+    return render(request, 'all_meetings.html', context={'data':data, 'deadlines':deadlines})
 
 def SignupPage(request):
     if request.method=='POST':

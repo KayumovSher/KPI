@@ -37,6 +37,8 @@
                     <th>
                         <a href="{% url 'all_evrika' %}">Eureka</a>
                     </th>
+                    <th> <a href="{% url 'all_meetings' %}"> Meeting </a> </th>
+
                     <th class="background-color:green;">Umumiy</th>
                     <th>Liga</th>
                     <th>Koef</th>
@@ -60,6 +62,7 @@
                     <td>
                         <a href="{% url 'evrika_detail' i.kpi.id %}">{{ i.evrikas }}</a>
                     </td>
+                    <td>  {{i.meetings}} </td>
                     <td>{{ i.kpi.general }}</td>
                     <td>{{ i.kpi.league }}</td>   
                     <td>{{ i.kpi.koef }}</td>
