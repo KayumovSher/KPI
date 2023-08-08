@@ -1,19 +1,25 @@
+from time import timezone
 from typing import Iterable, Optional
 from django.db import models
 from django.contrib.auth.models import User
 from datetime import datetime, date
+from django.utils import timezone
+
 
 class WorkManager(models.Manager):
     def work_sum(self, kpi):
         work = self.filter(kpi=kpi)
         return sum(float(x.score) for x in work)
-    
+
+
 class DeadlineModel(models.Model):
     date = models.DateField(null=True)
     created_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.date.strftime('%Y-%m-%d')
+
+
 class WorkModel(models.Model):
     WORK_CHOICES = (
         ("0.5", "0.5"), ("-1", "-1"), ('0', '0')
@@ -23,8 +29,9 @@ class WorkModel(models.Model):
     description = models.TextField(max_length=200, null=True, blank=True)
     kpi = models.ForeignKey("KpiModel", on_delete=models.CASCADE, related_name="work_items")
     created_at = models.DateTimeField(auto_now=True)
-    
+
     objects = WorkManager()
+
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
         self.kpi.calculate_general()
@@ -32,11 +39,13 @@ class WorkModel(models.Model):
     def __str__(self):
         return str(self.score) + " " + str(self.kpi.name)
 
+
 class SportManager(models.Manager):
 
     def sport_sum(self, kpi):
         sports = self.filter(kpi=kpi)
         return sum(x.score for x in sports)
+
 
 class SportModel(models.Model):
     SPORT_CHOICES = (
@@ -54,7 +63,8 @@ class SportModel(models.Model):
 
     def __str__(self):
         return str(self.details) + " " + str(self.score)
-    
+
+
 class BooksManager(models.Manager):
     def books_sum(self, kpi):
         books = self.filter(kpi=kpi)
@@ -63,47 +73,56 @@ class BooksManager(models.Manager):
 
 class BookItem(models.Model):
     title = models.CharField(max_length=200)
+
     def __str__(self):
-        return self.title    
+        return self.title
+
+
 class BookModel(models.Model):
     BOOK_CHOICES = (
-        (1,1), (0,0)
+        (1, 1), (0, 0)
     )
+    deadline = models.DateTimeField(default=timezone.now)
     book = models.ForeignKey(BookItem, on_delete=models.CASCADE, related_name="book_title")
     score = models.IntegerField(null=True, choices=BOOK_CHOICES)
     kpi = models.ForeignKey("KpiModel", on_delete=models.CASCADE, related_name="book_items")
     created_at = models.DateTimeField(auto_now=True)
     objects = BooksManager()
+
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
         self.kpi.calculate_general()
 
     def __str__(self):
         return self.book.title + " " + str(self.score)
-    
+
+
 # Book class => title, BookScore class => book - foreignkey(Book), 
 # and kpi - foreignkey(Kpi)    
-    
+
 class EvrikaManager(models.Manager):
     def evrika_sum(self, kpi):
         evrikas = self.filter(kpi=kpi)
         return sum(x.score for x in evrikas)
 
+
 class EvrikaModel(models.Model):
     EVRIKA_CHOICES = (
-        (5, 5), (0,0)
+        (5, 5), (0, 0)
     )
     details = models.CharField(max_length=200)
     score = models.IntegerField(choices=EVRIKA_CHOICES)
     kpi = models.ForeignKey("KpiModel", on_delete=models.CASCADE, related_name="evrika_items")
     created_at = models.DateTimeField(auto_now=True)
     objects = EvrikaManager()
+
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
         self.kpi.calculate_general()
 
     def __str__(self):
         return self.details + " " + str(self.score)
+
 
 class KpiModel(models.Model):
     name = models.CharField(max_length=255)
@@ -122,7 +141,7 @@ class KpiModel(models.Model):
         meeting_sum = MeetingModel.objects.meeting_score(self)
 
         total = float(sport) + float(book) + float(evrika) + float(work_sum)
-        
+
         if total <= 10:
             result = 50 + total
         elif total <= 23:
@@ -141,7 +160,6 @@ class KpiModel(models.Model):
             result = 50 + 10 + 10.4 + 9.6 + 10 + 10.05 + 9.95 + 10
 
         self.general = result + meeting_sum
-
 
     def get_league(self):
 
@@ -168,7 +186,8 @@ class KpiModel(models.Model):
             return "LEGEND"
 
     def get_koef(self):
-        league_pairs = {"REJECTED":1, "WOOD":1, "STONE":0.8, "BRONZE":0.6, "SILVER":0.4, "CRYSTAL":0.2, "ELITE":0.15, "LEGEND":0.1}
+        league_pairs = {"REJECTED": 1, "WOOD": 1, "STONE": 0.8, "BRONZE": 0.6, "SILVER": 0.4, "CRYSTAL": 0.2,
+                        "ELITE": 0.15, "LEGEND": 0.1}
         league = self.get_league()
         return league_pairs[league]
 
@@ -178,29 +197,31 @@ class KpiModel(models.Model):
         self.league = self.get_league()
         self.koef = self.get_koef()
         super().save(*args, **kwargs)
-    
+
     class Meta:
         ordering = ['name', 'general', 'league', 'koef', 'book_comment', 'upwork']
 
-
     def __str__(self):
         return f"{self.name}"
-    
+
 
 class MeetingManager(models.Manager):
     def meeting_score(self, kpi):
         meetings = self.filter(kpi=kpi)
         return sum(x.score for x in meetings)
-    
+
+
 class MeetingDateModel(models.Model):
     date = models.DateField()
     created_at = models.DateTimeField(auto_now=True)
-    
+
     def __str__(self):
         return self.date.strftime('%Y-%m-%d')
+
+
 class MeetingModel(models.Model):
     CHOICES = (
-        (0,0),(-5,-5)
+        (0, 0), (-5, -5)
     )
     meeting_date = models.ForeignKey(MeetingDateModel, on_delete=models.CASCADE)
     score = models.IntegerField(choices=CHOICES, default=0)
@@ -208,10 +229,10 @@ class MeetingModel(models.Model):
     created_at = models.DateTimeField(auto_now=True)
 
     objects = MeetingManager()
+
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
         self.kpi.calculate_general()
 
     def __str__(self):
         return self.kpi.name + str(self.score) + "meeting"
-
