@@ -31,28 +31,44 @@
                     
                     <tr>
                         <th>F.I.O</th>
-                        {% for x in book_titles %}
-                        <td>
-                          <!-- <input type="text" name="" value="{{x}}">   -->
-                          <!-- <input type="submit" name="edit" value="Save"> -->
-                          {{x}}
-                        </td>
+                        {% for i in book_items %}
+                            <th>
+                                {{i}}
+                            </th>
                         {% endfor %}
-                        <td> <input type="text" name="new_book">
-                            <input type="submit" name="Create_book" value="Create">
-                        </td>
-                        
+                        <form action="{% url 'all_books' %}" method="post">
+                            {% csrf_token %}
+                            <td> <input type="text" name="new_book_item" required> 
+                            <input type="submit" name="create_book_item" value="Create">  </td>
+                        </form>
                     </tr>
+                    
                     
                 </thead>
                 <tbody> 
-                    {% for i in scores  %}  
-                    <tr>
-                        {% for j in i %}
-                        <td> <input type="text" value="{{j}}" name="score">  </td>
+
+                    {% for dic_items in data %}
+                        {% for kpi, book_list in dic_items.items %}
+                        <tr>
+                            <td> {{kpi.name}} </td>
+                            {% for book in book_list %}
+                            <form action="{% url 'all_books' %}" method="POST">
+                                {% csrf_token %}
+                                <td> <select name="book_score" class="form-control"> 
+                                    <option value="{{book.score}}"> {{book.score}} </option>
+                                      <option value="1"> 1 </option>
+                                      <option value="0"> 0 </option>
+                                  </select> <input type="submit" name="save_book" value="Save">  </td>
+
+                                <input type="hidden" name="book_id" value="{{book.book_id}}">
+                                <input type="hidden" name="book_item_id" value="{{book.book_item_id}}">
+                                <input type="hidden" name="kpi_id" value="{{kpi.id}}">
+                            </form>
+                            {% endfor %}
+                            </tr>
                         {% endfor %}
-                    </tr>
                     {% endfor %}
+
                 </tbody>
             </table>
 

@@ -73,6 +73,7 @@ class BooksManager(models.Manager):
 
 class BookItem(models.Model):
     title = models.CharField(max_length=200)
+    created_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.title
@@ -82,7 +83,7 @@ class BookModel(models.Model):
     BOOK_CHOICES = (
         (1, 1), (0, 0)
     )
-    deadline = models.DateTimeField(default=timezone.now)
+    # deadline = models.DateTimeField(default=timezone.now)
     book = models.ForeignKey(BookItem, on_delete=models.CASCADE, related_name="book_title")
     score = models.IntegerField(null=True, choices=BOOK_CHOICES)
     kpi = models.ForeignKey("KpiModel", on_delete=models.CASCADE, related_name="book_items")

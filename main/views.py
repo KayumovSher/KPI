@@ -429,64 +429,57 @@ def all_works(request):
 
 
 def all_books(request):
-    if 'create_deadline' in request.POST:
-        deadline = DeadlineModel.objects.create(date=request.POST.get('new_deadline'))
-        deadline.save()
+    if 'create_book_item' in request.POST:
+        book_item = BookItem.objects.create(title=request.POST.get('new_book_item'))
+        book_item.save()
         return redirect('/all_books/')
     elif 'save_book' in request.POST:
-        n_score, book_id = request.POST.get('n_score'), request.POST.get('book_item_id')
-        deadline_id, kpi_id = request.POST.get('deadline_id'), request.POST.get('kpi_id')
-        kpi_user, dead_obj = KpiModel.objects.get(id=kpi_id), DeadlineModel.objects.get(id=deadline_id)
+        book_score, book_id = request.POST.get('book_score'), request.POST.get('book_id')
+        book_item_id, kpi_id = request.POST.get('book_item_id'), request.POST.get('kpi_id')
+        kpi_user= KpiModel.objects.get(id=kpi_id)
+        book_item_obj = BookItem.objects.get(id=book_item_id)
         if book_id == 'None':
-            BookModel.objects.create(deadline=dead_obj, score=n_score, kpi=kpi_user).save()
+            BookModel.objects.create(book=book_item_obj, score=book_score, kpi=kpi_user).save()
             return redirect('/all_books/')
+        
         obj = BookModel.objects.get(id=book_id)
-        obj.score = n_score
-        obj.deadline = dead_obj
+        obj.score = book_score
+        # obj.book = dead_obj
         obj.kpi = kpi_user
         obj.save()
         return redirect('/all_books/')
+    
     data = []
     kpis = KpiModel.objects.all()
-    deadlines = list(x.date for x in DeadlineModel.objects.all().order_by('created_at'))
-    deadline_pairs = {x.date: x.id for x in DeadlineModel.objects.all().order_by('created_at')}
+    book_items = list(x.title for x in BookItem.objects.all().order_by('created_at'))
+    book_pairs = {x.title: x.id for x in BookItem.objects.all().order_by('created_at')}
     for kpi_obj in kpis:
         kpi_data = {kpi_obj: []}
         book_dic = {}
 
         # Iterate through each BookModel object and add to the kpi_data dictionary
-        for book_item in kpi_obj.book_items.all():
-            book_dic[book_item.deadline.date] = {'score': book_item.score, 'work_id': book_item.id,
-                                                 "deadline_id": book_item.deadline.id}
-
-            for i in range(len(deadlines)):
-                if deadlines[i] in book_dic:
+        for book in kpi_obj.book_items.all():
+            book_dic[book.book.title] = {'score': book.score, 'book_id': book.id,
+                                                "book_item_id": book.book.id}
+        for i in range(len(book_items)):
+                if book_items[i] in book_dic:
                     kpi_data[kpi_obj].append({
-                        'date': deadlines[i].strftime('%Y-%m-%d'),
-                        'score': book_dic[deadlines[i]]['score'],
-                        'work_id': book_dic[deadlines[i]]['work_id'],
-                        'deadline_id': book_dic[deadlines[i]]['deadline_id']
+                        # 'book': book_items[i],
+                        'book_id':book_dic[book_items[i]]['book_id'],
+                        'score': book_dic[book_items[i]]['score'],
+                        'book_item_id': book_dic[book_items[i]]['book_item_id'],
                     })
                 else:
                     kpi_data[kpi_obj].append({
-                        'date': deadlines[i].strftime('%Y-%m-%d'),
+                        # 'book': '',
+                        'book_id':None,
                         'score': 0,
-                        'work_id': None,
-                        'deadline_id': deadline_pairs[deadlines[i]]
+                        'book_item_id': book_pairs[book_items[i]]
                     })
 
-            data.append(kpi_data)
-        return render(request, 'all_books.html', {"deadlines": deadlines, "data": data})
-
-    book_titles = list(set([j.book.title for i in kpis for j in i.book_items.all()]))
-    scores = [['' for j in range(len(book_titles) + 1)] for i in kpis]
-    for i, x in enumerate(kpis):
-        scores[i][0] = x.name
-        for j, y in enumerate(x.book_items.all()):
-            scores[i][book_titles.index(y.book.title) + 1] = y.score
-    return render(request, 'all_books.html', {"book_titles": book_titles, "scores": scores})
-
-
+        data.append(kpi_data)
+    return render(request, 'all_books.html', {"book_items": book_items, "data": data})
+    
 def all_evrikas(request):
     evrikas = EvrikaModel.objects.all().order_by("-created_at")
     return render(request, 'all_evrikas.html', {'evrikas': evrikas})
