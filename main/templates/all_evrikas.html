@@ -30,24 +30,40 @@
                     
                     <tr>
                         <th>F.I.O</th>
-                        {% for x in result %}
-                        {% for evrika in x.kpi_evrikas %}
-                        <td>
-                            {{evrika.details}}
-                        </td>
-                        {% endfor %}
-                        {% endfor %}
+                        <td> Ball </td>
+                        <td> Evrika Nimaligi </td>
                     </tr>
                     
                 </thead>
                 <tbody>
-                    {% for i in result  %}  
+                    {% for evrika in data %}
                     <tr>
-                        <td>{{ i.kpi.name }}</td>
-                        {% for evrika in i.kpi_evrikas %}
-                        <td> {{evrika.score}} </td>
-                        {% endfor %}
-                    </tr>
+                        <form action="{% url 'all_evrika' %}" method="post">
+                            {% csrf_token %}
+                        <td> {{evrika.kpi.name}} </td>
+                        <td> <select name="score" class="form-control"> 
+                            <option value="{{evrika.score}}"> {{evrika.score}} </option>
+                            <option value="0"> 0 </option>
+                            <option value="5"> 5 </option>
+                          </select> </td>
+                        <td> <input type="text" name="details" value="{{evrika.details}}"> 
+                            <input type="hidden" value="{{evrika.id}}" name="evrika_id">
+                        <input type="submit" value="Save" name="save_evrika"> </td>
+                        </form>
+
+                        <form action="{% url 'all_evrika' %}" method="post">
+                            {% csrf_token %}
+
+                            
+                            <td> <select name="score" class="form-control"> 
+                                    <option value="0"> 0 </option>
+                                    <option value="5"> 5 </option>
+                                  </select>
+                                <input type="text" name="details" placeholder="Evrika" required> 
+                                <input type="hidden" name="kpi_id" value="{{evrika.kpi.id}}">
+                            <input type="submit" name="create_evrika" value="Create">  </td>
+                        </form>
+                        </tr>
                     {% endfor %}
                 </tbody>
             </table>

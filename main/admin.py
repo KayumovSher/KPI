@@ -2,7 +2,7 @@ from django.contrib import admin
 from .models import *
 from django import forms
 from django.contrib import admin
-from .models import KpiModel, WorkModel, SportModel, EvrikaModel, BookModel, DeadlineModel, MeetingModel, MeetingDateModel
+from .models import KpiModel, WorkModel, SportModel, EvrikaModel, BookModel, DeadlineModel, MeetingModel, MeetingDateModel, SportDateModel
 
 
 class KPIModelForm(forms.ModelForm):
@@ -26,8 +26,12 @@ class WorkAdmin(admin.ModelAdmin):
     list_display = ("score", "kpi_users")
 
 class SportAdmin(admin.ModelAdmin):
-    list_display = ("details", "score")
+    def get_date(self, obj):
+        return obj.sport_date.date
+    list_display = ("get_date", "score")
 
+class SportDateModelAdmin(admin.ModelAdmin):
+    list_display = ('date',)
 class DeadlineModelAdmin(admin.ModelAdmin):
     list_display = ['date']
 class BookModelAdmin(admin.ModelAdmin):
@@ -62,3 +66,4 @@ admin.site.register(BookModel, BookModelAdmin)
 admin.site.register(MeetingModel, MeetingAdmin)
 admin.site.register(MeetingDateModel, MeetingDateAdmin)
 admin.site.register(DeadlineModel, DeadlineModelAdmin)
+admin.site.register(SportDateModel, SportDateModelAdmin)

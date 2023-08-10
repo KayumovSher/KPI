@@ -47,11 +47,18 @@ class SportManager(models.Manager):
         return sum(x.score for x in sports)
 
 
+class SportDateModel(models.Model):
+    date = models.DateField(default=date.today())
+    created_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self) -> str:
+        return self.date.strftime('%Y-%m-%d')
+    
 class SportModel(models.Model):
     SPORT_CHOICES = (
         (0, 0), (-1, -1)
     )
-    details = models.CharField(max_length=200)
+    sport_date = models.ForeignKey(SportDateModel, on_delete=models.CASCADE, related_name='sport_date_items')
     score = models.IntegerField(choices=SPORT_CHOICES)
     kpi = models.ForeignKey("KpiModel", on_delete=models.CASCADE, related_name="sport_items")
     created_at = models.DateTimeField(auto_now=True)
@@ -62,7 +69,7 @@ class SportModel(models.Model):
         self.kpi.calculate_general()
 
     def __str__(self):
-        return str(self.details) + " " + str(self.score)
+        return  str(self.score) + self.kpi.name
 
 
 class BooksManager(models.Manager):

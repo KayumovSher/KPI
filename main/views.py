@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from .models import KpiModel, SportModel, EvrikaModel, BookModel, WorkModel, BookItem, DeadlineModel, MeetingModel, \
-    MeetingDateModel
+    MeetingDateModel, SportDateModel
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
@@ -481,12 +481,23 @@ def all_books(request):
     return render(request, 'all_books.html', {"book_items": book_items, "data": data})
     
 def all_evrikas(request):
-    evrikas = EvrikaModel.objects.all().order_by("-created_at")
-    return render(request, 'all_evrikas.html', {'evrikas': evrikas})
+    if 'save_evrika' in request.POST:
+        score = request.POST.get('score')
+        details = request.POST.get('details')
+        obj = EvrikaModel.objects.get(id=request.POST.get('evrika_id'))
+        obj.score = score
+        obj.details = details
+        obj.save()
+    elif 'create_evrika' in request.POST:
+        kpi_obj = KpiModel.objects.get(id=request.POST.get('kpi_id'))
+        EvrikaModel.objects.create(details=request.POST.get('details'), score=request.POST.get('score'), kpi=kpi_obj).save()
+        return redirect('/all_evrika/')
+    evrikas = [x for x in EvrikaModel.objects.all().order_by("created_at")]
+    return render(request, 'all_evrikas.html', {'data': evrikas})
 
 
 def all_sports(request):
-    sports = SportModel.objects.all().order_by("-created_at")
+    sports = SportModel.objects.all().order_by("created_at")
     kpi_users = KpiModel.objects.all()
     if request.method == 'POST':
         if 'edit_sport' in request.POST:
@@ -507,8 +518,44 @@ def all_sports(request):
             obj = SportModel.objects.create(details=n_details, score=n_score, kpi=kpi)
             obj.save()
             return redirect('/all_sports/')
-    return render(request, 'all_sports.html', {'sports': sports, 'kpi_users': kpi_users})
+        
+#   get method
+    data = []
+    kpi_objects = KpiModel.objects.all()
+    sport_dates = list(x for x in SportDateModel.objects.all().order_by('created_at'))
+    sport_date_pairs = {x.date: x.id for x in SportDateModel.objects.all().order_by('created_at')}
+    sport_objects = SportModel.objects.all().order_by('created_at')
 
+    for sport_date_obj in sport_dates:
+        sport_data = {sport_date_obj.date: []}
+        sport_dic = {}
+
+        # Iterate through each WorkModel object and add to the kpi_data dictionary
+        for sport_item in sport_date_obj.sport_date_items.all():
+            sport_dic[sport_date_obj.date] = {'score': sport_item.score, 'sport_id': sport_item.id,
+                                                 "sport_date_id": sport_date_obj.id, 'kpi_user':sport_item.kpi}
+        
+        for i in range(len(sport_dates)):
+            if sport_dates[i] in sport_dic:
+                sport_data[sport_date_obj.date].append({
+                    'sport_date_id': sport_dates[i].id,
+                    'score': sport_dic[sport_dates[i]].date['score'],
+                    'sport_id': sport_dic[sport_dates[i]].date['sport_id'],
+                    'kpi_user': sport_dic[sport_dates[i]].date['kpi_user']
+                })
+            else:
+                sport_data[sport_date_obj.date].append({
+                    'sport_date_id': sport_dates[i].id,
+                    'score': 0,
+                    'sport_id': None,
+                    # 'kpi_user': deadline_pairs[deadlines[i]]
+                })
+
+        data.append(sport_data)
+    print(data)
+    return render(request, 'all_sports.html', {'sports': sports, 'kpi_users': kpi_users})
+# [{<KpiModel: sadriddin>: [{'date': '2023-08-17', 'score': '-1', 'work_id': 1, 'deadline_id': 1}, {'date': '1221-12-21', 'score': 0, 'work_id': None, 'deadline_id': 2}]}]
+# [{<KpiModel: sadriddin>: [{'date': '2023-08-17', 'score': '-1', 'work_id': 1, 'deadline_id': 1}, {'date': '1221-12-21', 'score': 0, 'work_id': None, 'deadline_id': 2}]}, {<KpiModel: user-1>: [{'date': '2023-08-17', 'score': 0, 'work_id': None, 'deadline_id': 1}, {'date': '1221-12-21', 'score': 0, 'work_id': None, 'deadline_id': 2}]}]
 
 @login_required(login_url="login")
 def edit_kpi(request, kpi_id):
