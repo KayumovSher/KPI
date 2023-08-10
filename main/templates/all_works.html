@@ -6,10 +6,106 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{% static 'css/work.css' %}">
+    <link rel="stylesheet" href="{% static 'css/all_works.css' %}">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
     <title>KPI</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
     {% load static %}
 </head>
+
+<style>
+    @import url(https://fonts.googleapis.com/css?family=Lato:300,400,900);
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+}
+
+html {
+  background: #444;
+}
+
+body {
+  min-height: 100%;
+  overflow: hidden;
+}
+
+.button_done {
+
+    width: 100px;
+    height: 150px;
+}
+
+.container_done {
+    width: 500px;
+    height: 50px;
+    min-height: 50%;
+    margin: 0 auto;
+}
+
+.button-wrap {
+    padding: 0;
+    position: relative;
+    text-align: center;
+    top: 50%;
+    margin-top: 0rem;
+}
+@media (max-width: 1200px) {
+  .button-wrap {
+    margin-top: -1.5em;
+  }
+}
+
+.button-label {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    padding: 1em 2em;
+    cursor: pointer;
+    color: #292929;
+    background: #efefef;
+    transition: 0.3s;
+    -webkit-user-select: none;
+      -moz-user-select: none;
+          -ms-user-select: none;
+              user-select: none;
+}
+.button-label h1 {
+
+    font-size: 0.80em;
+    position: absolute;
+    font-family: "Lato", sans-serif;
+}
+
+@media (max-width: 40em) {
+  .button-label {
+    padding: 0em 1em 3px;
+    margin: 0.25em;
+  }
+}
+
+.button-label:hover {
+    opacity: 0.8;
+}
+
+.red {
+    background: #D91E18;
+  color: #efefef;
+}
+
+.green {
+    background: #2ECC71;
+    color: #efefef;
+}
+
+.hidden {
+  display: none;
+}
+
+</style>
 <body>
 
 
@@ -67,12 +163,25 @@
                             {% for work_item in work_items %}
                             <form action="{% url 'all_works' %}" method="POST">
                                 {% csrf_token %}
-                                <td> <select name="n_score" class="form-control"> 
-                                    <option value="{{work_item.score}}"> {{work_item.score}} </option>
-                                      <option value="-1"> -1 </option>
-                                      <option value="0.5"> 0.5 </option>
-                                      <option value="0"> 0 </option>
-                                  </select> <input type="submit" name="save_work" value="Save">  </td>
+                                <td class="button_done">
+                                    <div class="container_done">
+                                        <div class="button-wrap d-flex justify-content-center">
+                                            <input class="hidden radio-label" type="radio" name="accept-offers" id="yes-button" checked="checked">
+                                            <label class="button-label yes" for="no-button">
+                                                <i class="ri-close-line yes"></i>
+                                            </label>
+                                            <input class="hidden radio-label" type="radio" name="accept-offers" id="no-button">
+                                            <label class="button-label" for="default-button">
+                                               <i class="ri-subtract-line"></i>
+                                            </label>
+                                            <input class="hidden radio-label" type="radio" name="accept-offers" id="maybe-button">
+                                            <label class="button-label no" for="yes-button">
+                                              <i class="ri-check-line no"></i>
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                </td>
 
                                 <input type="hidden" name="deadline_date" id="" value="{{work_item.date}}">
                                 <input type="hidden" name="work_item_id" id="" value="{{work_item.work_id}}">
@@ -86,6 +195,9 @@
                     {% endfor %}
                 </tbody>
             </table>
+    {% load static %}
+
+
 
 
         <a href="https://docs.google.com/spreadsheets/d/13aPcjyMXeHoDP3VeYuTcN4DlKeJEvOr_2t3qR4TV_3w/edit#gid=1208225701">
@@ -101,6 +213,37 @@
     
 <script type="text/javascript" src="{% static 'js/table2excel.js' %}"></script>
 <script type="text/javascript" src="{% static 'js/index.js' %}"></script>
+
+<script>
+
+    document.addEventListener("DOMContentLoaded", event => {
+        const btns = document.querySelectorAll(".button-label")
+
+        btns.forEach(el => {
+            el.addEventListener("click", event => {
+                const target = event.target
+                if(target.classList.contains('yes')) {
+                    btns.forEach(el => {
+                        el.classList.remove('green')
+                        el.classList.add('red')
+                    })
+                } else if(target.classList.contains('no')) {
+                    btns.forEach(el => {
+                        el.classList.add('green')
+                        el.classList.remove('red')
+                    })
+                } else {
+                    btns.forEach(el => {
+                        el.classList.remove('green')
+                        el.classList.remove('red')
+                    })
+                }
+            })
+        })
+
+    })
+
+</script>
 
 </body>
 </html>
