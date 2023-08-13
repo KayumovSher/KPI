@@ -35,8 +35,6 @@ def all_meetings(request):
         n_score, meeting_id = request.POST.get('n_score'), request.POST.get('meeting_id')
         meeting_date_id, kpi_id = request.POST.get('meeting_date_id'), request.POST.get('kpi_id')
         kpi_user, meeting_date_obj = KpiModel.objects.get(id=kpi_id), MeetingDateModel.objects.get(id=meeting_date_id)
-        print(meeting_id)
-        print(n_score, 'score')
         if meeting_id == 'None':
             MeetingModel.objects.create(meeting_date=meeting_date_obj, score=n_score, kpi=kpi_user).save()
             return redirect('/all_meetings/')
@@ -128,67 +126,13 @@ def LogoutPage(request):
 def Navbar(request):
     return render(request, 'navbar.html')
 
-
-# Book
-def edit_book(request, kpi_id, book_id):
-    kpi = get_object_or_404(KpiModel, id=kpi_id)
-    book = get_object_or_404(BookModel, id=book_id)
-
-    if request.method == 'POST':
-        n_book = request.POST.get('book')
-        score = request.POST.get('score')
-        bookitem = BookItem.objects.get(id=n_book)
-        book.book = bookitem
-        book.score = score
-        book.save()
-
-        return redirect(f'/book/{kpi_id}/')
-
-    return render(request, 'edit_book.html', {'kpi': kpi, 'book': book})
-
-
-def delete_book(request, kpi_id, book_id):
-    if request.method == 'POST':
-        book = get_object_or_404(BookModel, id=book_id)
-        book.delete()
-        return redirect(f'/book/{kpi_id}/')
-
-
-def create_book(request, kpi_id):
-    kpi = get_object_or_404(KpiModel, id=kpi_id)
-
-    if request.method == 'POST':
-        book_id = request.POST.get('book')
-        score = request.POST.get('n_score', '')
-        book = BookItem.objects.get(id=book_id)
-        new_book = BookModel.objects.create(score=score, book=book, kpi=kpi)
-        new_book.save()
-
-        return redirect(f'/book/{kpi_id}/')
-
-    return render(request, 'book.html', {'kpi': kpi})
-
-
-@login_required(login_url='login')
+@IsAdminOrReadOnly
 def book(request, id=None):
     kpi = get_object_or_404(KpiModel, id=id)
     books = BookModel.objects.filter(kpi=kpi)
-    bookitems = BookItem.objects.all()
+    return render(request, 'book.html', {"books": books, 'kpi': kpi})
 
-    if request.method == 'POST':
-        if 'edit_book' in request.POST:
-            book_id = request.POST.get('book_id')
-            return redirect('edit_book', kpi_id=id, book_id=book_id)
-        elif 'delete_book' in request.POST:
-            book_id = request.POST.get('book_id')
-            return redirect('delete_book', kpi_id=id, book_id=book_id)
-        elif 'create_book' in request.POST:
-            return redirect('create_book', kpi_id=id)
-
-    return render(request, 'book.html', {"books": books, 'kpi': kpi, 'bookitems': bookitems})
-
-
-@login_required(login_url='login')
+@IsAdminOrReadOnly
 def bookItems(request):
     bookitems = BookItem.objects.all()
     if request.method == 'POST':
@@ -240,44 +184,19 @@ def create_work(request, kpi_id):
 
     return render(request, 'work.html', {'kpi': kpi})
 
-
-@login_required(login_url='login')
+@IsAdminOrReadOnly
 def work(request, id=None):
     kpi = get_object_or_404(KpiModel, id=id)
     works = WorkModel.objects.filter(kpi=kpi).order_by("deadline")
-
-    if request.method == 'POST':
-        if 'edit_work' in request.POST:
-            work_id = request.POST.get('work_id')
-            return redirect('edit_work', kpi_id=id, work_id=work_id)
-        elif 'delete_work' in request.POST:
-            work_id = request.POST.get('work_id')
-            return redirect('delete_work', kpi_id=id, work_id=work_id)
-        elif 'create_work' in request.POST:
-            return redirect('create_work', kpi_id=id)
-
     return render(request, 'work.html', {"works": works, 'kpi': kpi})
-
 
 def reminder(request):
     return render(request, 'reminder.html')
 
-
-@login_required(login_url='login')
+@IsAdminOrReadOnly
 def sport(request, id=None):
     kpi = get_object_or_404(KpiModel, id=id)
     sports = SportModel.objects.filter(kpi=kpi)
-
-    if request.method == 'POST':
-        if 'edit_sport' in request.POST:
-            sport_id = request.POST.get('sport_id')
-            return redirect('edit_sport', kpi_id=id, sport_id=sport_id)
-        elif 'delete_book' in request.POST:
-            sport_id = request.POST.get('sport_id')
-            return redirect('delete_sport', kpi_id=id, sport_id=sport_id)
-        elif 'create_sport' in request.POST:
-            return redirect('create_sport', kpi_id=id)
-
     return render(request, 'sport.html', {"sports": sports, 'kpi': kpi})
 
 
