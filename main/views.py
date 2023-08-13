@@ -512,7 +512,6 @@ def all_sports(request):
         
         obj = BookModel.objects.get(id=book_id)
         obj.score = book_score
-        # obj.book = dead_obj
         obj.kpi = kpi_user
         obj.save()
         return redirect('/all_books/')
@@ -531,12 +530,12 @@ def all_sports(request):
             sport_dic[sport_date_obj.date.strftime('%Y-%m-%d')] = {'score': sport_item.score, 'sport_id': sport_item.id,
                                                  "sport_date_id": sport_item.sport_date.id, 'kpi_user':sport_item.kpi}
         for i in range(len(kpi_objects)):
-            if sport_date_obj.date in sport_dic:
+            if sport_dic:
                 sport_data[sport_date_obj.date.strftime('%Y-%m-%d')].append({
-                    'score': sport_dic[sport_date_obj.date]['score'],
-                    'sport_id': sport_dic[sport_date_obj.date]['sport_id'],
-                    'sport_date_id': sport_dic[sport_date_obj.date]['sport_date_id'],
-                    'kpi_user':sport_dic[sport_date_obj.date]['kpi_user']
+                    'score': sport_dic[sport_date_obj.date.strftime('%Y-%m-%d')]['score'],
+                    'sport_id': sport_dic[sport_date_obj.date.strftime('%Y-%m-%d')]['sport_id'],
+                    'sport_date_id': sport_dic[sport_date_obj.date.strftime('%Y-%m-%d')]['sport_date_id'],
+                    'kpi_user':sport_dic[sport_date_obj.date.strftime('%Y-%m-%d')]['kpi_user']
                 })
             else:
                 sport_data[sport_date_obj.date.strftime('%Y-%m-%d')].append({
