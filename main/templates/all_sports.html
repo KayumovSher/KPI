@@ -14,9 +14,8 @@
     {% include 'navbar.html' %}
 
     
-    {% load static %}
     <div class="container">
-        <h1 class="headerone">Work to Google Sheet KPI</h1>
+        <h1 class="headerone">Sport to Google Sheet KPI</h1>
 
             <br>
 
@@ -29,48 +28,37 @@
                 <thead class="thead-dark">
                     
                     <tr>
-                        <th>F.I.O</th>
-                        <th>Details</th>
-                        <th>Score</th>
+                        <th>Date</th>
+                        {% for kpi in kpi_objects %}
+                        <th>{{kpi.name}}</th>
+                       {% endfor %}
                     </tr>
                     
                 </thead>
                 <tbody>
-                  
-                        <form action="{% url 'all_sports' %}" method="post">
-                            {% csrf_token %}
-                        {% for sport in sports %}
+                    {% for sport_dict in data %}
+                        {% for sport_date, sport_items in sport_dict.items %}
                         <tr>
-                            <th> {{ sport.kpi.name}} </th>
+                            <td> {{sport_date}}</td>
+                            {% for sport_item in sport_items %}
+                            <form action="{% url 'all_sports' %}" method="POST">
+                                {% csrf_token %}
+                                <td> <select name="n_score" class="form-control"> 
+                                    <option value="{{sport_item.score}}"> {{sport_item.score}} </option>
+                                      <option value="-1"> -1 </option>
+                                      <option value="0"> 0 </option>
+                                  </select> <input type="submit" name="save_sport" value="Save">  </td>
 
-                            <th> <input type="text" name="details" id="" value="{{ sport.details}}"> </th>
-                            
-                            <th> <select name="score" class="form-control"> 
-                                <option value="{{sport.score}}"> {{sport.score}} </option>
-                                  <option value="0"> 0 </option>
-                                  <option value="-1"> -1 </option>
-                              </select>   </th>
-                              <input type="hidden" name="sport_id" value="{{sport.id}}">
-                              <input type="hidden" name="kpi_sport" value="{{sport.kpi}}">
-                            <th>
-                                <input type="submit" name="edit_sport" value="Edit">
-                            </th>
+                                <input type="hidden" name="sport_id" id="" value="{{sport_item.sport_id}}">
+                                <input type="hidden" name="sport_date_id" id="" value="{{sport_item.sport_date_id}}">
+                                <input type="hidden" name="kpi_user_id" value="{{sport_item.kpi_user.id}}">
+                            </form>
+                            {% endfor %}
                         </tr>
+         
+                        {% endfor %}
                     {% endfor %}
-
-                        <tr>
-                            <th> <select name="kpi_user" class="form-control"> 
-                                {% for kpi_user in kpi_users %}
-                                <option value="{{kpi_user.id}}"> {{kpi_user}} </option>
-                                {% endfor %}
-                                </select>   </th>
-
-                            <td> <input type="text" name="n_details"> </td>
-                            <td> <input type="text" name="n_score" id="">  </td>
-                            <th> <input type="submit" name="create_sport" value="Save"> </th>
-                        </tr>
-                        </form>
-    
+   
                 </tbody>
             </table>
 

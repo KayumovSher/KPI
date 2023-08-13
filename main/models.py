@@ -48,7 +48,7 @@ class SportManager(models.Manager):
 
 
 class SportDateModel(models.Model):
-    date = models.DateField(default=date.today())
+    date = models.DateField(default=timezone.now)
     created_at = models.DateTimeField(auto_now=True)
 
     def __str__(self) -> str:
