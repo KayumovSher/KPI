@@ -7,8 +7,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
-
-
+from .utils import IsAdminOrReadOnly
+from django.shortcuts import render
 # Create your views here.
 
 def index(request):
@@ -25,7 +25,7 @@ def index(request):
 
     return render(request, 'index.html', context={"results": result})
 
-
+@IsAdminOrReadOnly
 def all_meetings(request):
     if 'create_date' in request.POST:
         meet_date = MeetingDateModel.objects.create(date=request.POST.get('meeting_date'))
@@ -376,7 +376,7 @@ def evrika(request, id=None):
 
     return render(request, 'evrika.html', {"evrikas": evrikas, 'kpi': kpi})
 
-
+@IsAdminOrReadOnly
 def all_works(request):
     if 'create_deadline' in request.POST:
         deadline = DeadlineModel.objects.create(date=request.POST.get('new_deadline'))
@@ -427,7 +427,7 @@ def all_works(request):
         data.append(kpi_data)
     return render(request, 'all_works.html', {"deadlines": deadlines, "data": data})
 
-
+@IsAdminOrReadOnly
 def all_books(request):
     if 'create_book_item' in request.POST:
         book_item = BookItem.objects.create(title=request.POST.get('new_book_item'))
@@ -479,7 +479,8 @@ def all_books(request):
 
         data.append(kpi_data)
     return render(request, 'all_books.html', {"book_items": book_items, "data": data})
-    
+
+@IsAdminOrReadOnly  
 def all_evrikas(request):
     if 'save_evrika' in request.POST:
         score = request.POST.get('score')
@@ -495,7 +496,7 @@ def all_evrikas(request):
     evrikas = [x for x in EvrikaModel.objects.all().order_by("created_at")]
     return render(request, 'all_evrikas.html', {'data': evrikas})
 
-
+@IsAdminOrReadOnly
 def all_sports(request):
     if 'create_sport_date' in request.POST:
         sport_date_item = SportDateModel.objects.create(date=request.POST.get('sport_date_obj'))
@@ -546,7 +547,6 @@ def all_sports(request):
                 })
             sport_dic = {}
         data.append(sport_data)
-    print(data)
     return render(request, 'all_sports.html', {'data': data, 'kpi_objects': kpi_objects})
 # [{<KpiModel: sadriddin>: [{'date': '2023-08-17', 'score': '-1', 'work_id': 1, 'deadline_id': 1}, {'date': '1221-12-21', 'score': 0, 'work_id': None, 'deadline_id': 2}]}]
 # [{<KpiModel: sadriddin>: [{'date': '2023-08-17', 'score': '-1', 'work_id': 1, 'deadline_id': 1}, {'date': '1221-12-21', 'score': 0, 'work_id': None, 'deadline_id': 2}]}, {<KpiModel: user-1>: [{'date': '2023-08-17', 'score': 0, 'work_id': None, 'deadline_id': 1}, {'date': '1221-12-21', 'score': 0, 'work_id': None, 'deadline_id': 2}]}]
@@ -592,7 +592,7 @@ def create_kpi(request):
     return render(request, 'kpi.html')
 
 
-@login_required(login_url="login")
+@IsAdminOrReadOnly
 def kpi_view(request):
     kpi_models = KpiModel.objects.all()
 
