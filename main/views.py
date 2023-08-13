@@ -497,24 +497,24 @@ def all_evrikas(request):
 
 
 def all_sports(request):
-    if 'create_book_item' in request.POST:
-        book_item = BookItem.objects.create(title=request.POST.get('new_book_item'))
-        book_item.save()
-        return redirect('/all_books/')
-    elif 'save_book' in request.POST:
-        book_score, book_id = request.POST.get('book_score'), request.POST.get('book_id')
-        book_item_id, kpi_id = request.POST.get('book_item_id'), request.POST.get('kpi_id')
+    if 'create_sport_date' in request.POST:
+        sport_date_item = SportDateModel.objects.create(date=request.POST.get('sport_date_obj'))
+        sport_date_item.save()
+        return redirect('/all_sports/')
+    elif 'save_sport' in request.POST:
+        sport_score, sport_id = request.POST.get('sport_score'), request.POST.get('sport_id')
+        sport_date_id, kpi_id = request.POST.get('sport_date_id'), request.POST.get('kpi_user_id')
         kpi_user= KpiModel.objects.get(id=kpi_id)
-        book_item_obj = BookItem.objects.get(id=book_item_id)
-        if book_id == 'None':
-            BookModel.objects.create(book=book_item_obj, score=book_score, kpi=kpi_user).save()
-            return redirect('/all_books/')
+        sport_date_obj = SportDateModel.objects.get(id=sport_date_id)
+        if sport_id == 'None':
+            SportModel.objects.create(sport_date=sport_date_obj, score=sport_score, kpi=kpi_user).save()
+            return redirect('/all_sports/')
         
-        obj = BookModel.objects.get(id=book_id)
-        obj.score = book_score
-        obj.kpi = kpi_user
+        obj = SportModel.objects.get(id=sport_id)
+        obj.score = sport_score
+        # obj.kpi = kpi_user
         obj.save()
-        return redirect('/all_books/')
+        return redirect('/all_sports/')
         
 #   get method
     data = []

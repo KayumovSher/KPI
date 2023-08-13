@@ -43,7 +43,7 @@
                             {% for sport_item in sport_items %}
                             <form action="{% url 'all_sports' %}" method="POST">
                                 {% csrf_token %}
-                                <td> <select name="n_score" class="form-control"> 
+                                <td> <select name="sport_score" class="form-control"> 
                                     <option value="{{sport_item.score}}"> {{sport_item.score}} </option>
                                       <option value="-1"> -1 </option>
                                       <option value="0"> 0 </option>
@@ -58,7 +58,12 @@
          
                         {% endfor %}
                     {% endfor %}
-   
+                       <form action="{% url 'all_sports' %}" method="post">
+                        {% csrf_token %}
+                        <td> <input type="date" name="sport_date_obj" required> 
+                            <input type="submit" name="create_sport_date" value="Create">
+                        </td>
+                       </form>
                 </tbody>
             </table>
 
