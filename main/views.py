@@ -409,11 +409,13 @@ def all_evrikas(request):
         obj.details = details
         obj.save()
     elif 'create_evrika' in request.POST:
+        print(request.POST)
         kpi_obj = KpiModel.objects.get(id=request.POST.get('kpi_id'))
         EvrikaModel.objects.create(details=request.POST.get('details'), score=request.POST.get('score'), kpi=kpi_obj).save()
         return redirect('/all_evrika/')
     evrikas = [x for x in EvrikaModel.objects.all().order_by("created_at")]
-    return render(request, 'all_evrikas.html', {'data': evrikas})
+    kpi_users = KpiModel.objects.all()
+    return render(request, 'all_evrikas.html', {'data': evrikas, 'kpi_users':kpi_users})
 
 @IsAdminOrReadOnly
 def all_sports(request):
