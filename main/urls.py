@@ -14,10 +14,7 @@ urlpatterns = [
     path('sport/<int:id>/', views.sport, name='sport_detail'),
     
 
-    path('work_create/<int:kpi_id>/', views.create_work, name='create_work'),
     path('work/<int:id>/', views.work, name='work_detail'),
-    path('work/<int:kpi_id>/edit/<int:work_id>/', views.edit_work, name='edit_work'),
-    path('work/<int:kpi_id>/delete/<int:work_id>/', views.delete_work, name='delete_work'),
     path("work/<int:work_id>/increase_score/", views.work_increase_score, name='work_increase_score'),
     path("work/<int:work_id>/reset_score/", views.work_reset_score, name='work_reset_score'),
     path("work/<int:work_id>/decrease_score/", views.work_decrease_score, name='work_decrease_score'),
@@ -26,11 +23,7 @@ urlpatterns = [
        
     path('sport/<int:id>/', views.sport, name='sport_detail'),
 
-    path('evrika_create/<int:kpi_id>/', views.create_evrika, name='create_evrika'),
     path('evrika/<int:id>/', views.evrika, name='evrika_detail'),
-    path('evrika/<int:kpi_id>/edit/<int:evrika_id>/', views.edit_evrika, name='edit_evrika'),
-    path('evrika/<int:kpi_id>/delete/<int:evrika_id>/', views.delete_evrika, name='delete_evrika'),
-
 
     path("all_works/", views.all_works, name='all_works'),
     path("all_books/", views.all_books, name='all_books'),

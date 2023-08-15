@@ -1,5 +1,7 @@
 # myapp/permissions.py
-
+from .models import KpiModel, WorkModel, DeadlineModel
+from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404
 from django.http import HttpResponseForbidden
 from django.contrib.auth.decorators import login_required
 
@@ -21,3 +23,15 @@ class IsAdminOrReadOnly:
 
 def is_admin(user):
     return user.is_authenticated and user.is_staff
+
+def change_score(work_id=None, deadline_id=None, kpi_id=None, score=0):
+    kpi_user = KpiModel.objects.get(id=kpi_id)
+    dead_obj = DeadlineModel.objects.get(id=deadline_id)
+    if work_id == 0:
+            WorkModel.objects.create(deadline=dead_obj, score=score, kpi=kpi_user).save()
+            return redirect('/all_works/')
+        
+    work = get_object_or_404(WorkModel, id=work_id)
+    work.score = score
+    work.save()
+    

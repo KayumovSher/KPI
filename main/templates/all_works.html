@@ -184,19 +184,28 @@ body {
                                         <div class="button-wrap d-flex justify-content-center{%  if work_item.score == '0.5' %} green-buttons{% endif %}{%  if work_item.score == '-1' %} red-buttons{% endif %}">
                                             <form action="{% url 'work_decrease_score' work_item.work_id %}" method="POST">
                                                 {% csrf_token %}
-                                                <button type="submit" class="work-button">
+                                                <input type="hidden" name="deadline_id" value="{{work_item.deadline_id}}">
+                                                <input type="hidden" name="kpi_id" value="{{kpi.id}}">
+                                                <input type="hidden" name="work_id" value="{{work_item.work_id}}">
+                                                <button type="submit" class="work-button" name="decrease_work">
                                                     <i class="ri-close-line yes"></i>
                                                 </button>
                                             </form>
                                             <form action="{% url 'work_reset_score' work_item.work_id %}" method="POST">
                                                 {% csrf_token %}
-                                                <button type="submit" class="work-button">
+                                                <input type="hidden" name="deadline_id" value="{{work_item.deadline_id}}">
+                                                <input type="hidden" name="kpi_id" value="{{kpi.id}}">
+                                                <input type="hidden" name="work_id" value="{{work_item.work_id}}">
+                                                <button type="submit" class="work-button" name="reset_work">
                                                     <i class="ri-subtract-line yes"></i>
                                                 </button>
                                             </form>
                                             <form action="{% url 'work_increase_score' work_item.work_id %}" method="POST">
                                                 {% csrf_token %}
-                                                <button type="submit" class="work-button">
+                                                <input type="hidden" name="deadline_id" value="{{work_item.deadline_id}}">
+                                                <input type="hidden" name="kpi_id" value="{{kpi.id}}">
+                                                <input type="hidden" name="work_id" value="{{work_item.work_id}}">
+                                                <button type="submit" class="work-button" name="increase_work">
                                                     <i class="ri-check-line yes"></i>
                                                 </button>
                                             </form>

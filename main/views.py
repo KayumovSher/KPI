@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from .models import KpiModel, SportModel, EvrikaModel, BookModel, WorkModel, BookItem, DeadlineModel, MeetingModel, \
-    MeetingDateModel
+    MeetingDateModel, SportDateModel
 # MeetingDateModel, SportDateModel
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.models import User
@@ -10,6 +10,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from .utils import IsAdminOrReadOnly
 from django.shortcuts import render
+from .utils import change_score
 # Create your views here.
 
 def index(request):
@@ -143,98 +144,32 @@ def bookItems(request):
         return redirect('/')
     return render(request, 'book_items.html', {"bookitems": bookitems})
 
-
-def edit_work(request, kpi_id, work_id):
-    kpi = get_object_or_404(KpiModel, id=kpi_id)
-    work = get_object_or_404(WorkModel, id=work_id)
-
-    if request.method == 'POST':
-        deadline = request.POST.get('deadline')
-        score = request.POST.get('score')
-        description = request.POST.get('description', '')
-
-        work.deadline = deadline
-        work.score = score
-        work.description = description
-        work.save()
-
-        return redirect(f'/work/{kpi_id}/')
-
-    return render(request, 'edit_work.html', {'kpi': kpi, 'work': work})
-
-
-def delete_work(request, kpi_id, work_id):
-    if request.method == 'POST':
-        work = get_object_or_404(WorkModel, id=work_id)
-        work.delete()
-        return redirect(f'/work/{kpi_id}/')
-
-
-def create_work(request, kpi_id):
-    kpi = get_object_or_404(KpiModel, id=kpi_id)
-
-    if request.method == 'POST':
-        deadline = request.POST.get('n_deadline')
-        score = request.POST.get('n_score', '')
-        description = request.POST.get('n_description', '')
-
-        new_work = WorkModel.objects.create(deadline=deadline, score=score, description=description, kpi=kpi)
-        new_work.save()
-
-        return redirect(f'/work/{kpi_id}/')
-
-    return render(request, 'work.html', {'kpi': kpi})
-
 @IsAdminOrReadOnly
 def work(request, id=None):
     kpi = get_object_or_404(KpiModel, id=id)
     works = WorkModel.objects.filter(kpi=kpi).order_by("deadline")
     return render(request, 'work.html', {"works": works, 'kpi': kpi})
 
-
-@login_required(login_url='login')
+@IsAdminOrReadOnly
 def work_increase_score(request, work_id=None):
     if request.method != 'POST':
         return HttpResponseNotAllowed(('POST',))
-
-    work = get_object_or_404(WorkModel, id=work_id)
-    work.score += 0.5
-    work.save()
-
+    change_score(work_id, request.POST.get('deadline_id'), request.POST.get('kpi_id'), score=0.5)
     return redirect(to='all_works')
 
-@login_required(login_url='login')
-def work_increase_score(request, work_id=None):
-    if request.method != 'POST':
-        return HttpResponseNotAllowed(('POST',))
-
-    work = get_object_or_404(WorkModel, id=work_id)
-    work.score = '0.5'
-    work.save()
-
-    return redirect(to='all_works')
-
-@login_required(login_url='login')
+@IsAdminOrReadOnly
 def work_reset_score(request, work_id=None):
     if request.method != 'POST':
         return HttpResponseNotAllowed(('POST',))
-
-    work = get_object_or_404(WorkModel, id=work_id)
-    work.score = '0'
-    work.save()
-
+    change_score(work_id, request.POST.get('deadline_id'), request.POST.get('kpi_id'))
     return redirect(to='all_works')
-@login_required(login_url='login')
+
+@IsAdminOrReadOnly
 def work_decrease_score(request, work_id=None):
     if request.method != 'POST':
         return HttpResponseNotAllowed(('POST',))
-
-    work = get_object_or_404(WorkModel, id=work_id)
-    work.score = '-1'
-    work.save()
-
+    change_score(work_id, request.POST.get('deadline_id'), request.POST.get('kpi_id'), score=-1)
     return redirect(to='all_works')
-
 
 def reminder(request):
     return render(request, 'reminder.html')
@@ -285,46 +220,7 @@ def create_sport(request, kpi_id):
     return render(request, 'sport.html', {'kpi': kpi})
 
 
-def edit_evrika(request, kpi_id, evrika_id):
-    kpi = get_object_or_404(KpiModel, id=kpi_id)
-    evrika = get_object_or_404(EvrikaModel, id=evrika_id)
-
-    if request.method == 'POST':
-        details = request.POST.get('details')
-        score = request.POST.get('score', None)
-
-        evrika.details = details
-        evrika.score = score
-        evrika.save()
-
-        return redirect(f'/evrika/{kpi_id}/')
-
-    return render(request, 'edit_evrika.html', {'kpi': kpi, 'evrika': evrika})
-
-
-def delete_evrika(request, kpi_id, evrika_id):
-    if request.method == 'POST':
-        evrika = get_object_or_404(EvrikaModel, id=evrika_id)
-        evrika.delete()
-        return redirect(f'/evrika/{kpi_id}/')
-
-
-def create_evrika(request, kpi_id):
-    kpi = get_object_or_404(KpiModel, id=kpi_id)
-
-    if request.method == 'POST':
-        details = request.POST.get('n_details')
-        score = request.POST.get('n_score', '')
-
-        new_evrika = EvrikaModel.objects.create(details=details, score=score, kpi=kpi)
-        new_evrika.save()
-
-        return redirect(f'/evrika/{kpi_id}/')
-
-    return render(request, 'evrika.html', {'kpi': kpi})
-
-
-@login_required(login_url='login')
+@IsAdminOrReadOnly
 def evrika(request, id=None):
     kpi = get_object_or_404(KpiModel, id=id)
     evrikas = EvrikaModel.objects.filter(kpi=kpi)

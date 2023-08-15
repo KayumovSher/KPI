@@ -46,15 +46,18 @@ class SportManager(models.Manager):
         sports = self.filter(kpi=kpi)
         return sum(x.score for x in sports)
 
-    def __str__(self) -> str:
-        return self.date.strftime('%Y-%m-%d')
-
+class SportDateModel(models.Model):
+    date = models.DateField(default=timezone.now)
+    created_at = models.DateTimeField(auto_now=True)
+    
+    def __str__(self):
+        return self.date.strftime("%Y-%m-%d")
 
 class SportModel(models.Model):
     SPORT_CHOICES = (
         (0, 0), (-1, -1)
     )
-    sport_date = models.ForeignKey(SportDateModel, on_delete=models.CASCADE, related_name='sport_date_items')
+    sport_date = models.ForeignKey('SportDateModel', on_delete=models.CASCADE, related_name='sport_date_items')
     score = models.IntegerField(choices=SPORT_CHOICES)
     kpi = models.ForeignKey("KpiModel", on_delete=models.CASCADE, related_name="sport_items")
     created_at = models.DateTimeField(auto_now=True)
