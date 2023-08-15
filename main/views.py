@@ -224,17 +224,6 @@ def create_sport(request, kpi_id):
 def evrika(request, id=None):
     kpi = get_object_or_404(KpiModel, id=id)
     evrikas = EvrikaModel.objects.filter(kpi=kpi)
-
-    if request.method == 'POST':
-        if 'edit_evrika' in request.POST:
-            evrika_id = request.POST.get('evrika_id')
-            return redirect('edit_evrika', kpi_id=id, evrika_id=evrika_id)
-        elif 'delete_evrika' in request.POST:
-            evrika_id = request.POST.get('evrika_id')
-            return redirect('delete_evrika', kpi_id=id, evrika_id=evrika_id)
-        elif 'create_evrika' in request.POST:
-            return redirect('create_evrika', kpi_id=id)
-
     return render(request, 'evrika.html', {"evrikas": evrikas, 'kpi': kpi})
 
 @IsAdminOrReadOnly
