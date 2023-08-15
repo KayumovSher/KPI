@@ -48,12 +48,13 @@ class SportManager(models.Manager):
 
 
 class SportDateModel(models.Model):
-    date = models.DateField(default=date.today())
+    date = models.DateField(default=timezone.now())
     created_at = models.DateTimeField(auto_now=True)
 
     def __str__(self) -> str:
         return self.date.strftime('%Y-%m-%d')
-    
+
+
 class SportModel(models.Model):
     SPORT_CHOICES = (
         (0, 0), (-1, -1)
@@ -69,7 +70,7 @@ class SportModel(models.Model):
         self.kpi.calculate_general()
 
     def __str__(self):
-        return  str(self.score) + self.kpi.name
+        return str(self.score) + self.kpi.name
 
 
 class BooksManager(models.Manager):

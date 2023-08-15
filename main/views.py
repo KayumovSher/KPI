@@ -4,7 +4,7 @@ from .models import KpiModel, SportModel, EvrikaModel, BookModel, WorkModel, Boo
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseNotAllowed
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 
@@ -258,6 +258,48 @@ def work(request, id=None):
 
     return render(request, 'work.html', {"works": works, 'kpi': kpi})
 
+@login_required(login_url='login')
+def work_increase_score(request, work_id=None):
+    if request.method != 'POST':
+        return HttpResponseNotAllowed(('POST',))
+
+    work = get_object_or_404(WorkModel, id=work_id)
+    work.score += 0.5
+    work.save()
+
+    return redirect(to='all_works')
+
+@login_required(login_url='login')
+def work_increase_score(request, work_id=None):
+    if request.method != 'POST':
+        return HttpResponseNotAllowed(('POST',))
+
+    work = get_object_or_404(WorkModel, id=work_id)
+    work.score = '0.5'
+    work.save()
+
+    return redirect(to='all_works')
+
+@login_required(login_url='login')
+def work_reset_score(request, work_id=None):
+    if request.method != 'POST':
+        return HttpResponseNotAllowed(('POST',))
+
+    work = get_object_or_404(WorkModel, id=work_id)
+    work.score = '0'
+    work.save()
+
+    return redirect(to='all_works')
+@login_required(login_url='login')
+def work_decrease_score(request, work_id=None):
+    if request.method != 'POST':
+        return HttpResponseNotAllowed(('POST',))
+
+    work = get_object_or_404(WorkModel, id=work_id)
+    work.score = '-1'
+    work.save()
+
+    return redirect(to='all_works')
 
 def reminder(request):
     return render(request, 'reminder.html')
@@ -420,7 +462,7 @@ def all_works(request):
                 kpi_data[kpi_obj].append({
                     'date': deadlines[i].strftime('%Y-%m-%d'),
                     'score': 0,
-                    'work_id': None,
+                    'work_id': 0,
                     'deadline_id': deadline_pairs[deadlines[i]]
                 })
 

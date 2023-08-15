@@ -32,6 +32,14 @@ body {
   overflow: hidden;
 }
 
+.table {
+    width: inherit;
+}
+
+.container {
+    max-width: 1700px;
+}
+
 .button_done {
 
     width: 100px;
@@ -39,7 +47,7 @@ body {
 }
 
 .container_done {
-    width: 500px;
+    width: auto;
     height: 50px;
     min-height: 50%;
     margin: 0 auto;
@@ -59,10 +67,11 @@ body {
 }
 
 .button-label {
-    width: 50px;
-    height: 50px;
+    width: 30px;
+    height: 30px;
     display: flex;
     justify-content: center;
+    align-items: center;
     padding: 1em 2em;
     cursor: pointer;
     color: #292929;
@@ -103,6 +112,26 @@ body {
 
 .hidden {
   display: none;
+}
+
+.work-button {
+    border: none;
+    padding: 0.25rem 1rem;
+    color: #292929;
+    background: #efefef;
+}
+.work-button:hover {
+    cursor: pointer;
+    color: #292929;
+    background: #f5f5f5;
+}
+.green-buttons button {
+    background: #2ECC71;
+    color: #efefef;
+}
+.red-buttons button {
+    background: #D91E18;
+    color: #efefef;
 }
 
 </style>
@@ -156,38 +185,40 @@ body {
                     
                 </thead>
                 <tbody>
-                        {% for kpi_dict in data %}
+
+                    {% for kpi_dict in data %}
+
                         {% for kpi, work_items in kpi_dict.items %}
                         <tr>
-                            <td> {{kpi.name}}</td>
+
+                            <td>{{kpi.name}}</td>
                             {% for work_item in work_items %}
-                            <form action="{% url 'all_works' %}" method="POST">
-                                {% csrf_token %}
                                 <td class="button_done">
                                     <div class="container_done">
-                                        <div class="button-wrap d-flex justify-content-center">
-                                            <input class="hidden radio-label" type="radio" name="accept-offers" id="yes-button" checked="checked">
-                                            <label class="button-label yes" for="no-button">
-                                                <i class="ri-close-line yes"></i>
-                                            </label>
-                                            <input class="hidden radio-label" type="radio" name="accept-offers" id="no-button">
-                                            <label class="button-label" for="default-button">
-                                               <i class="ri-subtract-line"></i>
-                                            </label>
-                                            <input class="hidden radio-label" type="radio" name="accept-offers" id="maybe-button">
-                                            <label class="button-label no" for="yes-button">
-                                              <i class="ri-check-line no"></i>
-                                            </label>
+                                        <div class="button-wrap d-flex justify-content-center{%  if work_item.score == '0.5' %} green-buttons{% endif %}{%  if work_item.score == '-1' %} red-buttons{% endif %}">
+                                            <form action="{% url 'work_decrease_score' work_item.work_id %}" method="POST">
+                                                {% csrf_token %}
+                                                <button type="submit" class="work-button">
+                                                    <i class="ri-close-line yes"></i>
+                                                </button>
+                                            </form>
+                                            <form action="{% url 'work_reset_score' work_item.work_id %}" method="POST">
+                                                {% csrf_token %}
+                                                <button type="submit" class="work-button">
+                                                    <i class="ri-subtract-line yes"></i>
+                                                </button>
+                                            </form>
+                                            <form action="{% url 'work_increase_score' work_item.work_id %}" method="POST">
+                                                {% csrf_token %}
+                                                <button type="submit" class="work-button">
+                                                    <i class="ri-check-line yes"></i>
+                                                </button>
+                                            </form>
                                         </div>
                                     </div>
 
                                 </td>
 
-                                <input type="hidden" name="deadline_date" id="" value="{{work_item.date}}">
-                                <input type="hidden" name="work_item_id" id="" value="{{work_item.work_id}}">
-                                <input type="hidden" name="deadline_id" id="" value="{{work_item.deadline_id}}">
-                                <input type="hidden" name="kpi_id" value="{{kpi.id}}">
-                            </form>
                             {% endfor %}
                         </tr>
          
@@ -214,36 +245,6 @@ body {
 <script type="text/javascript" src="{% static 'js/table2excel.js' %}"></script>
 <script type="text/javascript" src="{% static 'js/index.js' %}"></script>
 
-<script>
-
-    document.addEventListener("DOMContentLoaded", event => {
-        const btns = document.querySelectorAll(".button-label")
-
-        btns.forEach(el => {
-            el.addEventListener("click", event => {
-                const target = event.target
-                if(target.classList.contains('yes')) {
-                    btns.forEach(el => {
-                        el.classList.remove('green')
-                        el.classList.add('red')
-                    })
-                } else if(target.classList.contains('no')) {
-                    btns.forEach(el => {
-                        el.classList.add('green')
-                        el.classList.remove('red')
-                    })
-                } else {
-                    btns.forEach(el => {
-                        el.classList.remove('green')
-                        el.classList.remove('red')
-                    })
-                }
-            })
-        })
-
-    })
-
-</script>
 
 </body>
 </html>
