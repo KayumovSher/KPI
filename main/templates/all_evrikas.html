@@ -36,6 +36,26 @@
                     
                 </thead>
                 <tbody>
+                    <form action="{% url 'all_evrika' %}" method="post">
+                        {% csrf_token %}
+                    {% if not data %}
+                    <td> <select name="kpi_id" required class="form-control"> 
+                        <option value="" name="">Choose one</option>
+                        {% for kpi_user in kpi_users %}
+                        <option value="{{kpi_user.id}}" name="kpi_id"> {{kpi_user}} </option>
+                        {% endfor %}
+                        </select>   </td>
+
+                        <td> <select name="score" class="form-control"> 
+                            <option value="0"> 0 </option>
+                            <option value="5"> 5 </option>
+                          </select> </td>
+                        <td> <input type="text" name="details"> 
+                            <input type="submit" name="create_evrika" value="Create">
+                        </td>
+                        {% endif %}
+                     </form>
+
                     {% for evrika in data %}
                     <tr>
                         <form action="{% url 'all_evrika' %}" method="post">

@@ -22,16 +22,9 @@ urlpatterns = [
     path("work/<int:work_id>/reset_score/", views.work_reset_score, name='work_reset_score'),
     path("work/<int:work_id>/decrease_score/", views.work_decrease_score, name='work_decrease_score'),
 
-    path('book_create/<int:kpi_id>/', views.create_book, name='create_book'),
     path('book/<int:id>/', views.book, name='book_detail'),
-    path('book/<int:kpi_id>/edit/<int:book_id>/', views.edit_book, name='edit_book'),
-    path('book/<int:kpi_id>/delete/<int:book_id>/', views.delete_book, name='delete_book'),
        
-    path('sport_create/<int:kpi_id>/', views.create_sport, name='create_sport'),
     path('sport/<int:id>/', views.sport, name='sport_detail'),
-    path('sport/<int:kpi_id>/edit/<int:sport_id>/', views.edit_sport, name='edit_sport'),
-    path('sport/<int:kpi_id>/delete/<int:sport_id>/', views.delete_sport, name='delete_sport'),
-    
 
     path('evrika_create/<int:kpi_id>/', views.create_evrika, name='create_evrika'),
     path('evrika/<int:id>/', views.evrika, name='evrika_detail'),
@@ -44,7 +37,7 @@ urlpatterns = [
     path("all_evrika/", views.all_evrikas, name='all_evrika'),
     path("all_sports/", views.all_sports, name='all_sports'),
     path('all_meetings/', views.all_meetings, name='all_meetings'),
-
+    
     path('reminder/', views.reminder),
     path('book_items/', views.bookItems, name='book_items'),
 

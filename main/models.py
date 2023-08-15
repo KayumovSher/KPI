@@ -46,11 +46,6 @@ class SportManager(models.Manager):
         sports = self.filter(kpi=kpi)
         return sum(x.score for x in sports)
 
-
-class SportDateModel(models.Model):
-    date = models.DateField(default=timezone.now())
-    created_at = models.DateTimeField(auto_now=True)
-
     def __str__(self) -> str:
         return self.date.strftime('%Y-%m-%d')
 
