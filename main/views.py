@@ -151,24 +151,13 @@ def work(request, id=None):
     return render(request, 'work.html', {"works": works, 'kpi': kpi})
 
 @IsAdminOrReadOnly
-def work_increase_score(request, work_id=None):
+def work_increase_reset_decrease_score(request, work_id=None):
     if request.method != 'POST':
         return HttpResponseNotAllowed(('POST',))
-    change_score(work_id, request.POST.get('deadline_id'), request.POST.get('kpi_id'), score=0.5)
-    return redirect(to='all_works')
-
-@IsAdminOrReadOnly
-def work_reset_score(request, work_id=None):
-    if request.method != 'POST':
-        return HttpResponseNotAllowed(('POST',))
-    change_score(work_id, request.POST.get('deadline_id'), request.POST.get('kpi_id'))
-    return redirect(to='all_works')
-
-@IsAdminOrReadOnly
-def work_decrease_score(request, work_id=None):
-    if request.method != 'POST':
-        return HttpResponseNotAllowed(('POST',))
-    change_score(work_id, request.POST.get('deadline_id'), request.POST.get('kpi_id'), score=-1)
+    score_dic = {'increase_work_score':0.5, 'decrease_work_score':-1, 'reset_work_score':0}
+    post_data = list(request.POST.items())
+    last_key = post_data[-1][0]
+    change_score(work_id, request.POST.get('deadline_id'), request.POST.get('kpi_id'), score=score_dic[last_key])
     return redirect(to='all_works')
 
 def reminder(request):

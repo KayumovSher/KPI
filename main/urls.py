@@ -15,9 +15,7 @@ urlpatterns = [
     
 
     path('work/<int:id>/', views.work, name='work_detail'),
-    path("work/<int:work_id>/increase_score/", views.work_increase_score, name='work_increase_score'),
-    path("work/<int:work_id>/reset_score/", views.work_reset_score, name='work_reset_score'),
-    path("work/<int:work_id>/decrease_score/", views.work_decrease_score, name='work_decrease_score'),
+    path("work/<int:work_id>/work_change_score/", views.work_increase_reset_decrease_score, name='work_increase_reset_decrease_score'),
 
     path('book/<int:id>/', views.book, name='book_detail'),
        
