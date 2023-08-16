@@ -392,7 +392,7 @@ def all_sports(request):
 # [{<KpiModel: sadriddin>: [{'date': '2023-08-17', 'score': '-1', 'work_id': 1, 'deadline_id': 1}, {'date': '1221-12-21', 'score': 0, 'work_id': None, 'deadline_id': 2}]}]
 # [{<KpiModel: sadriddin>: [{'date': '2023-08-17', 'score': '-1', 'work_id': 1, 'deadline_id': 1}, {'date': '1221-12-21', 'score': 0, 'work_id': None, 'deadline_id': 2}]}, {<KpiModel: user-1>: [{'date': '2023-08-17', 'score': 0, 'work_id': None, 'deadline_id': 1}, {'date': '1221-12-21', 'score': 0, 'work_id': None, 'deadline_id': 2}]}]
 
-@login_required(login_url="login")
+@IsAdminOrReadOnly
 def edit_kpi(request, kpi_id):
     kpi = get_object_or_404(KpiModel, id=kpi_id)
     if request.method == 'POST':
@@ -410,7 +410,7 @@ def edit_kpi(request, kpi_id):
     return render(request, 'edit_kpi.html')
 
 
-@login_required(login_url="login")
+@IsAdminOrReadOnly
 def delete_kpi(request, kpi_id):
     kpi = get_object_or_404(KpiModel, id=kpi_id)
     if request.method == 'POST':
@@ -418,7 +418,7 @@ def delete_kpi(request, kpi_id):
         return redirect(f'/kpi/')
 
 
-@login_required(login_url="login")
+@IsAdminOrReadOnly
 def create_kpi(request):
     if request.method == 'POST':
         name = request.POST.get('name')
