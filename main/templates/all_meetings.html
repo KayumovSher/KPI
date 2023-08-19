@@ -6,10 +6,136 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{% static 'css/work.css' %}">
-    <title>KPI</title>
+    <link rel="stylesheet" href="{% static 'css/all_works.css' %}">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <title>KPI Meeting</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
     {% load static %}
 </head>
+
+<style>
+    @import url(https://fonts.googleapis.com/css?family=Lato:300,400,900);
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+}
+
+html {
+  background: #444;
+}
+
+body {
+  min-height: 100%;
+  overflow: hidden;
+}
+
+.table {
+    width: inherit;
+}
+
+.container {
+    max-width: 1700px;
+}
+
+.button_done {
+
+    width: 100px;
+    height: 150px;
+}
+
+.container_done {
+    width: auto;
+    height: 50px;
+    min-height: 50%;
+    margin: 0 auto;
+}
+
+.button-wrap {
+    padding: 0;
+    position: relative;
+    text-align: center;
+    top: 50%;
+    margin-top: 0rem;
+}
+@media (max-width: 1200px) {
+  .button-wrap {
+    margin-top: -1.5em;
+  }
+}
+
+.button-label {
+    width: 30px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1em 2em;
+    cursor: pointer;
+    color: #292929;
+    background: #efefef;
+    transition: 0.3s;
+    -webkit-user-select: none;
+      -moz-user-select: none;
+          -ms-user-select: none;
+              user-select: none;
+}
+.button-label h1 {
+
+    font-size: 0.80em;
+    position: absolute;
+    font-family: "Lato", sans-serif;
+}
+
+@media (max-width: 40em) {
+  .button-label {
+    padding: 0em 1em 3px;
+    margin: 0.25em;
+  }
+}
+
+.button-label:hover {
+    opacity: 0.8;
+}
+
+.red {
+    background: #D91E18;
+  color: #efefef;
+}
+
+.green {
+    background: #2ECC71;
+    color: #efefef;
+}
+
+.hidden {
+  display: none;
+}
+
+.work-button {
+    border: none;
+    padding: 0.25rem 1rem;
+    color: #292929;
+    background: #efefef;
+}
+.work-button:hover {
+    cursor: pointer;
+    color: #292929;
+    background: #f5f5f5;
+}
+.green-buttons button {
+    background: #2ECC71;
+    color: #efefef;
+}
+.red-buttons button {
+    background: #D91E18;
+    color: #efefef;
+}
+
+</style>
+
 <body>
 
 
@@ -52,20 +178,31 @@
                         <tr>
                             <td> {{kpi.name}}</td>
                             {% for meeting in meet_items %}
-                            <form action="{% url 'all_meetings' %}" method="POST">
-                                {% csrf_token %}
-                                <td> <select name="n_score" class="form-control"> 
-                                    <option value="{{meeting.score}}"> {{meeting.score}} </option>
-                                      <option value="-5"> -5 </option>
-                                      <option value="0"> 0 </option>
-                                  </select> <input type="submit" name="save_meeting" value="Save">  </td>
+                            <td class="button_done">
+                                <div class="container_done">
+                                    <div class="button-wrap d-flex justify-content-center{%  if meeting.score == '0' %} green-buttons{% endif %}{%  if meeting.score == '-5' %} red-buttons{% endif %}">
+                                        <form action="{% url 'meeting_increase_decrease_score' meeting.meeting_id %}" method="POST">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="meeting_date_id" value="{{meeting.meeting_date_id}}">
+                                            <input type="hidden" name="kpi_id" value="{{kpi.id}}">
+                                            <button type="submit" class="work-button" name="decrease_meeting_score">
+                                                <i class="ri-close-line yes"></i>
+                                            </button>
+                                        </form>
 
-                                <input type="hidden" name="meeting_date" id="" value="{{meeting.meeting_date.date}}">
-                                <input type="hidden" name="meeting_id" id="" value="{{meeting.meeting_id}}">
-                                <input type="hidden" name="meeting_date_id" id="" value="{{meeting.meeting_date_id}}">
-                                <input type="hidden" name="kpi_id" value="{{kpi.id}}">
-                            </form>
-                            {% endfor %}
+                                        <form action="{% url 'meeting_increase_decrease_score' meeting.meeting_id %}" method="POST">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="meeting_date_id" value="{{meeting.meeting_date_id}}">
+                                            <input type="hidden" name="kpi_id" value="{{kpi.id}}">
+                                            <button type="submit" class="work-button" name="increase_meeting_score">
+                                                <i class="ri-check-line yes"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+
+                            </td>
+                        {% endfor %}
                         </tr>
          
                         {% endfor %}

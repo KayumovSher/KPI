@@ -6,9 +6,133 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{% static 'css/work.css' %}">
+    <link rel="stylesheet" href="{% static 'css/all_works.css' %}">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
     <title>KPI</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
     {% load static %}
+    <style>
+        @import url(https://fonts.googleapis.com/css?family=Lato:300,400,900);
+    * {
+      box-sizing: border-box;
+    }
+    
+    html, body {
+      height: 100%;
+    }
+    
+    html {
+      background: #444;
+    }
+    
+    body {
+      min-height: 100%;
+      overflow: hidden;
+    }
+    
+    .table {
+        width: inherit;
+    }
+    
+    .container {
+        max-width: 1700px;
+    }
+    
+    .button_done {
+    
+        width: 100px;
+        height: 150px;
+    }
+    
+    .container_done {
+        width: auto;
+        height: 50px;
+        min-height: 50%;
+        margin: 0 auto;
+    }
+    
+    .button-wrap {
+        padding: 0;
+        position: relative;
+        text-align: center;
+        top: 50%;
+        margin-top: 0rem;
+    }
+    @media (max-width: 1200px) {
+      .button-wrap {
+        margin-top: -1.5em;
+      }
+    }
+    
+    .button-label {
+        width: 30px;
+        height: 30px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 1em 2em;
+        cursor: pointer;
+        color: #292929;
+        background: #efefef;
+        transition: 0.3s;
+        -webkit-user-select: none;
+          -moz-user-select: none;
+              -ms-user-select: none;
+                  user-select: none;
+    }
+    .button-label h1 {
+    
+        font-size: 0.80em;
+        position: absolute;
+        font-family: "Lato", sans-serif;
+    }
+    
+    @media (max-width: 40em) {
+      .button-label {
+        padding: 0em 1em 3px;
+        margin: 0.25em;
+      }
+    }
+    
+    .button-label:hover {
+        opacity: 0.8;
+    }
+    
+    .red {
+        background: #D91E18;
+      color: #efefef;
+    }
+    
+    .green {
+        background: #2ECC71;
+        color: #efefef;
+    }
+    
+    .hidden {
+      display: none;
+    }
+    
+    .work-button {
+        border: none;
+        padding: 0.25rem 1rem;
+        color: #292929;
+        background: #efefef;
+    }
+    .work-button:hover {
+        cursor: pointer;
+        color: #292929;
+        background: #f5f5f5;
+    }
+    .green-buttons button {
+        background: #2ECC71;
+        color: #efefef;
+    }
+    .red-buttons button {
+        background: #D91E18;
+        color: #efefef;
+    }
+    
+    </style>
 </head>
 <body>
     {% include 'navbar.html' %}
@@ -58,18 +182,31 @@
 
                     {% for evrika in data %}
                     <tr>
-                        <form action="{% url 'all_evrika' %}" method="post">
-                            {% csrf_token %}
                         <td> {{evrika.kpi.name}} </td>
-                        <td> <select name="score" class="form-control"> 
-                            <option value="{{evrika.score}}"> {{evrika.score}} </option>
-                            <option value="0"> 0 </option>
-                            <option value="5"> 5 </option>
-                          </select> </td>
-                        <td> <input type="text" name="details" value="{{evrika.details}}"> 
-                            <input type="hidden" value="{{evrika.id}}" name="evrika_id">
-                        <input type="submit" value="Save" name="save_evrika"> </td>
-                        </form>
+                        <td class="button_done">
+                            <div class="container_done">
+                                <div class="button-wrap d-flex justify-content-center{%  if evrika.score == '5' %} green-buttons{% endif %}{%  if evrika.score == '0' %} red-buttons{% endif %}">
+                                    <form action="{% url 'evrika_increase_decrease_score' evrika.id %}" method="POST">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="details" value="{{evrika.details}}">
+                                        <input type="hidden" name="kpi_id" value="{{evrika.kpi.id}}">
+                                        <button type="submit" class="work-button" name="decrease_evrika_score">
+                                            <i class="ri-close-line yes"></i>
+                                        </button>
+                                    </form>
+                                    <form action="{% url 'evrika_increase_decrease_score' evrika.id %}" method="POST">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="details" value="{{evrika.details}}">
+                                        <input type="hidden" name="kpi_id" value="{{evrika.kpi.id}}">
+                                        <button type="submit" class="work-button" name="increase_evrika_score">
+                                            <i class="ri-check-line yes"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+
+                        </td>
+                        <td> {{evrika.details}} </td>
 
                         <form action="{% url 'all_evrika' %}" method="post">
                             {% csrf_token %}

@@ -16,11 +16,11 @@ urlpatterns = [
 
     path('work/<int:id>/', views.work, name='work_detail'),
     path("work/<int:work_id>/work_change_score/", views.work_increase_reset_decrease_score, name='work_increase_reset_decrease_score'),
-
+    path("book/<str:book_id>/book_change_score/", views.book_increase_decrease_score, name='book_increase_decrease_score'),
     path('book/<int:id>/', views.book, name='book_detail'),
-       
+    path("sport/<str:sport_id>/sport_change_score/", views.sport_increase_decrease_score, name='sport_increase_decrease_score'),
     path('sport/<int:id>/', views.sport, name='sport_detail'),
-
+    path("evrika/<str:evrika_id>/evrika_change_score/", views.evrika_increase_decrease_score, name='evrika_increase_decrease_score'),
     path('evrika/<int:id>/', views.evrika, name='evrika_detail'),
 
     path("all_works/", views.all_works, name='all_works'),
@@ -28,6 +28,7 @@ urlpatterns = [
     path("all_evrika/", views.all_evrikas, name='all_evrika'),
     path("all_sports/", views.all_sports, name='all_sports'),
     path('all_meetings/', views.all_meetings, name='all_meetings'),
+    path('meeting/<str:meeting_id>/meeting_change_score/', views.meeting_increase_decrease_score, name='meeting_increase_decrease_score'),
     
     path('reminder/', views.reminder),
     path('book_items/', views.bookItems, name='book_items'),

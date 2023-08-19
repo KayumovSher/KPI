@@ -10,7 +10,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from .utils import IsAdminOrReadOnly
 from django.shortcuts import render
-from .utils import change_score
+from . import utils
 # Create your views here.
 
 def index(request):
@@ -80,6 +80,14 @@ def all_meetings(request):
         data.append(kpi_data)
     return render(request, 'all_meetings.html', context={'data': data, 'deadlines': deadlines})
 
+def meeting_increase_decrease_score(request, meeting_id=0):
+    if request.method != 'POST':
+        return HttpResponseNotAllowed(('POST',))
+    score_dic = {'increase_meeting_score':0, 'decrease_meeting_score':-5, 'reset_work_score':0}
+    post_data = list(request.POST.items())
+    last_key = post_data[-1][0]
+    utils.change_meeting_score(meeting_id, request.POST.get('meeting_date_id'), request.POST.get('kpi_id'), score=score_dic[last_key])
+    return redirect(to='all_meetings')
 
 def SignupPage(request):
     if request.method == 'POST':
@@ -157,7 +165,7 @@ def work_increase_reset_decrease_score(request, work_id=None):
     score_dic = {'increase_work_score':0.5, 'decrease_work_score':-1, 'reset_work_score':0}
     post_data = list(request.POST.items())
     last_key = post_data[-1][0]
-    change_score(work_id, request.POST.get('deadline_id'), request.POST.get('kpi_id'), score=score_dic[last_key])
+    utils.change_score(work_id, request.POST.get('deadline_id'), request.POST.get('kpi_id'), score=score_dic[last_key])
     return redirect(to='all_works')
 
 def reminder(request):
@@ -230,7 +238,6 @@ def all_works(request):
             return redirect('/all_works/')
         obj = WorkModel.objects.get(id=work_id)
         obj.score = n_score
-        obj.deadline = dead_obj
         obj.kpi = kpi_user
         obj.save()
         return redirect('/all_works/')
@@ -265,6 +272,26 @@ def all_works(request):
 
         data.append(kpi_data)
     return render(request, 'all_works.html', {"deadlines": deadlines, "data": data})
+
+@IsAdminOrReadOnly
+def book_increase_decrease_score(request, book_id=0):
+    if request.method != 'POST':
+        return HttpResponseNotAllowed(('POST',))
+    score_dic = {'increase_book_score':1, 'decrease_book_score':0}
+    post_data = list(request.POST.items())
+    last_key = post_data[-1][0]
+    
+    kpi_id, book_item_id = request.POST.get('kpi_id'), request.POST.get('book_item_id')
+    kpi_user = KpiModel.objects.get(id=kpi_id)
+    book_item_obj = BookItem.objects.get(id=book_item_id)
+    if book_id == 0 or book_id == 'None':
+            BookModel.objects.create(book=book_item_obj, score=score_dic[last_key], kpi=kpi_user).save()
+            return redirect('/all_books/')
+    book = get_object_or_404(BookModel, id=book_id)
+    book.score = score_dic[last_key]
+    book.save()
+    return redirect(to='all_books')
+
 
 @IsAdminOrReadOnly
 def all_books(request):
@@ -319,6 +346,25 @@ def all_books(request):
         data.append(kpi_data)
     return render(request, 'all_books.html', {"book_items": book_items, "data": data})
 
+@IsAdminOrReadOnly
+def evrika_increase_decrease_score(request, evrika_id=0):
+    print(request.POST)
+    if request.method != 'POST':
+        return HttpResponseNotAllowed(('POST',))
+    score_dic = {'increase_evrika_score':5, 'decrease_evrika_score':0}
+    post_data = list(request.POST.items())
+    last_key = post_data[-1][0]
+    kpi_id, details = request.POST.get('kpi_id'), request.POST.get('details')
+    kpi_user = KpiModel.objects.get(id=kpi_id)
+    if evrika_id == 0 or evrika_id == '':
+            EvrikaModel.objects.create(details=details, score=score_dic[last_key], kpi=kpi_user).save()
+            return redirect('/all_evrika/')
+    evrika = get_object_or_404(EvrikaModel, id=evrika_id)
+    evrika.score = score_dic[last_key]
+    evrika.save()
+    return redirect(to='all_evrika')
+
+
 @IsAdminOrReadOnly  
 def all_evrikas(request):
     if 'save_evrika' in request.POST:
@@ -329,13 +375,24 @@ def all_evrikas(request):
         obj.details = details
         obj.save()
     elif 'create_evrika' in request.POST:
-        print(request.POST)
         kpi_obj = KpiModel.objects.get(id=request.POST.get('kpi_id'))
         EvrikaModel.objects.create(details=request.POST.get('details'), score=request.POST.get('score'), kpi=kpi_obj).save()
         return redirect('/all_evrika/')
     evrikas = [x for x in EvrikaModel.objects.all().order_by("created_at")]
     kpi_users = KpiModel.objects.all()
+    print(evrikas)
     return render(request, 'all_evrikas.html', {'data': evrikas, 'kpi_users':kpi_users})
+
+# from django.views.decorators.csrf import csrf_protect
+@IsAdminOrReadOnly
+def sport_increase_decrease_score(request, sport_id=0):
+    if request.method != 'POST':
+        return HttpResponseNotAllowed(('POST',))
+    score_dic = {'decrease_sport_score':-1, 'increase_sport_score':0}
+    post_data = list(request.POST.items())
+    last_key = post_data[-1][0]
+    utils.change_sport_score(sport_id, request.POST.get('sport_date_id'), request.POST.get('kpi_id'), score=score_dic[last_key])
+    return redirect(to='all_sports')
 
 @IsAdminOrReadOnly
 def all_sports(request):
