@@ -8,8 +8,14 @@
         padding: 0;
         margin: 0;
         position: relative;/* Move the element 20 pixels down from its normal position */
-        left: 1000px; 
+        left: 30rem;
     }
+
+    .navbar-nav {
+        left: 10px;
+    }
+
+
     
 </style>
         
@@ -20,7 +26,7 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0" style="padding: 10px;">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0" style="align-items: inherit'">
                 <h4 style="color: aliceblue;">{% if request.user.is_authenticated %}
                     <p>{{ request.user.username }}!</p>
                     {% endif %}
