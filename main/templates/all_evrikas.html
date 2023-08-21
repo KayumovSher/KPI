@@ -165,84 +165,49 @@
 
             <table class="table table-bordered">
                 <thead class="thead-dark">
-                    
                     <tr>
                         <th>F.I.O</th>
+                        {% for x in evrikas %}
                         <td> Ball </td>
                         <td> Evrika Nimaligi </td>
+                        {% endfor %}
                     </tr>
-                    
                 </thead>
-                <tbody>
+
+        <tbody>
+                {% for evrika_dic in data %}
+                {% for kpi, evrika_items in evrika_dic.items %}
+
+                <tr>
                     <form action="{% url 'all_evrika' %}" method="post">
                         {% csrf_token %}
-                    {% if not data %}
-                    <td> <select name="kpi_id" required class="form-control"> 
-                        <option value="" name="">Choose one</option>
-                        {% for kpi_user in kpi_users %}
-                        <option value="{{kpi_user.id}}" name="kpi_id"> {{kpi_user}} </option>
-                        {% endfor %}
-                        </select>   </td>
-
-                        <td> <select name="score" class="form-control"> 
-                            <option value="0"> 0 </option>
-                            <option value="5"> 5 </option>
-                          </select> </td>
-                        <td> <input type="text" name="details"> 
-                            <input type="submit" name="create_evrika" value="Create">
-                        </td>
-                        {% endif %}
-                     </form>
-
-                    {% for evrika in data %}
-                    <tr>
-                        <td> {{evrika.kpi.name}} </td>
-                        <td class="button_done">
-                            <div class="container_done">
-                                <div class="button-wrap d-flex justify-content-center{%  if evrika.score == '5' %} green-buttons{% endif %}{%  if evrika.score == '0' %} red-buttons{% endif %}">
-                                    <form action="{% url 'evrika_increase_decrease_score' evrika.id %}" method="POST">
-                                        {% csrf_token %}
-                                        <input type="hidden" name="details" value="{{evrika.details}}">
-                                        <input type="hidden" name="kpi_id" value="{{evrika.kpi.id}}">
-                                        <button type="submit" class="work-button" name="decrease_evrika_score">
-                                            <i class="ri-close-line yes"></i>
-                                        </button>
-                                    </form>
-                                    <form action="{% url 'evrika_increase_decrease_score' evrika.id %}" method="POST">
-                                        {% csrf_token %}
-                                        <input type="hidden" name="details" value="{{evrika.details}}">
-                                        <input type="hidden" name="kpi_id" value="{{evrika.kpi.id}}">
-                                        <button type="submit" class="work-button" name="increase_evrika_score">
-                                            <i class="ri-check-line yes"></i>
-                                        </button>
-                                    </form>
-                                </div>
-                            </div>
-
-                        </td>
-                        <td> {{evrika.details}} </td>
-
-                        <form action="{% url 'all_evrika' %}" method="post">
-                            {% csrf_token %}
-
-                            
-                            <td> <select name="score" class="form-control"> 
-                                    <option value="0"> 0 </option>
-                                    <option value="5"> 5 </option>
-                                  </select>
-                                <input type="text" name="details" placeholder="Evrika" required> 
-                                <input type="hidden" name="kpi_id" value="{{evrika.kpi.id}}">
-                            <input type="submit" name="create_evrika" value="Create">  </td>
-                        </form>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-
-
-
-
-
+                    <td> {{kpi.name}} </td>
+                    {% for evrika in evrika_items %}
+                    <td> <select name="score" class="form-control"> 
+                        <option value="{{evrika.score}}"> {{evrika.score}} </option>
+                        <option value="0"> 0 </option>
+                        <option value="5"> 5 </option>
+                    </select> </td>
+                    <td> <input type="text" name="details" value="{{evrika.details}}"> 
+                        <input type="hidden" value="{{evrika.evrika_id}}" name="evrika_id">
+                    <input type="submit" value="Save" name="save_evrika"> </td>
+                    </form>
+                    
+                {% endfor %}
+                <form action="{% url 'all_evrika' %}" method="post">
+                    <td> <input type="text" name="score" placeholder="ball"> 
+                     <input type="text" name="details" placeholder="details"> 
+                     <input type="hidden" name="kpi_user_id" value="{{kpi.id}}">
+                    <input type="submit" name="create_evrika" value="Create"> </td>
+                    
+                </form>
+                {% endfor %}
+                   
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+                    
         <a href="https://docs.google.com/spreadsheets/d/13aPcjyMXeHoDP3VeYuTcN4DlKeJEvOr_2t3qR4TV_3w/edit#gid=1208225701">
 
             <button>Table to Kpi Google Sheet</button>

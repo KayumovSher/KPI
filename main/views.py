@@ -363,7 +363,7 @@ def evrika_increase_decrease_score(request, evrika_id=0):
     evrika.score = score_dic[last_key]
     evrika.save()
     return redirect(to='all_evrika')
-
+from django.db.models import Count
 
 @IsAdminOrReadOnly  
 def all_evrikas(request):
@@ -375,13 +375,26 @@ def all_evrikas(request):
         obj.details = details
         obj.save()
     elif 'create_evrika' in request.POST:
-        kpi_obj = KpiModel.objects.get(id=request.POST.get('kpi_id'))
+        kpi_obj = KpiModel.objects.get(id=request.POST.get('kpi_user_id'))
         EvrikaModel.objects.create(details=request.POST.get('details'), score=request.POST.get('score'), kpi=kpi_obj).save()
         return redirect('/all_evrika/')
+    data = []
     evrikas = [x for x in EvrikaModel.objects.all().order_by("created_at")]
     kpi_users = KpiModel.objects.all()
-    print(evrikas)
-    return render(request, 'all_evrikas.html', {'data': evrikas, 'kpi_users':kpi_users})
+    kpi_queryset = KpiModel.objects.annotate(evrika_count=Count('evrika_items'))
+    kpi_with_most_evrika = kpi_queryset.order_by('-evrika_count').first()
+
+    evrika_dic = {}
+    for x in kpi_users:
+        evrika_dic[x] = []
+        for y in evrikas:
+            if y.kpi == x:
+                evrika_dic[x].append({'score':y.score, 'details':y.details,'evrika_id':y.id})
+            # else:
+            #     evrika_dic[x].append({'score':0, 'details':'','evrika_id':None})
+    data.append(evrika_dic)
+    print(kpi_with_most_evrika)
+    return render(request, 'all_evrikas.html', {'data': data, 'kpi_users':kpi_users, 'evrikas':evrikas, 'kpi_with_most_evrika':kpi_with_most_evrika})
 
 # from django.views.decorators.csrf import csrf_protect
 @IsAdminOrReadOnly
