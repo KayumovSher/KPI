@@ -1,24 +1,24 @@
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
 </head>
 <body>
-  {% include 'navbar.html' %}
+{% include 'navbar.html' %}
 
-  {% load static %}
+{% load static %}
 
-  <div>
+<div>
     {% for x in bookitems %}
-      {{x.title}} <br>
+        {{ x.title }} <br>
     {% endfor %}
-  </div>
+</div>
 
-  <form action="" method="post">
+<form action="" method="post">
     {% csrf_token %}
     <input type="text" name="title">
     <input type="submit" name="Save">
-  </form>
+</form>
 </body>
 </html> 

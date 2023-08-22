@@ -12,165 +12,169 @@
 </head>
 
 <style>
-    *,*:after,*:before{
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    -ms-box-sizing: border-box;
-    box-sizing: border-box;
-}
-body{
-    font-family: arial, sans-serif;
-    width: auto;
-    font-size: 15px;
-    position: sticky;
-    color: #000;
+    *, *:after, *:before {
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        -ms-box-sizing: border-box;
+        box-sizing: border-box;
 
-    justify-content: center;
-    align-items: center;
-    margin: 0;
-    padding: 0;
-    text-align: center;
+    }
 
-}
+    body {
+        font-family: arial, sans-serif;
+        width: auto;
+        font-size: 15px;
+        position: sticky;
+        color: #000;
+
+        justify-content: center;
+        align-items: center;
+        margin: 0;
+        padding: 0;
+        text-align: center;
+    {#background: #3c00a0;rr#}
+
+    }
 
 
+    .container-fluid {
+        width: auto;
+    }
 
-.container-fluid {
-    width: auto;
-}
+    /* .div__container{
+        justify-content: center;
+        align-items: center;
+        display: flex;
+    } */
 
-/* .div__container{
-    justify-content: center;
-    align-items: center;
-    display: flex;
-} */
+    /* .container{
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    } */
 
-/* .container{
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-} */
+    button {
+        display: block;
+        text-align: center;
+        width: 300px;
+        margin: 25px auto;
+        background-color: #000;
+        color: #fff;
+        font-size: 15px;
+        cursor: pointer;
+    }
 
-button{
-    display: block;
-    text-align: center;
-    width: 300px;
-    margin: 25px auto;
-    background-color: #000;
-    color: #fff;
-    font-size: 15px;
-    cursor: pointer;
-}
-h1{
-    font-size: 50px;
-    font-weight: 600;
-    text-align: center;
-}
+    h1 {
+        font-size: 50px;
+        font-weight: 600;
+        text-align: center;
+    }
 
-table {
-    border-spacing: 12px;
-}
+    table {
+        border-spacing: 12px;
+    }
 
-table thead th a {
-    text-decoration: none;
-    width: 200px;
-}
+    table thead th a {
+        text-decoration: none;
+        width: 200px;
+    }
 
-.table table-bordered{
-    border-collapse: collapse;
-    width: 500px;
-    padding-left: 0;
-}
-table {
-    table-layout: fixed;
-}
-.table td {
-    overflow: scroll;
-}
+    .table table-bordered {
+        border-collapse: collapse;
+        width: 500px;
+        padding-left: 0;
+    }
+
+    table {
+        table-layout: fixed;
+    }
+
+    .table td {
+        overflow: scroll;
+    }
 </style>
 
 <body>
 
-    
-    {% include 'navbar.html' %}
-    
-    
 
-    <div class="container-fluid" >
-         
+{% include 'navbar.html' %}
 
-        <h1>Table to Google Sheet KPI <i class="ri-arrow-right-line"></i><a href="reminder">Remind!</a></h1>
-        <table class="table table-bordered" >
-            <thead class="thead-dark">
-                <tr>
-                    <th>F.I.O</th>
-                    <th>
-                        <a href="{% url 'all_books' %}">Kitob</a>
-                    </th>
-                    <th>
-                        <a href="{% url 'all_sports' %}">Sport</a>
-                    </th>
-                    <th>
-                        <a href="{% url 'all_works' %}">Ish</a>
-                    </th>
-                    <th>
-                        <a href="{% url 'all_evrika' %}">Eureka</a>
-                    </th>
-                    <th> <a href="{% url 'all_meetings' %}"> Meeting </a> </th>
 
-                    <th class="background-color:green;">Umumiy</th>
-                    <th>Liga</th>
-                    <th>Koef</th>
-                    <th>Book Comments</th>
-                    <th>Upwork</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for i in results  %}  
-                <tr>
-                    <td>{{ i.kpi.name }}</td>
-                    <td>
-                        <a href="{% url 'book_detail' i.kpi.id %}">{{ i.books }}</a>
-                    </td>
-                    <td>
-                        <a href="{% url 'sport_detail' i.kpi.id %}">{{ i.sports }}</a>
-                    </td>
-                    <td>
-                        <a href="{% url 'work_detail' i.kpi.id %}">{{ i.works }}</a>
-                    </td>
-                    <td>
-                        <a href="{% url 'evrika_detail' i.kpi.id %}">{{ i.evrikas }}</a>
-                    </td>
-                    <td>  {{i.meetings}} </td>
-                    <td>{{ i.kpi.general }}</td>
-                    <td>{{ i.kpi.league }}</td>   
-                    <td>{{ i.kpi.koef }}</td>
-                    <td>
-                        <a href="{{ i.kpi.book_comment }}">{{ i.kpi.book_comment }}</a>
-                    </td>
-                    <td>
-                        <a href="{{ i.kpi.upwork }}">{{ i.kpi.upwork }}</a>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+<div class="container-fluid">
 
-        <a href="https://docs.google.com/spreadsheets/d/13aPcjyMXeHoDP3VeYuTcN4DlKeJEvOr_2t3qR4TV_3w/edit#gid=1208225701">
-            <button>Table to Kpi Google Sheet</button>
-        </a>
-        <button onclick="tableToGoogleSheet()">
-            Table to Excel
-        </button>
-        {% if request.user.is_staff %}
+
+    <h1>Table to Google Sheet KPI <i class="ri-arrow-right-line"></i><a href="reminder">Remind!</a></h1>
+    <table class="table table-bordered">
+        <thead class="thead-dark">
+        <tr>
+            <th>F.I.O</th>
+            <th>
+                <a href="{% url 'all_books' %}">Kitob</a>
+            </th>
+            <th>
+                <a href="{% url 'all_sports' %}">Sport</a>
+            </th>
+            <th>
+                <a href="{% url 'all_works' %}">Ish</a>
+            </th>
+            <th>
+                <a href="{% url 'all_evrika' %}">Eureka</a>
+            </th>
+            <th><a href="{% url 'all_meetings' %}"> Meeting </a></th>
+
+            <th class="background-color:green;">Umumiy</th>
+            <th>Liga</th>
+            <th>Koef</th>
+            <th>Book Comments</th>
+            <th>Upwork</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for i in results %}
+            <tr>
+                <td>{{ i.kpi.name }}</td>
+                <td>
+                    <a href="{% url 'book_detail' i.kpi.id %}">{{ i.books }}</a>
+                </td>
+                <td>
+                    <a href="{% url 'sport_detail' i.kpi.id %}">{{ i.sports }}</a>
+                </td>
+                <td>
+                    <a href="{% url 'work_detail' i.kpi.id %}">{{ i.works }}</a>
+                </td>
+                <td>
+                    <a href="{% url 'evrika_detail' i.kpi.id %}">{{ i.evrikas }}</a>
+                </td>
+                <td>  {{ i.meetings }} </td>
+                <td>{{ i.kpi.general }}</td>
+                <td>{{ i.kpi.league }}</td>
+                <td>{{ i.kpi.koef }}</td>
+                <td>
+                    <a href="{{ i.kpi.book_comment }}">{{ i.kpi.book_comment }}</a>
+                </td>
+                <td>
+                    <a href="{{ i.kpi.upwork }}">{{ i.kpi.upwork }}</a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="https://docs.google.com/spreadsheets/d/13aPcjyMXeHoDP3VeYuTcN4DlKeJEvOr_2t3qR4TV_3w/edit#gid=1208225701">
+        <button>Table to Kpi Google Sheet</button>
+    </a>
+    <button onclick="tableToGoogleSheet()">
+        Table to Excel
+    </button>
+    {% if request.user.is_staff %}
         <a href="{% url 'kpi_detail' %}">
             <button>Kpi Users</button>
         </a>
-        {% endif %}
+    {% endif %}
 
-    </div>
-    
+</div>
+
 <script type="text/javascript" src="{% static 'js/table2excel.js' %}"></script>
 <script type="text/javascript" src="{% static 'js/index.js' %}"></script>
 </body>

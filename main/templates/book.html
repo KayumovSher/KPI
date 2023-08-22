@@ -24,49 +24,49 @@
 </style>
 
 <body>
-    {% include 'navbar.html' %}
-    
-    <div class="container">
-        <h1 class="headerone">Book to Google Sheet KPI</h1>
-            <br>
+{% include 'navbar.html' %}
 
-            <h2 class="nameCenter">
-                {{kpi.name}} 
-            </h2>
+<div class="container">
+    <h1 class="headerone">Book to Google Sheet KPI</h1>
+    <br>
 
-            <br>
+    <h2 class="nameCenter">
+        {{ kpi.name }}
+    </h2>
 
-            <table class="table table-bordered">
-            <thead class="thead-dark"> 
-                    <tr>
-                    <th>Title</th>
-                    <th>Score</th>
-                    </tr>
-            </thead>
-                    <tbody>
+    <br>
 
-                        {% for i in books %}
-                        <tr>
-                                <th> {{ i.book.title}} </th>
-                                
-                                <th> {{i.score}} </th>
-                        </tr>
-                        {% endfor %}
-    
-                    </tbody>
-        </table>
+    <table class="table table-bordered">
+        <thead class="thead-dark">
+        <tr>
+            <th>Title</th>
+            <th>Score</th>
+        </tr>
+        </thead>
+        <tbody>
 
-        <a href="https://docs.google.com/spreadsheets/d/13aPcjyMXeHoDP3VeYuTcN4DlKeJEvOr_2t3qR4TV_3w/edit#gid=1208225701">
+        {% for i in books %}
+            <tr>
+                <th> {{ i.book.title }} </th>
 
-            <button>Table to Kpi Google Sheet</button>
-        </a>
-        <button onclick="tableToGoogleSheet()">
-            Table to Excel
-        </button>
-        
+                <th> {{ i.score }} </th>
+            </tr>
+        {% endfor %}
 
-    </div>
-    
+        </tbody>
+    </table>
+
+    <a href="https://docs.google.com/spreadsheets/d/13aPcjyMXeHoDP3VeYuTcN4DlKeJEvOr_2t3qR4TV_3w/edit#gid=1208225701">
+
+        <button>Table to Kpi Google Sheet</button>
+    </a>
+    <button onclick="tableToGoogleSheet()">
+        Table to Excel
+    </button>
+
+
+</div>
+
 <script type="text/javascript" src="{% static 'js/table2excel.js' %}"></script>
 <script type="text/javascript" src="{% static 'js/index.js' %}"></script>
 

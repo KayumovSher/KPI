@@ -11,7 +11,7 @@
 </head>
 
 <style>
-        button {
+    button {
         display: block;
         text-align: center;
         width: 300px;
@@ -24,46 +24,46 @@
 </style>
 
 <body>
-    {% include 'navbar.html' %}
-    <div class="container">
-        <h1 class="headerone">Sport to Google Sheet KPI</h1>
+{% include 'navbar.html' %}
+<div class="container">
+    <h1 class="headerone">Sport to Google Sheet KPI</h1>
 
-            <br>
+    <br>
 
-            <h2 class="nameCenter">
-                {{kpi.name}} 
-            </h2>
+    <h2 class="nameCenter">
+        {{ kpi.name }}
+    </h2>
 
-            <br>
+    <br>
 
-            <table class="table table-bordered">
-            <thead class="thead-dark"> 
-                    <tr>
-                        <th>Details</th>
-                        <th>Score</th>
-                    </tr>
-            </thead>
-                </thead>
-                <tbody>
-                    {% for sport in sports %}
-                    <tr>
-                            <th> {{ sport.sport_date.date}} </th>
-                            <th> {{sport.score}} </th>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-        </table>
-        <a href="https://docs.google.com/spreadsheets/d/13aPcjyMXeHoDP3VeYuTcN4DlKeJEvOr_2t3qR4TV_3w/edit#gid=1208225701">
+    <table class="table table-bordered">
+        <thead class="thead-dark">
+        <tr>
+            <th>Details</th>
+            <th>Score</th>
+        </tr>
+        </thead>
+        </thead>
+        <tbody>
+        {% for sport in sports %}
+            <tr>
+                <th> {{ sport.sport_date.date }} </th>
+                <th> {{ sport.score }} </th>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <a href="https://docs.google.com/spreadsheets/d/13aPcjyMXeHoDP3VeYuTcN4DlKeJEvOr_2t3qR4TV_3w/edit#gid=1208225701">
 
-            <button>Table to Kpi Google Sheet</button>
-        </a>
-        <button onclick="tableToGoogleSheet()">
-            Table to Excel
-        </button>
-        
+        <button>Table to Kpi Google Sheet</button>
+    </a>
+    <button onclick="tableToGoogleSheet()">
+        Table to Excel
+    </button>
 
-    </div>
-    
+
+</div>
+
 <script type="text/javascript" src="{% static 'js/table2excel.js' %}"></script>
 <script type="text/javascript" src="{% static 'js/index.js' %}"></script>
 
