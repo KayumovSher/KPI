@@ -11,6 +11,7 @@ from django.http import JsonResponse
 from .utils import IsAdminOrReadOnly
 from django.shortcuts import render
 from . import utils
+from django.db.models import Count, Max
 # Create your views here.
 
 def index(request):
@@ -363,7 +364,6 @@ def evrika_increase_decrease_score(request, evrika_id=0):
     evrika.score = score_dic[last_key]
     evrika.save()
     return redirect(to='all_evrika')
-from django.db.models import Count
 
 @IsAdminOrReadOnly  
 def all_evrikas(request):
@@ -381,8 +381,7 @@ def all_evrikas(request):
     data = []
     evrikas = [x for x in EvrikaModel.objects.all().order_by("created_at")]
     kpi_users = KpiModel.objects.all()
-    kpi_queryset = KpiModel.objects.annotate(evrika_count=Count('evrika_items'))
-    kpi_with_most_evrika = kpi_queryset.order_by('-evrika_count').first()
+    kpi_users_with_evrika_count = KpiModel.objects.annotate(evrika_count=Count('evrika_items')).order_by('-evrika_count').first()
 
     evrika_dic = {}
     for x in kpi_users:
@@ -393,10 +392,8 @@ def all_evrikas(request):
             # else:
             #     evrika_dic[x].append({'score':0, 'details':'','evrika_id':None})
     data.append(evrika_dic)
-    print(kpi_with_most_evrika)
-    return render(request, 'all_evrikas.html', {'data': data, 'kpi_users':kpi_users, 'evrikas':evrikas, 'kpi_with_most_evrika':kpi_with_most_evrika})
+    return render(request, 'all_evrikas.html', {'data': data, 'kpi_users':kpi_users, 'evrikas':evrikas, 'ball_detail_len':range(kpi_users_with_evrika_count.evrika_count)})
 
-# from django.views.decorators.csrf import csrf_protect
 @IsAdminOrReadOnly
 def sport_increase_decrease_score(request, sport_id=0):
     if request.method != 'POST':
