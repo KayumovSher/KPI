@@ -195,7 +195,11 @@
                     
                 {% endfor %}
                 <form action="{% url 'all_evrika' %}" method="post">
-                    <td> <input type="text" name="score" placeholder="ball"> 
+                    {% csrf_token %}
+                    <td> <select name="score" class="form-control"> 
+                                        <option value="0"> 0 </option>
+                                        <option value="5"> 5 </option>
+                                        </select> 
                      <input type="text" name="details" placeholder="details"> 
                      <input type="hidden" name="kpi_user_id" value="{{kpi.id}}">
                     <input type="submit" name="create_evrika" value="Create"> </td>
