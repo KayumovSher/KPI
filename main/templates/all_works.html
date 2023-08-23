@@ -15,230 +15,258 @@
 
 <style>
     @import url(https://fonts.googleapis.com/css?family=Lato:300,400,900);
-* {
-  box-sizing: border-box;
-}
 
-html, body {
-  height: 100%;
-}
+    * {
+        box-sizing: border-box;
+    }
 
-html {
-  background: #444;
-}
+    html, body {
+        height: 100%;
+    }
 
-body {
-  min-height: 100%;
-  overflow: hidden;
-}
+    html {
+        background: #444;
+    }
 
-.table {
-    width: inherit;
-}
+        body {
+        min-height: 100%;
+        width: auto;
+        font-size: 15px;
+        position: sticky;
 
-.container {
-    max-width: 1700px;
-}
+        color: #3c00a0;
 
-.button_done {
+        justify-content: center;
+        align-items: center;
+        margin: 0;
+        padding: 0;
+        text-align: center;
 
-    width: 100px;
-    height: 150px;
-}
+    }
+
+    .table {
+        width: auto;
+        table-layout: fixed;
+    }
+
+    .container {
+        max-width: fit-content;
+                width: auto;
+        padding-left: 15px;
+        padding-right: 15px;
+        margin-right: auto;
+        margin-left: auto;
+       
+    }
+
+    .button_done {
+
+        width: 100px;
+        height: 150px;
+    }
 
 
+    .container_done {
+        width: auto;
+        height: 50px;
+        min-height: 50%;
+        margin: 0 auto;
+    }
 
-.container_done {
-    width: auto;
-    height: 50px;
-    min-height: 50%;
-    margin: 0 auto;
-}
+    .button-wrap {
+        padding: 0;
+        position: relative;
+        text-align: center;
+        top: 50%;
+        margin-top: 0rem;
+    }
 
-.button-wrap {
-    padding: 0;
-    position: relative;
-    text-align: center;
-    top: 50%;
-    margin-top: 0rem;
-}
-@media (max-width: 1200px) {
-  .button-wrap {
-    margin-top: -1.5em;
-  }
-}
+    @media (max-width: 1200px) {
+        .button-wrap {
+            margin-top: -1.5em;
+        }
+    }
 
-.button-label {
-    width: 30px;
-    height: 30px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 1em 2em;
-    cursor: pointer;
-    color: #292929;
-    background: #efefef;
-    transition: 0.3s;
-    -webkit-user-select: none;
-      -moz-user-select: none;
-          -ms-user-select: none;
-              user-select: none;
-}
-.button-label h1 {
+    .button-label {
+        width: 30px;
+        height: 30px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 1em 2em;
+        cursor: pointer;
+        color: #292929;
+        background: #efefef;
+        transition: 0.3s;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
 
-    font-size: 0.80em;
-    position: absolute;
-    font-family: "Lato", sans-serif;
-}
+    .button-label h1 {
 
-@media (max-width: 40em) {
-  .button-label {
-    padding: 0em 1em 3px;
-    margin: 0.25em;
-  }
-}
+        font-size: 0.80em;
+        position: absolute;
+        font-family: "Lato", sans-serif;
+    }
 
-.button-label:hover {
-    opacity: 0.8;
-}
+    @media (max-width: 40em) {
+        .button-label {
+            padding: 0em 1em 3px;
+            margin: 0.25em;
+        }
+    }
 
-.red {
-    background: #D91E18;
-  color: #efefef;
-}
+    .button-label:hover {
+        opacity: 0.8;
+    }
 
-.green {
-    background: #2ECC71;
-    color: #efefef;
-}
+    .red {
+        background: #D91E18;
+        color: #efefef;
+    }
 
-.hidden {
-  display: none;
-}
+    .green {
+        background: #2ECC71;
+        color: #efefef;
+    }
 
-.work-button {
-    border: none;
-    padding: 0.25rem 1rem;
-    color: #292929;
-    background: #efefef;
-}
-.work-button:hover {
-    cursor: pointer;
-    color: #292929;
-    background: #f5f5f5;
-}
-.green-buttons button {
-    background: #2ECC71;
-    color: #efefef;
-}
-.red-buttons button {
-    background: #D91E18;
-    color: #efefef;
-}
+    .hidden {
+        display: none;
+    }
+
+    .work-button {
+        border: none;
+        padding: 0.25rem 1rem;
+        color: #292929;
+        background: #efefef;
+    }
+
+    .work-button:hover {
+        cursor: pointer;
+        color: #292929;
+        background: #f5f5f5;
+    }
+
+    .green-buttons button {
+        background: #2ECC71;
+        color: #efefef;
+    }
+
+    .red-buttons button {
+        background: #D91E18;
+        color: #efefef;
+    }
+
+    table table-bordered {
+
+    }
 
 </style>
 <body>
 
 
-    {% include 'navbar.html' %}
-    
-   
-    {% load static %}
-    <div class="container">
-        <h1 class="headerone">Work to Google Sheet KPI</h1>
+{% include 'navbar.html' %}
 
-          <br>
 
-          <h2 class="nameCenter">
-            
-          </h2>
-              
-          <br>
+{% load static %}
+<div class="container">
+    <h1 class="headerone">Work to Google Sheet KPI</h1>
 
-            <table class="table table-bordered">
-                <thead class="thead-dark">            
-                    <tr>
-                        <th>F.I.O</th>
-                        {% for i in deadlines %}
-                            <th>
-                                {{i}}
-                            </th>
-                        {% endfor %}
-                        <form action="{% url 'all_works' %}" method="post">
-                            {% csrf_token %}
-                            <td> <input type="date" name="new_deadline" required> 
-                            <input type="submit" name="create_deadline" value="Create">  </td>
-                        </form>
-                    </tr>
-                    
-                </thead>
-                <tbody>
+    <br>
 
-                    {% for kpi_dict in data %}
+    <h2 class="nameCenter">
 
-                        {% for kpi, work_items in kpi_dict.items %}
-                        <tr>
+    </h2>
 
-                            <td>{{kpi.name}}</td>
-                            {% for work_item in work_items %}
-                                <td class="button_done">
-                                    <div class="container_done">
-                                        <div class="button-wrap d-flex justify-content-center{%  if work_item.score == '0.5' %} green-buttons{% endif %}{%  if work_item.score == '-1' %} red-buttons{% endif %}">
-                                            <form action="{% url 'work_increase_reset_decrease_score' work_item.work_id %}" method="POST">
-                                                {% csrf_token %}
-                                                <input type="hidden" name="deadline_id" value="{{work_item.deadline_id}}">
-                                                <input type="hidden" name="kpi_id" value="{{kpi.id}}">
-                                                <input type="hidden" name="work_id" value="{{work_item.work_id}}">
-                                                <button type="submit" class="work-button" name="decrease_work_score">
-                                                    <i class="ri-close-line yes"></i>
-                                                </button>
-                                            </form>
-                                            <form action="{% url 'work_increase_reset_decrease_score' work_item.work_id %}" method="POST">
-                                                {% csrf_token %}
-                                                <input type="hidden" name="deadline_id" value="{{work_item.deadline_id}}">
-                                                <input type="hidden" name="kpi_id" value="{{kpi.id}}">
-                                                <input type="hidden" name="work_id" value="{{work_item.work_id}}">
-                                                <button type="submit" class="work-button" name="reset_work_score">
-                                                    <i class="ri-subtract-line yes"></i>
-                                                </button>
-                                            </form>
-                                            <form action="{% url 'work_increase_reset_decrease_score' work_item.work_id %}" method="POST">
-                                                {% csrf_token %}
-                                                <input type="hidden" name="deadline_id" value="{{work_item.deadline_id}}">
-                                                <input type="hidden" name="kpi_id" value="{{kpi.id}}">
-                                                <input type="hidden" name="work_id" value="{{work_item.work_id}}">
-                                                <button type="submit" class="work-button" name="increase_work_score">
-                                                    <i class="ri-check-line yes"></i>
-                                                </button>
-                                            </form>
-                                        </div>
-                                    </div>
+    <br>
 
-                                </td>
+    <table class="table table-bordered">
+        <thead class="thead-light">
+        <tr>
+            <th>F.I.O</th>
+            {% for i in deadlines %}
+                <th>
+                    {{ i }}
+                </th>
+            {% endfor %}
+            <form action="{% url 'all_works' %}" method="post">
+                {% csrf_token %}
+                <td><input type="date" name="new_deadline" required>
+                    <input type="submit" name="create_deadline" value="Create"></td>
+            </form>
+        </tr>
 
-                            {% endfor %}
-                        </tr>
-         
-                        {% endfor %}
+        </thead>
+        <tbody>
+
+        {% for kpi_dict in data %}
+
+            {% for kpi, work_items in kpi_dict.items %}
+                <tr>
+
+                    <td>{{ kpi.name }}</td>
+                    {% for work_item in work_items %}
+                        <td class="button_done">
+                            <div class="container_done">
+                                <div class="button-wrap d-flex justify-content-center{% if work_item.score == '0.5' %} green-buttons{% endif %}{% if work_item.score == '-1' %} red-buttons{% endif %}">
+                                    <form action="{% url 'work_increase_reset_decrease_score' work_item.work_id %}"
+                                          method="POST">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="deadline_id" value="{{ work_item.deadline_id }}">
+                                        <input type="hidden" name="kpi_id" value="{{ kpi.id }}">
+                                        <input type="hidden" name="work_id" value="{{ work_item.work_id }}">
+                                        <button type="submit" class="work-button" name="decrease_work_score">
+                                            <i class="ri-close-line yes"></i>
+                                        </button>
+                                    </form>
+                                    <form action="{% url 'work_increase_reset_decrease_score' work_item.work_id %}"
+                                          method="POST">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="deadline_id" value="{{ work_item.deadline_id }}">
+                                        <input type="hidden" name="kpi_id" value="{{ kpi.id }}">
+                                        <input type="hidden" name="work_id" value="{{ work_item.work_id }}">
+                                        <button type="submit" class="work-button" name="reset_work_score">
+                                            <i class="ri-subtract-line yes"></i>
+                                        </button>
+                                    </form>
+                                    <form action="{% url 'work_increase_reset_decrease_score' work_item.work_id %}"
+                                          method="POST">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="deadline_id" value="{{ work_item.deadline_id }}">
+                                        <input type="hidden" name="kpi_id" value="{{ kpi.id }}">
+                                        <input type="hidden" name="work_id" value="{{ work_item.work_id }}">
+                                        <button type="submit" class="work-button" name="increase_work_score">
+                                            <i class="ri-check-line yes"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+
+                        </td>
+
                     {% endfor %}
-                </tbody>
-            </table>
+                </tr>
+
+            {% endfor %}
+        {% endfor %}
+        </tbody>
+    </table>
     {% load static %}
 
 
+    <a href="https://docs.google.com/spreadsheets/d/13aPcjyMXeHoDP3VeYuTcN4DlKeJEvOr_2t3qR4TV_3w/edit#gid=1208225701">
+
+        <button>Table to Kpi Google Sheet</button>
+    </a>
+    <button onclick="tableToGoogleSheet()">
+        Table to Excel
+    </button>
 
 
-        <a href="https://docs.google.com/spreadsheets/d/13aPcjyMXeHoDP3VeYuTcN4DlKeJEvOr_2t3qR4TV_3w/edit#gid=1208225701">
+</div>
 
-            <button>Table to Kpi Google Sheet</button>
-        </a>
-        <button onclick="tableToGoogleSheet()">
-            Table to Excel
-        </button>
-        
-
-    </div>
-    
 <script type="text/javascript" src="{% static 'js/table2excel.js' %}"></script>
 <script type="text/javascript" src="{% static 'js/index.js' %}"></script>
 

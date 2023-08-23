@@ -15,124 +15,145 @@
 
 <style>
     @import url(https://fonts.googleapis.com/css?family=Lato:300,400,900);
-* {
-  box-sizing: border-box;
-}
 
-html, body {
-  height: 100%;
-}
+    * {
+        box-sizing: border-box;
+    }
 
-html {
-  background: #444;
-}
+    html, body {
+        height: auto;
+    }
 
-body {
-  min-height: 100%;
-  overflow: hidden;
-}
+    html {
+        background: #444;
+    }
 
-.table {
-    width: inherit;
-}
+    body {
+        min-height: 100%;
+        width: auto;
+        font-size: 15px;
+        position: sticky;
 
-.container {
-    max-width: 1700px;
-}
+        color: #3c00a0;
 
-.button_done {
+        justify-content: center;
+        align-items: center;
+        margin: 0;
+        padding: 0;
+        text-align: center;
 
-    width: 100px;
-    height: 150px;
+    }
+table{
+    table-layout: fixed;
 }
+    .table {
+        width: fit-content;
 
-.container_done {
-    width: auto;
-    height: 50px;
-    min-height: 50%;
-    margin: 0 auto;
-}
 
-.button-wrap {
-    padding: 0;
-    position: relative;
-    text-align: center;
-    top: 50%;
-    margin-top: 0rem;
-}
-@media (max-width: 1200px) {
-  .button-wrap {
-    margin-top: -1.5em;
-  }
-}
 
-.button-label {
-    width: 30px;
-    height: 30px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 1em 2em;
-    cursor: pointer;
-    color: #292929;
-    background: #efefef;
-    transition: 0.3s;
-    -webkit-user-select: none;
-      -moz-user-select: none;
-          -ms-user-select: none;
-              user-select: none;
-}
-.button-label h1 {
+    .container {
+        max-width: 1700px;
+    }
 
-    font-size: 0.80em;
-    position: absolute;
-    font-family: "Lato", sans-serif;
-}
+    .button_done {
 
-@media (max-width: 40em) {
-  .button-label {
-    padding: 0em 1em 3px;
-    margin: 0.25em;
-  }
-}
+        width: 100px;
+        height: 150px;
+    }
 
-.button-label:hover {
-    opacity: 0.8;
-}
+    .container_done {
+        width: auto;
+        height: 50px;
+        min-height: 50%;
+        margin: 0 auto;
+    }
 
-.red {
-    background: #D91E18;
-  color: #efefef;
-}
+    .button-wrap {
+        padding: 0;
+        position: relative;
+        text-align: center;
+        top: 50%;
+        margin-top: 0rem;
+    }
 
-.green {
-    background: #2ECC71;
-    color: #efefef;
-}
+    @media (max-width: 1200px) {
+        .button-wrap {
+            margin-top: -1.5em;
+        }
+    }
 
-.hidden {
-  display: none;
-}
+    .button-label {
+        width: 30px;
+        height: 30px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 1em 2em;
+        cursor: pointer;
+        color: #292929;
+        background: #efefef;
+        transition: 0.3s;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
 
-.work-button {
-    border: none;
-    padding: 0.25rem 1rem;
-    color: #292929;
-    background: #efefef;
-}
-.work-button:hover {
-    cursor: pointer;
-    color: #292929;
-    background: #f5f5f5;
-}
-.green-buttons button {
-    background: #2ECC71;
-    color: #efefef;
-}
-.red-buttons button {
-    background: #D91E18;
-    color: #efefef;
-}
+    .button-label h1 {
+
+        font-size: 0.80em;
+        position: absolute;
+        font-family: "Lato", sans-serif;
+    }
+
+    @media (max-width: 40em) {
+        .button-label {
+            padding: 0em 1em 3px;
+            margin: 0.25em;
+        }
+    }
+
+    .button-label:hover {
+        opacity: 0.8;
+    }
+
+    .red {
+        background: #D91E18;
+        color: #efefef;
+    }
+
+    .green {
+        background: #2ECC71;
+        color: #efefef;
+    }
+
+    .hidden {
+        display: none;
+    }
+
+    .work-button {
+        border: none;
+        padding: 0.25rem 1rem;
+        color: #292929;
+        background: #efefef;
+        width: auto;
+    }
+
+    .work-button:hover {
+        cursor: pointer;
+        color: #292929;
+        background: #f5f5f5;
+    }
+
+    .green-buttons button {
+        background: #2ECC71;
+        color: #efefef;
+    }
+
+    .red-buttons button {
+        background: #D91E18;
+        color: #efefef;
+    }
 
     button {
         display: block;
@@ -147,49 +168,50 @@ body {
 </style>
 
 <body>
-    {% include 'navbar.html' %}
+{% include 'navbar.html' %}
 
-    
-    <div class="container">
-        <h1 class="headerone">Sport to Google Sheet KPI</h1>
 
-            <br>
+<div class="container">
+    <h1 class="headerone">Sport to Google Sheet KPI</h1>
 
-            <h2 class="nameCenter">
+    <br>
 
-            </h2>
-            <br>
+    <h2 class="nameCenter">
 
-            <table class="table table-bordered">
-                <thead class="thead-dark">
-                    
-                    <tr>
-                        <th>Date</th>
-                        {% for kpi in kpi_objects %}
-                        <th>{{kpi.name}}</th>
-                       {% endfor %}
-                    </tr>
-                    
-                </thead>
-                <tbody>
-                    {% for sport_dict in data %}
-                        {% for sport_date, sport_item_list in sport_dict.items %}
-                        <tr>
-                            <td> {{sport_date}}</td>
-                            {% for sport_item in sport_item_list %}
-                            <td class="button_done">
-                                <div class="container_done">
-                                    <div class="button-wrap d-flex justify-content-center{%  if sport_item.score == '0' %} green-buttons{% endif %}{%  if sport_item.score == '-1' %} red-buttons{% endif %}">
-                                        <form action="{% url 'sport_increase_decrease_score' sport_item.sport_id %}" method="POST">
-                                            {% csrf_token %}
-                                            <input type="hidden" name="sport_date_id" value="{{sport_item.sport_date_id}}">
-                                            <input type="hidden" name="kpi_id" value="{{sport_item.kpi_user.id}}">
-                                            <input type="hidden" name="score" value="{{sport_item.score}}">
-                                            <button type="submit" class="work-button" name="decrease_sport_score">
-                                                <i class="ri-close-line yes"></i>
-                                            </button>
-                                        </form>
-                                        <!-- <form action="{% url 'sport_increase_decrease_score' sport_item.score %}" method="POST">
+    </h2>
+    <br>
+
+    <table class="table table-bordered">
+        <thead class="thead-light">
+
+        <tr>
+            <th>Date</th>
+            {% for kpi in kpi_objects %}
+                <th>{{ kpi.name }}</th>
+            {% endfor %}
+        </tr>
+
+        </thead>
+        <tbody>
+        {% for sport_dict in data %}
+            {% for sport_date, sport_item_list in sport_dict.items %}
+                <tr>
+                <td> {{ sport_date }}</td>
+                {% for sport_item in sport_item_list %}
+                    <td class="button_done">
+                        <div class="container_done">
+                            <div class="button-wrap d-flex justify-content-center{% if sport_item.score == '0' %} green-buttons{% endif %}{% if sport_item.score == '-1' %} red-buttons{% endif %}">
+                                <form action="{% url 'sport_increase_decrease_score' sport_item.sport_id %}"
+                                      method="POST">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="sport_date_id" value="{{ sport_item.sport_date_id }}">
+                                    <input type="hidden" name="kpi_id" value="{{ sport_item.kpi_user.id }}">
+                                    <input type="hidden" name="score" value="{{ sport_item.score }}">
+                                    <button type="submit" class="work-button" name="decrease_sport_score">
+                                        <i class="ri-close-line yes"></i>
+                                    </button>
+                                </form>
+                                <!-- <form action="{% url 'sport_increase_decrease_score' sport_item.score %}" method="POST">
                                             {% csrf_token %}
                                             <input type="hidden" name="sport_date_id" value="{{sport_item.sport_date}}">
                                             <input type="hidden" name="kpi_id" value="{{kpi.id}}">
@@ -197,41 +219,42 @@ body {
                                                 <i class="ri-subtract-line yes"></i>
                                             </button>
                                         </form> -->
-                                        <form action="{% url 'sport_increase_decrease_score' sport_item.sport_id %}" method="POST">
-                                            {% csrf_token %}
-                                            <input type="hidden" name="sport_date_id" value="{{sport_item.sport_date_id}}">
-                                            <input type="hidden" name="kpi_id" value="{{sport_item.kpi_user.id}}">
-                                            <button type="submit" class="work-button" name="increase_sport_score">
-                                                <i class="ri-check-line yes"></i>
-                                            </button>
-                                        </form>
-                                    </div>
-                                </div>
+                                <form action="{% url 'sport_increase_decrease_score' sport_item.sport_id %}"
+                                      method="POST">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="sport_date_id" value="{{ sport_item.sport_date_id }}">
+                                    <input type="hidden" name="kpi_id" value="{{ sport_item.kpi_user.id }}">
+                                    <button type="submit" class="work-button" name="increase_sport_score">
+                                        <i class="ri-check-line yes"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
 
-                            </td>
-                            {% endfor %}
-                        {% endfor %}
-                        {% endfor %}
-                       <form action="{% url 'all_sports' %}" method="post">
-                        {% csrf_token %}
-                        <td> <input type="date" name="sport_date_obj" required> 
-                            <input type="submit" name="create_sport_date" value="Create">
-                        </td>
-                       </form>
-                </tbody>
-            </table>
+                    </td>
+                {% endfor %}
+            {% endfor %}
+        {% endfor %}
+        <form action="{% url 'all_sports' %}" method="post">
+            {% csrf_token %}
+            <td><input type="date" name="sport_date_obj" required>
+                <input type="submit" name="create_sport_date" value="Create">
+            </td>
+        </form>
+        </tbody>
+    </table>
 
-        <a href="https://docs.google.com/spreadsheets/d/13aPcjyMXeHoDP3VeYuTcN4DlKeJEvOr_2t3qR4TV_3w/edit#gid=1208225701">
+    <a href="https://docs.google.com/spreadsheets/d/13aPcjyMXeHoDP3VeYuTcN4DlKeJEvOr_2t3qR4TV_3w/edit#gid=1208225701">
 
-            <button>Table to Kpi Google Sheet</button>
-        </a>
-        <button onclick="tableToGoogleSheet()">
-            Table to Excel
-        </button>
-        
+        <button>Table to Kpi Google Sheet</button>
+    </a>
+    <button onclick="tableToGoogleSheet()">
+        Table to Excel
+    </button>
 
-    </div>
-    
+
+</div>
+
 <script type="text/javascript" src="{% static 'js/table2excel.js' %}"></script>
 <script type="text/javascript" src="{% static 'js/index.js' %}"></script>
 
