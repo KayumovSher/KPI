@@ -10,63 +10,71 @@
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
     <title>KPI</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    
     {% load static %}
-    <style>
-        @import url(https://fonts.googleapis.com/css?family=Lato:300,400,900);
+
+</head>
+
+<style>
+
+    @import url(https://fonts.googleapis.com/css?family=Lato:300,400,900);
+
     * {
-      box-sizing: border-box;
+    box-sizing: border-box;
     }
-    
+
     html, body {
-      height: 100%;
+    background-color: white !important;
+    height: max-content;
     }
-    
+
     html {
-      background: #444;
+    background: #444;
     }
-    
+
     body {
         min-height: 100%;
         width: auto;
         font-size: 15px;
         position: sticky;
-
         color: #3c00a0;
-
         justify-content: center;
         align-items: center;
         margin: 0;
         padding: 0;
         text-align: center;
-
     }
-    
-   table{
-       table-layout: fixed;
-   }
-    
+
+    table{
+    table-layout: fixed;
+    }
+
+    .table{
+        width: fit-content;
+        table-layout: fixed;
+    }
+
     .container {
-        max-width: 1700px;
+        max-width: fit-content;
+        width: auto;
+        padding-left: 15px;
+        padding-right: 15px;
+        margin-right: auto;
+        margin-left: auto;
     }
 
-    input {
-        overflow: visible;
-        width: 60px;
-    }
-    
     .button_done {
-    
         width: 100px;
         height: 150px;
     }
-    
+
     .container_done {
         width: auto;
         height: 50px;
         min-height: 50%;
         margin: 0 auto;
     }
-    
+
     .button-wrap {
         padding: 0;
         position: relative;
@@ -74,12 +82,13 @@
         top: 50%;
         margin-top: 0rem;
     }
+
     @media (max-width: 1200px) {
-      .button-wrap {
-        margin-top: -1.5em;
-      }
+        .button-wrap {
+            margin-top: -1.5em;
+        }
     }
-    
+
     .button-label {
         width: 30px;
         height: 30px;
@@ -92,66 +101,66 @@
         background: #efefef;
         transition: 0.3s;
         -webkit-user-select: none;
-          -moz-user-select: none;
-              -ms-user-select: none;
-                  user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
     }
+
     .button-label h1 {
-    
         font-size: 0.80em;
         position: absolute;
         font-family: "Lato", sans-serif;
     }
-    
+
     @media (max-width: 40em) {
-      .button-label {
-        padding: 0em 1em 3px;
-        margin: 0.25em;
-      }
+        .button-label {
+            padding: 0em 1em 3px;
+            margin: 0.25em;
+        }
     }
-    
+
     .button-label:hover {
         opacity: 0.8;
     }
-    
+
     .red {
         background: #D91E18;
-      color: #efefef;
+    color: #efefef;
     }
-    
+
     .green {
         background: #2ECC71;
         color: #efefef;
     }
-    
+
     .hidden {
-      display: none;
+    display: none;
     }
-    
+
     .work-button {
         border: none;
         padding: 0.25rem 1rem;
         color: #292929;
         background: #efefef;
+        width: auto;
     }
+
     .work-button:hover {
         cursor: pointer;
         color: #292929;
         background: #f5f5f5;
     }
+
     .green-buttons button {
         background: #2ECC71;
         color: #efefef;
     }
+
     .red-buttons button {
         background: #D91E18;
         color: #efefef;
     }
-    
-    </style>
-</head>
 
-<style>
     button {
         display: block;
         text-align: center;
@@ -162,24 +171,34 @@
         font-size: 15px;
         cursor: pointer;
     }
+
+    input {
+        overflow: visible;
+        width: 60px;
+    }
+
 </style>
 
+
 <body>
+
     {% include 'navbar.html' %}
     
     {% load static %}
+
     <div class="container">
 
-
         <h1 class="headerone">Work to Google Sheet KPI</h1>
-
-
-            <br>
-
             
-            <br>
+        <br>
 
-            <table class="table table-bordered">
+        <h2 class="nameCenter">
+            All Evrikas
+        </h2>
+
+        <br>
+
+        <table class="table table-bordered">
                 <thead class="thead-light">
                     <tr>
                         <th>F.I.O</th>

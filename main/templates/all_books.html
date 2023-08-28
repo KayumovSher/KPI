@@ -10,10 +10,13 @@
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
     <title>KPI</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+   
     {% load static %}
+
 </head>
 
 <style>
+
     @import url(https://fonts.googleapis.com/css?family=Lato:300,400,900);
 
     * {
@@ -21,7 +24,9 @@
     }
 
     html, body {
-        height: 100%;
+        {#height: 100%;#}
+        background-color: white !important;
+        height: max-content;
     }
 
     html {
@@ -33,9 +38,7 @@
         width: auto;
         font-size: 15px;
         position: sticky;
-
         color: #3c00a0;
-
         justify-content: center;
         align-items: center;
         margin: 0;
@@ -48,21 +51,21 @@
         table-layout: fixed;
     }
 
-    {#.table {#}
-    {#    width: auto;#}
-
+    .table {
+        width: auto;
+        table-layout: fixed;
+    }
 
     .container {
+        max-width: fit-content;
         width: auto;
         padding-left: 15px;
         padding-right: 15px;
         margin-right: auto;
         margin-left: auto;
-        max-width: fit-content;
     }
 
     .button_done {
-
         width: 100px;
         height: 150px;
     }
@@ -106,7 +109,6 @@
     }
 
     .button-label h1 {
-
         font-size: 0.80em;
         position: absolute;
         font-family: "Lato", sans-serif;
@@ -171,97 +173,102 @@
         font-size: 15px;
         cursor: pointer;
     }
+
 </style>
 
 <body>
-{% include 'navbar.html' %}
+
+    {% include 'navbar.html' %}
+
+    {% load static %}
+
+    <div class="container">
+
+        <h1 class="headerone">Sport to Google Sheet KPI</h1>
+
+        <br>
+
+        <h2 class="nameCenter">
+            All Books
+        </h2>
+
+        <br>
+
+        <table class="table table-bordered">
+            <thead class="thead-light">
+
+            <tr>
+                <th>F.I.O</th>
+                {% for i in book_items %}
+                    <th>
+                        {{ i }}
+                    </th>
+                {% endfor %}
+                <form action="{% url 'all_books' %}" method="post">
+                    {% csrf_token %}
+                    <td><input type="text" name="new_book_item" required>
+                        <input type="submit" name="create_book_item" value="Create"></td>
+                </form>
+            </tr>
 
 
-{% load static %}
-<div class="container">
+            </thead>
+            <tbody>
 
-    <br>
+            {% for dic_items in data %}
+                {% for kpi, book_list in dic_items.items %}
+                    <tr>
+                        <td> {{ kpi.name }} </td>
+                        {% for book in book_list %}
+                            <td class="button_done">
+                                <div class="container_done">
+                                    <div class="button-wrap d-flex justify-content-center{% if book.score == '1' %} green-buttons{% endif %}{% if book.score == '0' %} red-buttons{% endif %}">
+                                        <form action="{% url 'book_increase_decrease_score' book.book_id %}" method="POST">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="book_item_id" value="{{ book.book_item_id }}">
+                                            <input type="hidden" name="kpi_id" value="{{ kpi.id }}">
+                                            <input type="hidden" name="score" value="{{ book.score }}">
+                                            <button type="submit" class="work-button" name="decrease_book_score">
+                                                <i class="ri-close-line yes"></i>
+                                            </button>
+                                        </form>
 
-    <h2 class="nameCenter">
-        All Books
-    </h2>
-
-    <br>
-
-    <table class="table table-bordered">
-        <thead class="thead-light">
-
-        <tr>
-            <th>F.I.O</th>
-            {% for i in book_items %}
-                <th>
-                    {{ i }}
-                </th>
-            {% endfor %}
-            <form action="{% url 'all_books' %}" method="post">
-                {% csrf_token %}
-                <td><input type="text" name="new_book_item" required>
-                    <input type="submit" name="create_book_item" value="Create"></td>
-            </form>
-        </tr>
-
-
-        </thead>
-        <tbody>
-
-        {% for dic_items in data %}
-            {% for kpi, book_list in dic_items.items %}
-                <tr>
-                    <td> {{ kpi.name }} </td>
-                    {% for book in book_list %}
-                        <td class="button_done">
-                            <div class="container_done">
-                                <div class="button-wrap d-flex justify-content-center{% if book.score == '1' %} green-buttons{% endif %}{% if book.score == '0' %} red-buttons{% endif %}">
-                                    <form action="{% url 'book_increase_decrease_score' book.book_id %}" method="POST">
-                                        {% csrf_token %}
-                                        <input type="hidden" name="book_item_id" value="{{ book.book_item_id }}">
-                                        <input type="hidden" name="kpi_id" value="{{ kpi.id }}">
-                                        <input type="hidden" name="score" value="{{ book.score }}">
-                                        <button type="submit" class="work-button" name="decrease_book_score">
-                                            <i class="ri-close-line yes"></i>
-                                        </button>
-                                    </form>
-
-                                    <form action="{% url 'book_increase_decrease_score' book.book_id %}" method="POST">
-                                        {% csrf_token %}
-                                        <input type="hidden" name="book_item_id" value="{{ book.book_item_id }}">
-                                        <input type="hidden" name="kpi_id" value="{{ kpi.id }}">
-                                        <button type="submit" class="work-button" name="increase_book_score">
-                                            <i class="ri-check-line yes"></i>
-                                        </button>
-                                    </form>
+                                        <form action="{% url 'book_increase_decrease_score' book.book_id %}" method="POST">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="book_item_id" value="{{ book.book_item_id }}">
+                                            <input type="hidden" name="kpi_id" value="{{ kpi.id }}">
+                                            <input type="hidden" name="score" value="{{ book.score }}">
+                                            <button type="submit" class="work-button" name="increase_book_score">
+                                                <i class="ri-check-line yes"></i>
+                                            </button>
+                                        </form>
+                                    </div>
                                 </div>
-                            </div>
 
-                        </td>
+                            </td>
 
-                    {% endfor %}
-                </tr>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
             {% endfor %}
-        {% endfor %}
 
-        </tbody>
-    </table>
-
-
-    <a href="https://docs.google.com/spreadsheets/d/13aPcjyMXeHoDP3VeYuTcN4DlKeJEvOr_2t3qR4TV_3w/edit#gid=1208225701">
-
-        <button>Table to Kpi Google Sheet</button>
-    </a>
-    <button onclick="tableToGoogleSheet()">
-        Table to Excel
-    </button>
+            </tbody>
+        </table>
 
 
-</div>
+        <a href="https://docs.google.com/spreadsheets/d/13aPcjyMXeHoDP3VeYuTcN4DlKeJEvOr_2t3qR4TV_3w/edit#gid=1208225701">
 
-<script type="text/javascript" src="{% static 'js/table2excel.js' %}"></script>
-<script type="text/javascript" src="{% static 'js/index.js' %}"></script>
+            <button>Table to Kpi Google Sheet</button>
+        </a>
+        <button onclick="tableToGoogleSheet()">
+            Table to Excel
+        </button>
+
+
+    </div>
+
+    <script type="text/javascript" src="{% static 'js/table2excel.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/index.js' %}"></script>
 
 </body>
 </html>
