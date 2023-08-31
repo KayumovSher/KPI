@@ -12,6 +12,8 @@ from .utils import IsAdminOrReadOnly
 from django.shortcuts import render
 from . import utils
 from django.db.models import Count, Max
+
+
 # Create your views here.
 
 def index(request):
@@ -27,6 +29,7 @@ def index(request):
             {"kpi": x, "sports": sports, "evrikas": evrikas, "works": works, "books": books, 'meetings': meetings})
 
     return render(request, 'index.html', context={"results": result})
+
 
 @IsAdminOrReadOnly
 def all_meetings(request):
@@ -51,8 +54,8 @@ def all_meetings(request):
 
     data = []
     kpi_objects = KpiModel.objects.all()
-    deadlines = list(x.date for x in MeetingDateModel.objects.all().order_by('created_at'))
-    deadline_pairs = {x.date: x.id for x in MeetingDateModel.objects.all().order_by('created_at')}
+    deadlines = list(x.date for x in MeetingDateModel.objects.all().order_by('deadline'))
+    deadline_pairs = {x.date: x.id for x in MeetingDateModel.objects.all().order_by('deadline')}
 
     for kpi_obj in kpi_objects:
         kpi_data = {kpi_obj: []}
@@ -81,14 +84,24 @@ def all_meetings(request):
         data.append(kpi_data)
     return render(request, 'all_meetings.html', context={'data': data, 'deadlines': deadlines})
 
+
+@IsAdminOrReadOnly
+def meeting(request, id=None):
+    kpi = get_object_or_404(KpiModel, id=id)
+    meetings = MeetingModel.objects.filter(kpi=kpi).order_by("deadline")
+    return render(request, 'meeting.html', {"meetings": meetings, 'kpi': kpi})
+
+
 def meeting_increase_decrease_score(request, meeting_id=0):
     if request.method != 'POST':
         return HttpResponseNotAllowed(('POST',))
-    score_dic = {'increase_meeting_score':0, 'decrease_meeting_score':-5, 'reset_work_score':0}
+    score_dic = {'increase_meeting_score': 0, 'decrease_meeting_score': -5, 'reset_work_score': 0}
     post_data = list(request.POST.items())
     last_key = post_data[-1][0]
-    utils.change_meeting_score(meeting_id, request.POST.get('meeting_date_id'), request.POST.get('kpi_id'), score=score_dic[last_key])
+    utils.change_meeting_score(meeting_id, request.POST.get('meeting_date_id'), request.POST.get('kpi_id'),
+                               score=score_dic[last_key])
     return redirect(to='all_meetings')
+
 
 def SignupPage(request):
     if request.method == 'POST':
@@ -137,11 +150,13 @@ def LogoutPage(request):
 def Navbar(request):
     return render(request, 'navbar.html')
 
+
 @IsAdminOrReadOnly
 def book(request, id=None):
     kpi = get_object_or_404(KpiModel, id=id)
     books = BookModel.objects.filter(kpi=kpi)
     return render(request, 'book.html', {"books": books, 'kpi': kpi})
+
 
 @IsAdminOrReadOnly
 def bookItems(request):
@@ -153,24 +168,28 @@ def bookItems(request):
         return redirect('/')
     return render(request, 'book_items.html', {"bookitems": bookitems})
 
+
 @IsAdminOrReadOnly
 def work(request, id=None):
     kpi = get_object_or_404(KpiModel, id=id)
     works = WorkModel.objects.filter(kpi=kpi).order_by("deadline")
     return render(request, 'work.html', {"works": works, 'kpi': kpi})
 
+
 @IsAdminOrReadOnly
 def work_increase_reset_decrease_score(request, work_id=None):
     if request.method != 'POST':
         return HttpResponseNotAllowed(('POST',))
-    score_dic = {'increase_work_score':0.5, 'decrease_work_score':-1, 'reset_work_score':0}
+    score_dic = {'increase_work_score': 0.5, 'decrease_work_score': -1, 'reset_work_score': 0}
     post_data = list(request.POST.items())
     last_key = post_data[-1][0]
     utils.change_score(work_id, request.POST.get('deadline_id'), request.POST.get('kpi_id'), score=score_dic[last_key])
     return redirect(to='all_works')
 
+
 def reminder(request):
     return render(request, 'reminder.html')
+
 
 @IsAdminOrReadOnly
 def sport(request, id=None):
@@ -224,6 +243,7 @@ def evrika(request, id=None):
     evrikas = EvrikaModel.objects.filter(kpi=kpi)
     return render(request, 'evrika.html', {"evrikas": evrikas, 'kpi': kpi})
 
+
 @IsAdminOrReadOnly
 def all_works(request):
     if 'create_deadline' in request.POST:
@@ -274,20 +294,21 @@ def all_works(request):
         data.append(kpi_data)
     return render(request, 'all_works.html', {"deadlines": deadlines, "data": data})
 
+
 @IsAdminOrReadOnly
 def book_increase_decrease_score(request, book_id=0):
     if request.method != 'POST':
         return HttpResponseNotAllowed(('POST',))
-    score_dic = {'increase_book_score':1, 'decrease_book_score':0}
+    score_dic = {'increase_book_score': 1, 'decrease_book_score': 0}
     post_data = list(request.POST.items())
     last_key = post_data[-1][0]
-    
+
     kpi_id, book_item_id = request.POST.get('kpi_id'), request.POST.get('book_item_id')
     kpi_user = KpiModel.objects.get(id=kpi_id)
     book_item_obj = BookItem.objects.get(id=book_item_id)
     if book_id == 0 or book_id == 'None':
-            BookModel.objects.create(book=book_item_obj, score=score_dic[last_key], kpi=kpi_user).save()
-            return redirect('/all_books/')
+        BookModel.objects.create(book=book_item_obj, score=score_dic[last_key], kpi=kpi_user).save()
+        return redirect('/all_books/')
     book = get_object_or_404(BookModel, id=book_id)
     book.score = score_dic[last_key]
     book.save()
@@ -303,19 +324,19 @@ def all_books(request):
     elif 'save_book' in request.POST:
         book_score, book_id = request.POST.get('book_score'), request.POST.get('book_id')
         book_item_id, kpi_id = request.POST.get('book_item_id'), request.POST.get('kpi_id')
-        kpi_user= KpiModel.objects.get(id=kpi_id)
+        kpi_user = KpiModel.objects.get(id=kpi_id)
         book_item_obj = BookItem.objects.get(id=book_item_id)
         if book_id == 'None':
             BookModel.objects.create(book=book_item_obj, score=book_score, kpi=kpi_user).save()
             return redirect('/all_books/')
-        
+
         obj = BookModel.objects.get(id=book_id)
         obj.score = book_score
         # obj.book = dead_obj
         obj.kpi = kpi_user
         obj.save()
         return redirect('/all_books/')
-    
+
     data = []
     kpis = KpiModel.objects.all()
     book_items = list(x.title for x in BookItem.objects.all().order_by('created_at'))
@@ -327,45 +348,47 @@ def all_books(request):
         # Iterate through each BookModel object and add to the kpi_data dictionary
         for book in kpi_obj.book_items.all():
             book_dic[book.book.title] = {'score': book.score, 'book_id': book.id,
-                                                "book_item_id": book.book.id}
+                                         "book_item_id": book.book.id}
         for i in range(len(book_items)):
-                if book_items[i] in book_dic:
-                    kpi_data[kpi_obj].append({
-                        # 'book': book_items[i],
-                        'book_id':book_dic[book_items[i]]['book_id'],
-                        'score': book_dic[book_items[i]]['score'],
-                        'book_item_id': book_dic[book_items[i]]['book_item_id'],
-                    })
-                else:
-                    kpi_data[kpi_obj].append({
-                        # 'book': '',
-                        'book_id':None,
-                        'score': 0,
-                        'book_item_id': book_pairs[book_items[i]]
-                    })
+            if book_items[i] in book_dic:
+                kpi_data[kpi_obj].append({
+                    # 'book': book_items[i],
+                    'book_id': book_dic[book_items[i]]['book_id'],
+                    'score': book_dic[book_items[i]]['score'],
+                    'book_item_id': book_dic[book_items[i]]['book_item_id'],
+                })
+            else:
+                kpi_data[kpi_obj].append({
+                    # 'book': '',
+                    'book_id': None,
+                    'score': 0,
+                    'book_item_id': book_pairs[book_items[i]]
+                })
 
         data.append(kpi_data)
     return render(request, 'all_books.html', {"book_items": book_items, "data": data})
+
 
 @IsAdminOrReadOnly
 def evrika_increase_decrease_score(request, evrika_id=0):
     print(request.POST)
     if request.method != 'POST':
         return HttpResponseNotAllowed(('POST',))
-    score_dic = {'increase_evrika_score':5, 'decrease_evrika_score':0}
+    score_dic = {'increase_evrika_score': 5, 'decrease_evrika_score': 0}
     post_data = list(request.POST.items())
     last_key = post_data[-1][0]
     kpi_id, details = request.POST.get('kpi_id'), request.POST.get('details')
     kpi_user = KpiModel.objects.get(id=kpi_id)
     if evrika_id == 0 or evrika_id == '':
-            EvrikaModel.objects.create(details=details, score=score_dic[last_key], kpi=kpi_user).save()
-            return redirect('/all_evrika/')
+        EvrikaModel.objects.create(details=details, score=score_dic[last_key], kpi=kpi_user).save()
+        return redirect('/all_evrika/')
     evrika = get_object_or_404(EvrikaModel, id=evrika_id)
     evrika.score = score_dic[last_key]
     evrika.save()
     return redirect(to='all_evrika')
 
-@IsAdminOrReadOnly  
+
+@IsAdminOrReadOnly
 def all_evrikas(request):
     if 'save_evrika' in request.POST:
         score = request.POST.get('score')
@@ -376,33 +399,39 @@ def all_evrikas(request):
         obj.save()
     elif 'create_evrika' in request.POST:
         kpi_obj = KpiModel.objects.get(id=request.POST.get('kpi_user_id'))
-        EvrikaModel.objects.create(details=request.POST.get('details'), score=request.POST.get('score'), kpi=kpi_obj).save()
+        EvrikaModel.objects.create(details=request.POST.get('details'), score=request.POST.get('score'),
+                                   kpi=kpi_obj).save()
         return redirect('/all_evrika/')
     data = []
     evrikas = [x for x in EvrikaModel.objects.all().order_by("created_at")]
     kpi_users = KpiModel.objects.all()
-    kpi_users_with_evrika_count = KpiModel.objects.annotate(evrika_count=Count('evrika_items')).order_by('-evrika_count').first()
+    kpi_users_with_evrika_count = KpiModel.objects.annotate(evrika_count=Count('evrika_items')).order_by(
+        '-evrika_count').first()
 
     evrika_dic = {}
     for x in kpi_users:
         evrika_dic[x] = []
         for y in evrikas:
             if y.kpi == x:
-                evrika_dic[x].append({'score':y.score, 'details':y.details,'evrika_id':y.id})
+                evrika_dic[x].append({'score': y.score, 'details': y.details, 'evrika_id': y.id})
             # else:
             #     evrika_dic[x].append({'score':0, 'details':'','evrika_id':None})
     data.append(evrika_dic)
-    return render(request, 'all_evrikas.html', {'data': data, 'kpi_users':kpi_users, 'evrikas':evrikas, 'ball_detail_len':range(kpi_users_with_evrika_count.evrika_count)})
+    return render(request, 'all_evrikas.html', {'data': data, 'kpi_users': kpi_users, 'evrikas': evrikas,
+                                                'ball_detail_len': range(kpi_users_with_evrika_count.evrika_count)})
+
 
 @IsAdminOrReadOnly
 def sport_increase_decrease_score(request, sport_id=0):
     if request.method != 'POST':
         return HttpResponseNotAllowed(('POST',))
-    score_dic = {'decrease_sport_score':-1, 'increase_sport_score':0}
+    score_dic = {'decrease_sport_score': -1, 'increase_sport_score': 0}
     post_data = list(request.POST.items())
     last_key = post_data[-1][0]
-    utils.change_sport_score(sport_id, request.POST.get('sport_date_id'), request.POST.get('kpi_id'), score=score_dic[last_key])
+    utils.change_sport_score(sport_id, request.POST.get('sport_date_id'), request.POST.get('kpi_id'),
+                             score=score_dic[last_key])
     return redirect(to='all_sports')
+
 
 @IsAdminOrReadOnly
 def all_sports(request):
@@ -413,19 +442,19 @@ def all_sports(request):
     elif 'save_sport' in request.POST:
         sport_score, sport_id = request.POST.get('sport_score'), request.POST.get('sport_id')
         sport_date_id, kpi_id = request.POST.get('sport_date_id'), request.POST.get('kpi_user_id')
-        kpi_user= KpiModel.objects.get(id=kpi_id)
+        kpi_user = KpiModel.objects.get(id=kpi_id)
         sport_date_obj = SportDateModel.objects.get(id=sport_date_id)
         if sport_id == 'None':
             SportModel.objects.create(sport_date=sport_date_obj, score=sport_score, kpi=kpi_user).save()
             return redirect('/all_sports/')
-        
+
         obj = SportModel.objects.get(id=sport_id)
         obj.score = sport_score
         # obj.kpi = kpi_user
         obj.save()
         return redirect('/all_sports/')
-        
-#   get method
+
+    #   get method
     data = []
     kpi_objects = [x for x in KpiModel.objects.all()]
     sport_dates = list(x for x in SportDateModel.objects.all().order_by('created_at'))
@@ -437,25 +466,28 @@ def all_sports(request):
         # Iterate through each SportModel object and add to the sport_data dictionary
         for sport_item in sport_date_obj.sport_date_items.all():
             sport_dic[sport_date_obj.date.strftime('%Y-%m-%d')] = {'score': sport_item.score, 'sport_id': sport_item.id,
-                                                 "sport_date_id": sport_item.sport_date.id, 'kpi_user':sport_item.kpi}
+                                                                   "sport_date_id": sport_item.sport_date.id,
+                                                                   'kpi_user': sport_item.kpi}
         for i in range(len(kpi_objects)):
             if sport_dic:
                 sport_data[sport_date_obj.date.strftime('%Y-%m-%d')].append({
                     'score': sport_dic[sport_date_obj.date.strftime('%Y-%m-%d')]['score'],
                     'sport_id': sport_dic[sport_date_obj.date.strftime('%Y-%m-%d')]['sport_id'],
                     'sport_date_id': sport_dic[sport_date_obj.date.strftime('%Y-%m-%d')]['sport_date_id'],
-                    'kpi_user':sport_dic[sport_date_obj.date.strftime('%Y-%m-%d')]['kpi_user']
+                    'kpi_user': sport_dic[sport_date_obj.date.strftime('%Y-%m-%d')]['kpi_user']
                 })
             else:
                 sport_data[sport_date_obj.date.strftime('%Y-%m-%d')].append({
                     'score': 0,
                     'sport_id': None,
                     'sport_date_id': sport_date_obj.id,
-                    'kpi_user':kpi_objects[i]
+                    'kpi_user': kpi_objects[i]
                 })
             sport_dic = {}
         data.append(sport_data)
     return render(request, 'all_sports.html', {'data': data, 'kpi_objects': kpi_objects})
+
+
 # [{<KpiModel: sadriddin>: [{'date': '2023-08-17', 'score': '-1', 'work_id': 1, 'deadline_id': 1}, {'date': '1221-12-21', 'score': 0, 'work_id': None, 'deadline_id': 2}]}]
 # [{<KpiModel: sadriddin>: [{'date': '2023-08-17', 'score': '-1', 'work_id': 1, 'deadline_id': 1}, {'date': '1221-12-21', 'score': 0, 'work_id': None, 'deadline_id': 2}]}, {<KpiModel: user-1>: [{'date': '2023-08-17', 'score': 0, 'work_id': None, 'deadline_id': 1}, {'date': '1221-12-21', 'score': 0, 'work_id': None, 'deadline_id': 2}]}]
 

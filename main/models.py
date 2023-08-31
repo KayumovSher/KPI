@@ -220,7 +220,7 @@ class MeetingManager(models.Manager):
 
 class MeetingDateModel(models.Model):
     date = models.DateField()
-    created_at = models.DateTimeField(auto_now=True)
+    deadline = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.date.strftime('%Y-%m-%d')
@@ -233,7 +233,7 @@ class MeetingModel(models.Model):
     meeting_date = models.ForeignKey(MeetingDateModel, on_delete=models.CASCADE)
     score = models.IntegerField(choices=CHOICES, default=0)
     kpi = models.ForeignKey(KpiModel, on_delete=models.CASCADE, related_name='meeting_items')
-    created_at = models.DateTimeField(auto_now=True)
+    deadline = models.DateTimeField(auto_now=True)
 
     objects = MeetingManager()
 

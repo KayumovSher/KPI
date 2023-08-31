@@ -151,7 +151,9 @@
                 <td>
                     <a href="{% url 'evrika_detail' i.kpi.id %}">{{ i.evrikas }}</a>
                 </td>
-                <td>  {{ i.meetings }} </td>
+                <td>
+                    <a href="{% url 'meeting_detail' i.kpi.id %}">{{ i.meetings }}</a>
+                </td>
                 <td>{{ i.kpi.general }}</td>
                 <td>{{ i.kpi.league }}</td>
                 <td>{{ i.kpi.koef }}</td>

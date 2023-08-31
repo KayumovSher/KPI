@@ -12,12 +12,17 @@
 </head>
 
 <style>
+    .table .thead-dark th {
+        color: white;
+        background-color: #3c00a0;
+    }
+
     button {
         display: block;
         text-align: center;
         width: 300px;
         margin: 25px auto;
-        background-color: #000;
+        background-color: #3c00a0;
         color: #fff;
         font-size: 15px;
         cursor: pointer;
@@ -27,6 +32,8 @@
 
 <body>
 {% include 'navbar.html' %}
+
+{% load static %}
 
 <div class="container">
     <h1 class="headerone">Evrika to Google Sheet KPI</h1>

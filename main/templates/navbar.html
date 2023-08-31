@@ -2,56 +2,78 @@
 
 {% block content %}
 
-<style>
-    .nav-item{
-        list-style: none;
-        padding: 0;
-        margin: 0;
-        position: relative;/* Move the element 20 pixels down from its normal position */
-        left: 30rem;
-    }
+    <style>
 
-    .navbar-nav {
-        left: 10px;
-    }
+        .navbar {
+            display: inherit;
+        }
 
+        .bg-dark {
+            background-color: #3c00a0 !important;
+        }
 
-    
-</style>
+        .navbar-dark .navbar-nav .nav-link {
+            color: white;
+        }
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="{% url 'index' %}"></a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="#navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0" style="align-items: inherit'">
-                <h4 style="color: aliceblue;">{% if request.user.is_authenticated %}
-                    <p>{{ request.user.username }}!</p>
+        .nav-item {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            position: relative; /* Move the element 20 pixels down from its normal position */
+            left: 160rem;
+        }
+
+        .navbar-nav {
+            left: 10px;
+        }
+
+        .ri-arrow-left-circle-line {
+            color: white;
+            position: inherit;
+            width: 60rem;
+            font-size: xx-large;
+            padding: 50px;
+        }
+
+    </style>
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="{% url 'index' %}"></a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent" aria-controls="#navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0" style="align-items: inherit">
+                    <a href="{% url 'index' %}"> <i class="ri-arrow-left-circle-line"></i> </a>
+                    <h4 style="color: aliceblue;">{% if request.user.is_authenticated %}
+                        <p>{{ request.user.username }}!</p>
                     {% endif %}
-                    </h4>  
-                <li class="nav-item" >
-                    <a class="nav-link" href="{% url 'index' %}">Home</a>
-                </li>
-
-                {% if user.is_authenticated %}
-                    <li class="nav-item" >
-                        <a class="nav-link" href="{% url 'logout' %}">Logout</a>
-                    </li>
-                {% else %}
-                    <li class="nav-item" >
-                        <a class="nav-link" href="{% url 'login' %}">Login</a>
+                    </h4>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'index' %}">Home</a>
                     </li>
 
-                {% endif %}
+                    {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'login' %}">Login</a>
+                        </li>
+
+                    {% endif %}
 
 
-            </ul>
+                </ul>
 
+            </div>
         </div>
-    </div>
 
-</nav>
+    </nav>
 
 {% endblock %}

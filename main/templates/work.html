@@ -11,12 +11,17 @@
 </head>
 
 <style>
+.table .thead-dark th{
+        color: white;
+        background-color: #3c00a0;
+    }
+
     button {
         display: block;
         text-align: center;
         width: 300px;
         margin: 25px auto;
-        background-color: #000;
+        background-color: #3c00a0;
         color: #fff;
         font-size: 15px;
         cursor: pointer;
@@ -28,7 +33,7 @@
 {% include 'navbar.html' %}
 
 <div class="container">
-    <h1 class="headerone">WorK</h1>
+    <h1 class="headerone">Work</h1>
 
     <br>
 
@@ -43,7 +48,6 @@
         <tr>
             <th>Deadline</th>
             <th>Score</th>
-            <th>Description</th>
         </tr>
         </thead>
         </thead>
@@ -52,7 +56,6 @@
             <tr>
                 <th> {{ work.deadline.date }} </th>
                 <th> {{ work.score }} </th>
-                <th> {{ work.description }} </th>
             </tr>
         {% endfor %}
 
