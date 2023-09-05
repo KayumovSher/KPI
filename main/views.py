@@ -88,7 +88,7 @@ def all_meetings(request):
 @IsAdminOrReadOnly
 def meeting(request, id=None):
     kpi = get_object_or_404(KpiModel, id=id)
-    meetings = MeetingModel.objects.filter(kpi=kpi).order_by("deadline")
+    meetings = MeetingModel.objects.filter(kpi=kpi).order_by("meeting_date__date")
     return render(request, 'meeting.html', {"meetings": meetings, 'kpi': kpi})
 
 

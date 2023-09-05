@@ -52,7 +52,7 @@
         <tbody>
         {% for meeting in meetings %}
             <tr>
-                <th> {{ meeting.deadline.date }} </th>
+                <th> {{ meeting.meeting_date.date }} </th>
                 <th> {{ meeting.score }} </th>
             </tr>
         {% endfor %}
