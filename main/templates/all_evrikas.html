@@ -42,7 +42,7 @@
         align-items: center;
         margin: 0;
         padding: 0;
-        text-align: center;
+        text-align-last: center;
     }
 
     table {
@@ -55,16 +55,19 @@
     }
 
     .table td {
-        padding: 0.75rem;
-        vertical-align: middle;
+        padding: 7rem;
         border: 1px solid #dee2e6;
     }
 
 
     .table td, .table th {
-        padding: 3rem;
-        vertical-align: top;
-        text-align-all: center;
+        padding: 0.75rem;
+        width: auto;
+        vertical-align: middle;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        padding-left: 10px;
+        padding-right: 135px;
     }
 
     .container {
@@ -193,7 +196,7 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        height: 4vh;
+        height: 30px;
 
     }
 
@@ -201,7 +204,7 @@
 
     input {
         overflow: visible;
-        width: 65px;
+        width: 150px;
         position: relative;
 
 
@@ -218,6 +221,22 @@
 
     }
 
+    .form-control{
+        display: block;
+        width: 80px;
+        padding: 5px;
+        font-size: 1rem;
+        line-height: 2;
+        color: #3c00a0;
+        background-color: white;
+        background-clip: padding-box;
+        border: 1px solid #ced4da;
+        border-radius: 0.25rem;
+    }
+
+    body form{
+        text-align: center;
+    }
 </style>
 
 
@@ -256,7 +275,7 @@
             {% for kpi, evrika_items in evrika_dic.items %}
 
                 <tr>
-                <form action="{% url 'all_evrika' %}" method="post">
+                <form action="{% url 'all_evrika' %}" method="post" class="form-check">
                     {% csrf_token %}
                     <td> {{ kpi.name }} </td>
                     {% for evrika in evrika_items %}
