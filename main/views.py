@@ -296,7 +296,7 @@ def all_works(request):
 
 
 @IsAdminOrReadOnly
-def book_increase_decrease_score(request, book_id=0):
+def book_increase_decrease_score(request, book_id):
     if request.method != 'POST':
         return HttpResponseNotAllowed(('POST',))
     score_dic = {'increase_book_score': 1, 'decrease_book_score': 0}
@@ -306,12 +306,7 @@ def book_increase_decrease_score(request, book_id=0):
     kpi_id, book_item_id = request.POST.get('kpi_id'), request.POST.get('book_item_id')
     kpi_user = KpiModel.objects.get(id=kpi_id)
     book_item_obj = BookItem.objects.get(id=book_item_id)
-    if book_id == 0 or book_id == 'None':
-        BookModel.objects.create(book=book_item_obj, score=score_dic[last_key], kpi=kpi_user).save()
-        return redirect('/all_books/')
-    book = get_object_or_404(BookModel, id=book_id)
-    book.score = score_dic[last_key]
-    book.save()
+    BookModel.objects.update_or_create(book=book_item_obj, kpi=kpi_user, defaults={'score':score_dic[last_key]})
     return redirect(to='all_books')
 
 
@@ -366,12 +361,12 @@ def all_books(request):
                 })
 
         data.append(kpi_data)
+
     return render(request, 'all_books.html', {"book_items": book_items, "data": data})
 
 
 @IsAdminOrReadOnly
 def evrika_increase_decrease_score(request, evrika_id=0):
-    print(request.POST)
     if request.method != 'POST':
         return HttpResponseNotAllowed(('POST',))
     score_dic = {'increase_evrika_score': 5, 'decrease_evrika_score': 0}
