@@ -45,7 +45,7 @@
         <li class="nav-item">
             <a href="{% url 'index' %}"> <i class="ri-arrow-left-circle-line"></i> </a>
             <h4 class="m-0 d-flex align-items-center" style="color: aliceblue;">{% if request.user.is_authenticated %}
-                {{ request.user.username }}!
+                <i class="ri-user-line">{{ request.user.username }}!</i>
             {% endif %}
             </h4>
         </li>
