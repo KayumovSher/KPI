@@ -306,7 +306,7 @@ def book_increase_decrease_score(request, book_id):
     kpi_id, book_item_id = request.POST.get('kpi_id'), request.POST.get('book_item_id')
     kpi_user = KpiModel.objects.get(id=kpi_id)
     book_item_obj = BookItem.objects.get(id=book_item_id)
-    BookModel.objects.update_or_create(book=book_item_obj, kpi=kpi_user, defaults={'score':score_dic[last_key]})
+    BookModel.objects.update_or_create(book=book_item_obj, kpi=kpi_user, defaults={'score': score_dic[last_key]})
     return redirect(to='all_books')
 
 
