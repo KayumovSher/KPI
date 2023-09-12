@@ -23,7 +23,7 @@
     body {
         font-family: arial, sans-serif;
         width: auto;
-        font-size: 15px;
+        font-size: 14px;
         position: sticky;
         color: #3c00a0;
 
@@ -118,7 +118,7 @@
                 <i class="ri-book-mark-line"><a href="{% url 'all_books' %}">Kitob</a></i>
             </th>
             <th>
-                <i class="ri-ping-pong-line"><a href="{% url 'all_sports' %}">Sport</a></i>
+                <i class="ri-football-line"><a href="{% url 'all_sports' %}">Sport</a></i>
             </th>
             <th>
                 <i class="ri-file-cloud-line"><a href="{% url 'all_works' %}">Ish</a></i>
@@ -148,6 +148,7 @@
         </thead>
         <tbody>
         {% for i in results %}
+
             <tr>
                 <td>{{ i.kpi.name }}</td>
                 <td>
