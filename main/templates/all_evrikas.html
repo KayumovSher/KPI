@@ -283,28 +283,39 @@
                         <td>
                             <select name="score" class="form-control">
                                 <option value="{{ evrika.score }}"> {{ evrika.score }} </option>
-                                <option value="0"> 0</option>
-                                <option value="5"> 5</option>
+
+                                {% if user.is_authenticated %}
+                                    <option value="0"> 0</option>
+                                    <option value="5"> 5</option>
+                                {% endif %}
                             </select>
                         </td>
                         <td>
                             <input type="text" name="details" value="{{ evrika.details }}">
                             <input type="hidden" value="{{ evrika.evrika_id }}" name="evrika_id">
-                            <input type="submit" value="Save" name="save_evrika">
+                            {% if user.is_authenticated %}
+                                <input type="submit" value="Save" name="save_evrika">
+                            {% endif %}
                         </td>
                         </form>
 
                     {% endfor %}
-                <form action="{% url 'all_evrika' %}" method="post">
+                <form action="{% url 'all_evrika' %}" method="post">{% if user.is_authenticated %}
                     {% csrf_token %}
-                    <td><select name="score" class="form-control">
-                        <option value="0"> 0</option>
-                        <option value="5"> 5</option>
-                    </select>
+                    <td>
+                        <label>
+                            <select name="score" class="form-control">
+                                <option value="0"> 0</option>
+                                <option value="5"> 5</option>
+                            </select>
+                        </label>
                         <input type="text" name="details" placeholder="details">
                         <input type="hidden" name="kpi_user_id" value="{{ kpi.id }}">
-                        <input type="submit" name="create_evrika" value="Create"></td>
-
+                        {% if user.is_authenticated %}
+                            <input type="submit" name="create_evrika" value="Create">
+                        {% endif %}
+                    </td>
+                    {% endif %}
                 </form>
             {% endfor %}
 

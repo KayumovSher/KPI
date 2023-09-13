@@ -204,10 +204,15 @@
                             {{ i }}
                         </th>
                     {% endfor %}
-                    <form action="{% url 'all_works' %}" method="post">
+                    <form action="{% url 'all_works' %}" method="post">{% if user.is_authenticated %}
                         {% csrf_token %}
-                        <td><input type="date" name="new_deadline" required>
-                            <input type="submit" name="create_deadline" value="Create"></td>
+                        <td>
+                            <label>
+                                <input type="date" name="new_deadline" required>
+                            </label>
+                            <input type="submit" name="create_deadline" value="Create">
+                            {% endif %}
+                        </td>
                     </form>
                 </tr>
 
@@ -230,8 +235,9 @@
                                             <input type="hidden" name="deadline_id" value="{{ work_item.deadline_id }}">
                                             <input type="hidden" name="kpi_id" value="{{ kpi.id }}">
                                             <input type="hidden" name="work_id" value="{{ work_item.work_id }}">
-                                            <button type="submit" class="work-button" name="decrease_work_score">
+                                            <button type="submit" class="work-button" name="decrease_work_score">{% if user.is_authenticated %}
                                                 <i class="ri-close-line yes"></i>
+                                                {% endif %}
                                             </button>
                                         </form>
                                         <form action="{% url 'work_increase_reset_decrease_score' work_item.work_id %}"
@@ -240,8 +246,9 @@
                                             <input type="hidden" name="deadline_id" value="{{ work_item.deadline_id }}">
                                             <input type="hidden" name="kpi_id" value="{{ kpi.id }}">
                                             <input type="hidden" name="work_id" value="{{ work_item.work_id }}">
-                                            <button type="submit" class="work-button" name="reset_work_score">
+                                            <button type="submit" class="work-button" name="reset_work_score">{% if user.is_authenticated %}
                                                 <i class="ri-subtract-line yes"></i>
+                                                {% endif %}
                                             </button>
                                         </form>
                                         <form action="{% url 'work_increase_reset_decrease_score' work_item.work_id %}"
@@ -250,8 +257,9 @@
                                             <input type="hidden" name="deadline_id" value="{{ work_item.deadline_id }}">
                                             <input type="hidden" name="kpi_id" value="{{ kpi.id }}">
                                             <input type="hidden" name="work_id" value="{{ work_item.work_id }}">
-                                            <button type="submit" class="work-button" name="increase_work_score">
+                                            <button type="submit" class="work-button" name="increase_work_score">{% if user.is_authenticated %}
                                                 <i class="ri-check-line yes"></i>
+                                                {% endif %}
                                             </button>
                                         </form>
                                     </div>

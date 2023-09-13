@@ -212,6 +212,7 @@
                     {% for kpi in kpi_objects %}
                         <th>{{ kpi.name }}</th>
                     {% endfor %}
+
                 </tr>
 
             </thead>
@@ -230,8 +231,9 @@
                                         <input type="hidden" name="sport_date_id" value="{{ sport_item.sport_date_id }}">
                                         <input type="hidden" name="kpi_id" value="{{ sport_item.kpi_user.id }}">
                                         <input type="hidden" name="score" value="{{ sport_item.score }}">
-                                        <button type="submit" class="work-button" name="decrease_sport_score">
+                                        <button type="submit" class="work-button" name="decrease_sport_score">{% if user.is_authenticated %}
                                             <i class="ri-close-line yes"></i>
+                                            {% endif %}
                                         </button>
                                     </form>
                                     <!-- <form action="{% url 'sport_increase_decrease_score' sport_item.score %}" method="POST">
@@ -247,8 +249,9 @@
                                         {% csrf_token %}
                                         <input type="hidden" name="sport_date_id" value="{{ sport_item.sport_date_id }}">
                                         <input type="hidden" name="kpi_id" value="{{ sport_item.kpi_user.id }}">
-                                        <button type="submit" class="work-button" name="increase_sport_score">
+                                        <button type="submit" class="work-button" name="increase_sport_score">{% if user.is_authenticated %}
                                             <i class="ri-check-line yes"></i>
+                                            {% endif %}
                                         </button>
                                     </form>
                                 </div>
@@ -258,11 +261,16 @@
                     {% endfor %}
                 {% endfor %}
             {% endfor %}
-            <form action="{% url 'all_sports' %}" method="post">
+            <form action="{% url 'all_sports' %}" method="post">{% if user.is_authenticated %}
+            	
+
                 {% csrf_token %}
-                <td><input type="date" name="sport_date_obj" required>
+                <td>
+                    <input type="date" name="sport_date_obj" required>
+                    
                     <input type="submit" name="create_sport_date" value="Create">
                 </td>
+                {% endif %}
             </form>
             </tbody>
         </table>

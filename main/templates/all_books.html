@@ -210,10 +210,16 @@
                         {{ i }}
                     </th>
                 {% endfor %}
-                <form action="{% url 'all_books' %}" method="post">
+                <form action="{% url 'all_books' %}" method="post">{% if user.is_authenticated %}
                     {% csrf_token %}
-                    <td><input type="text" name="new_book_item" required>
-                        <input type="submit" name="create_book_item" value="Create"></td>
+                    <td>
+                        <label>
+                            <input type="text" name="new_book_item" required>
+                        </label>
+                        <input type="submit" name="create_book_item" value="Create">
+
+                    </td>
+                    {% endif %}
                 </form>
             </tr>
 

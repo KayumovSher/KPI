@@ -211,10 +211,11 @@
                                 {{i}}
                             </th>
                         {% endfor %}
-                        <form action="{% url 'all_meetings' %}" method="post">
+                        <form action="{% url 'all_meetings' %}" method="post">{% if user.is_authenticated %}
                             {% csrf_token %}
                             <td> <input type="date" name="meeting_date" required> 
                             <input type="submit" name="create_date" value="Create">  </td>
+                            {% endif %}
                         </form>
                     </tr>
                     
@@ -232,8 +233,9 @@
                                             {% csrf_token %}
                                             <input type="hidden" name="meeting_date_id" value="{{meeting.meeting_date_id}}">
                                             <input type="hidden" name="kpi_id" value="{{kpi.id}}">
-                                            <button type="submit" class="work-button" name="decrease_meeting_score">
+                                            <button type="submit" class="work-button" name="decrease_meeting_score">{% if user.is_authenticated %}
                                                 <i class="ri-close-line yes"></i>
+                                                {% endif %}
                                             </button>
                                         </form>
 
@@ -241,8 +243,9 @@
                                             {% csrf_token %}
                                             <input type="hidden" name="meeting_date_id" value="{{meeting.meeting_date_id}}">
                                             <input type="hidden" name="kpi_id" value="{{kpi.id}}">
-                                            <button type="submit" class="work-button" name="increase_meeting_score">
+                                            <button type="submit" class="work-button" name="increase_meeting_score">{% if user.is_authenticated %}
                                                 <i class="ri-check-line yes"></i>
+                                                {% endif %}
                                             </button>
                                         </form>
                                     </div>
