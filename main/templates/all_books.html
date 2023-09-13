@@ -229,13 +229,16 @@
                             <td class="button_done">
                                 <div class="container_done">
                                     <div class="button-wrap d-flex justify-content-center{% if book.score == 1 %} green-buttons{% endif %}{% if book.score == 0 %} red-buttons{% endif %}">
+
+
                                         <form action="{% url 'book_increase_decrease_score' book.book_id %}" method="POST">
                                             {% csrf_token %}
                                             <input type="hidden" name="book_item_id" value="{{ book.book_item_id }}">
                                             <input type="hidden" name="kpi_id" value="{{ kpi.id }}">
                                             <input type="hidden" name="score" value="{{ book.score }}">
-                                            <button type="submit" class="work-button" name="decrease_book_score">
+                                            <button type="submit" class="work-button" name="decrease_book_score">{% if user.is_authenticated %}
                                                 <i class="ri-close-line yes"></i>
+                                                {% endif %}
                                             </button>
                                         </form>
 
@@ -244,11 +247,13 @@
                                             <input type="hidden" name="book_item_id" value="{{ book.book_item_id }}">
                                             <input type="hidden" name="kpi_id" value="{{ kpi.id }}">
                                             <input type="hidden" name="score" value="{{ book.score }}">
-                                            <button type="submit" class="work-button" name="increase_book_score">
+                                            <button type="submit" class="work-button" name="increase_book_score">{% if user.is_authenticated %}
                                                 <i class="ri-check-line yes"></i>
+                                                {% endif %}
                                             </button>
                                         </form>
                                     </div>
+
                                 </div>
 
                             </td>
