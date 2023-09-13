@@ -17,7 +17,7 @@ from django.db.models import Count, Max
 # Create your views here.
 
 def index(request):
-    kpi_models = KpiModel.objects.all().order_by('-created_at')
+    kpi_models = KpiModel.objects.all().order_by('name')
     result = []
     for x in kpi_models:
         books = sum(x.score for x in BookModel.objects.filter(kpi=x))
