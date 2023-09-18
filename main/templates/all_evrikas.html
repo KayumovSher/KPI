@@ -234,6 +234,19 @@
         border: 1px solid #ced4da;
         border-radius: 0.25rem;
     }
+    .form-control-off{
+        display: block;
+        width: 100px;
+        padding: 5px;
+        font-size: 1rem;
+        line-height: 2;
+        color: #3c00a0;
+        background-color: white;
+        background-clip: padding-box;
+        border: 1px solid #ced4da;
+        border-radius: 0.25rem;
+        pointer-events: none;
+    }
 
     body form{
         text-align: center;
@@ -281,22 +294,37 @@
                     <td> {{ kpi.name }} </td>
                     {% for evrika in evrika_items %}
                         <td>
-                            <select name="score" class="form-control">
-                                <option value="{{ evrika.score }}"> {{ evrika.score }} </option>
-
-                                {% if user.is_authenticated %}
+                            {% if user.is_authenticated %}
+                                <select name="score" class="form-control">
+                                    <option value="{{ evrika.score }}"> {{ evrika.score }} </option>
                                     <option value="0"> 0</option>
                                     <option value="5"> 5</option>
-                                {% endif %}
-                            </select>
-                        </td>
-                        <td>
-                            <input type="text" name="details" value="{{ evrika.details }}">
-                            <input type="hidden" value="{{ evrika.evrika_id }}" name="evrika_id">
-                            {% if user.is_authenticated %}
-                                <input type="submit" value="Save" name="save_evrika">
+                                </select>
+                            {% else %}
+                                <select name="score" class="form-control-off">
+                                    <option value="{{ evrika.score }}"> {{ evrika.score }} </option>
+                                    <option value="0"> 0</option>
+                                    <option value="5"> 5</option>
+                                </select>
                             {% endif %}
                         </td>
+                        {% if user.is_authenticated %}
+                            <td>
+                                <input type="text" name="details" value="{{ evrika.details }}">
+                                <input type="hidden" value="{{ evrika.evrika_id }}" name="evrika_id">
+                                {% if user.is_authenticated %}
+                                    <input type="submit" value="Save" name="save_evrika">
+                                {% endif %}
+                            </td>
+                        {% else %}
+                            <td>
+                                <input type="text" name="details" style="pointer-events: none" value="{{ evrika.details }}">
+                                <input type="hidden" value="{{ evrika.evrika_id }}" name="evrika_id">
+                                {% if user.is_authenticated %}
+                                    <input type="submit" value="Save" name="save_evrika">
+                                {% endif %}
+                            </td>
+                        {% endif %}
                         </form>
 
                     {% endfor %}
@@ -315,7 +343,7 @@
                             <input type="submit" name="create_evrika" value="Create">
                         {% endif %}
                     </td>
-                    {% endif %}
+                {% endif %}
                 </form>
             {% endfor %}
 

@@ -151,6 +151,15 @@
         width: auto;
     }
 
+    .work-button-off {
+        border: none;
+        padding: 0.25rem 1rem;
+        color: #292929;
+        background: #efefef;
+        width: auto;
+        pointer-events: none;
+    }
+
     .work-button:hover {
         cursor: pointer;
         color: #292929;
@@ -233,20 +242,31 @@
                                             {% csrf_token %}
                                             <input type="hidden" name="meeting_date_id" value="{{meeting.meeting_date_id}}">
                                             <input type="hidden" name="kpi_id" value="{{kpi.id}}">
-                                            <button type="submit" class="work-button" name="decrease_meeting_score">{% if user.is_authenticated %}
-                                                <i class="ri-close-line yes"></i>
-                                                {% endif %}
-                                            </button>
+                                            {% if user.is_authenticated %}
+                                                <button type="submit" class="work-button" name="decrease_meeting_score">
+                                                    <i class="ri-close-line yes"></i>
+                                                </button>
+                                            {% else %}
+                                                <button type="submit" class="work-button-off"
+                                                        name="decrease_meeting_score">
+                                                    <i class="ri-close-line yes"></i>
+                                                </button>
+                                            {% endif %}
                                         </form>
 
                                         <form action="{% url 'meeting_increase_decrease_score' meeting.meeting_id %}" method="POST">
                                             {% csrf_token %}
                                             <input type="hidden" name="meeting_date_id" value="{{meeting.meeting_date_id}}">
                                             <input type="hidden" name="kpi_id" value="{{kpi.id}}">
-                                            <button type="submit" class="work-button" name="increase_meeting_score">{% if user.is_authenticated %}
-                                                <i class="ri-check-line yes"></i>
-                                                {% endif %}
-                                            </button>
+                                            {% if user.is_authenticated %}
+                                                <button type="submit" class="work-button" name="increase_meeting_score">
+                                                    <i class="ri-check-line yes"></i>
+                                                </button>
+                                            {% else %}
+                                                <button type="submit" class="work-button-off" name="increase_meeting_score">
+                                                    <i class="ri-check-line yes"></i>
+                                                </button>
+                                            {% endif %}
                                         </form>
                                     </div>
                                 </div>

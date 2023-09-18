@@ -10,7 +10,7 @@
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
     <title>KPI</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
-   
+
     {% load static %}
 
 </head>
@@ -23,7 +23,6 @@
         box-sizing: border-box;
     }
 
-    
 
     html {
         background: #444;
@@ -148,6 +147,16 @@
         width: auto;
     }
 
+    .work-button-off {
+        border: none;
+        padding: 0.25rem 1rem;
+        color: #292929;
+        background: #efefef;
+        width: auto;
+        pointer-events: none;
+    }
+
+
     .work-button:hover {
         cursor: pointer;
         color: #292929;
@@ -179,117 +188,132 @@
 
 <body>
 
-    {% include 'navbar.html' %}
+{% include 'navbar.html' %}
 
-    {% load static %}
+{% load static %}
 
-    <div class="container">
+<div class="container">
 
-        <h1 class="headerone">Work to Google Sheet KPI</h1>
+    <h1 class="headerone">Work to Google Sheet KPI</h1>
 
-        <br>
+    <br>
 
-        <h2 class="nameCenter">
-            All Works
-        </h2>
+    <h2 class="nameCenter">
+        All Works
+    </h2>
 
-        <br>
+    <br>
 
-        <table class="table table-bordered">
-            <thead class="thead-light">
+    <table class="table table-bordered">
+        <thead class="thead-light">
+        <tr>
+            <th>F.I.O</th>
+            {% for i in deadlines %}
+                <th>
+                    {{ i }}
+                </th>
+            {% endfor %}
+            <form action="{% url 'all_works' %}" method="post">{% if user.is_authenticated %}
+                {% csrf_token %}
+                <td>
+                <label>
+                    <input type="date" name="new_deadline" required>
+                </label>
+                <input type="submit" name="create_deadline" value="Create">
+            {% endif %}
+                </td>
+            </form>
+        </tr>
+
+        </thead>
+        <tbody>
+
+        {% for kpi_dict in data %}
+
+            {% for kpi, work_items in kpi_dict.items %}
                 <tr>
-                    <th>F.I.O</th>
-                    {% for i in deadlines %}
-                        <th>
-                            {{ i }}
-                        </th>
-                    {% endfor %}
-                    <form action="{% url 'all_works' %}" method="post">{% if user.is_authenticated %}
-                        {% csrf_token %}
-                        <td>
-                            <label>
-                                <input type="date" name="new_deadline" required>
-                            </label>
-                            <input type="submit" name="create_deadline" value="Create">
-                            {% endif %}
+
+                    <td>{{ kpi.name }}</td>
+                    {% for work_item in work_items %}
+                        <td class="button_done">
+                            <div class="container_done">
+                                <div class="button-wrap d-flex justify-content-center{% if work_item.score == '0.5' %} green-buttons{% endif %}{% if work_item.score == '-1' %} red-buttons{% endif %}">
+                                    <form action="{% url 'work_increase_reset_decrease_score' work_item.work_id %}"
+                                          method="POST">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="deadline_id" value="{{ work_item.deadline_id }}">
+                                        <input type="hidden" name="kpi_id" value="{{ kpi.id }}">
+                                        <input type="hidden" name="work_id" value="{{ work_item.work_id }}">
+                                        {% if user.is_authenticated %}
+                                            <button type="submit" class="work-button" name="decrease_work_score">
+                                                <i class="ri-close-line yes"></i>
+                                            </button>
+                                        {% else %}
+                                            <button type="submit" class="work-button-off" name="decrease_work_score">
+                                                <i class="ri-close-line yes"></i>
+                                            </button>
+                                        {% endif %}
+                                    </form>
+                                    <form action="{% url 'work_increase_reset_decrease_score' work_item.work_id %}"
+                                          method="POST">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="deadline_id" value="{{ work_item.deadline_id }}">
+                                        <input type="hidden" name="kpi_id" value="{{ kpi.id }}">
+                                        <input type="hidden" name="work_id" value="{{ work_item.work_id }}">
+                                        {% if user.is_authenticated %}
+                                            <button type="submit" class="work-button" name="reset_work_score">
+                                                <i class="ri-subtract-line yes"></i>
+                                            </button>
+                                        {% else %}
+                                            <button type="submit" class="work-button-off" name="reset_work_score">
+                                                <i class="ri-subtract-line yes"></i>
+                                            </button>
+                                        {% endif %}
+                                    </form>
+                                    <form action="{% url 'work_increase_reset_decrease_score' work_item.work_id %}"
+                                          method="POST">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="deadline_id" value="{{ work_item.deadline_id }}">
+                                        <input type="hidden" name="kpi_id" value="{{ kpi.id }}">
+                                        <input type="hidden" name="work_id" value="{{ work_item.work_id }}">
+                                        {% if user.is_authenticated %}
+                                            <button type="submit" class="work-button" name="increase_work_score">
+                                                <i class="ri-check-line yes"></i>
+                                            </button>
+                                        {% else %}
+                                            <button type="submit" class="work-button-off" name="increase_work_score">
+                                                <i class="ri-check-line yes"></i>
+                                            </button>
+                                        {% endif %}
+                                    </form>
+                                </div>
+                            </div>
+
                         </td>
-                    </form>
+
+                    {% endfor %}
                 </tr>
 
-            </thead>
-            <tbody>
-
-            {% for kpi_dict in data %}
-
-                {% for kpi, work_items in kpi_dict.items %}
-                    <tr>
-
-                        <td>{{ kpi.name }}</td>
-                        {% for work_item in work_items %}
-                            <td class="button_done">
-                                <div class="container_done">
-                                    <div class="button-wrap d-flex justify-content-center{% if work_item.score == '0.5' %} green-buttons{% endif %}{% if work_item.score == '-1' %} red-buttons{% endif %}">
-                                        <form action="{% url 'work_increase_reset_decrease_score' work_item.work_id %}"
-                                            method="POST">
-                                            {% csrf_token %}
-                                            <input type="hidden" name="deadline_id" value="{{ work_item.deadline_id }}">
-                                            <input type="hidden" name="kpi_id" value="{{ kpi.id }}">
-                                            <input type="hidden" name="work_id" value="{{ work_item.work_id }}">
-                                            <button type="submit" class="work-button" name="decrease_work_score">{% if user.is_authenticated %}
-                                                <i class="ri-close-line yes"></i>
-                                                {% endif %}
-                                            </button>
-                                        </form>
-                                        <form action="{% url 'work_increase_reset_decrease_score' work_item.work_id %}"
-                                            method="POST">
-                                            {% csrf_token %}
-                                            <input type="hidden" name="deadline_id" value="{{ work_item.deadline_id }}">
-                                            <input type="hidden" name="kpi_id" value="{{ kpi.id }}">
-                                            <input type="hidden" name="work_id" value="{{ work_item.work_id }}">
-                                            <button type="submit" class="work-button" name="reset_work_score">{% if user.is_authenticated %}
-                                                <i class="ri-subtract-line yes"></i>
-                                                {% endif %}
-                                            </button>
-                                        </form>
-                                        <form action="{% url 'work_increase_reset_decrease_score' work_item.work_id %}"
-                                            method="POST">
-                                            {% csrf_token %}
-                                            <input type="hidden" name="deadline_id" value="{{ work_item.deadline_id }}">
-                                            <input type="hidden" name="kpi_id" value="{{ kpi.id }}">
-                                            <input type="hidden" name="work_id" value="{{ work_item.work_id }}">
-                                            <button type="submit" class="work-button" name="increase_work_score">{% if user.is_authenticated %}
-                                                <i class="ri-check-line yes"></i>
-                                                {% endif %}
-                                            </button>
-                                        </form>
-                                    </div>
-                                </div>
-
-                            </td>
-
-                        {% endfor %}
-                    </tr>
-
-                {% endfor %}
             {% endfor %}
-            </tbody>
-        </table>
-        {% load static %}
+        {% endfor %}
+        </tbody>
+    </table>
+    {% load static %}
 
 
-        <a href="https://docs.google.com/spreadsheets/d/13aPcjyMXeHoDP3VeYuTcN4DlKeJEvOr_2t3qR4TV_3w/edit#gid=1208225701">
+    <a href="https://docs.google.com/spreadsheets/d/13aPcjyMXeHoDP3VeYuTcN4DlKeJEvOr_2t3qR4TV_3w/edit#gid=1208225701">
 
-            <button>Table to Kpi Google Sheet</button>
-        </a>
-        <button onclick="tableToGoogleSheet()">
-            Table to Excel
-        </button>
+        <button>Table to Kpi Google Sheet</button>
+    </a>
+    <button onclick="tableToGoogleSheet()">
+        Table to Excel
+    </button>
 
 
-    </div>
+</div>
 
-    <script type="text/javascript" src="{% static 'js/table2excel.js' %}"></script>
-    <script type="text/javascript" src="{% static 'js/index.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/table2excel.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/index.js' %}"></script>
 
 
 </body>

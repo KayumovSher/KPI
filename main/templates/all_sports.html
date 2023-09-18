@@ -154,6 +154,15 @@
         width: auto;
     }
 
+    .work-button-off {
+        border: none;
+        padding: 0.25rem 1rem;
+        color: #292929;
+        background: #efefef;
+        width: auto;
+        pointer-events: none;
+    }
+
     .work-button:hover {
         cursor: pointer;
         color: #292929;
@@ -231,10 +240,15 @@
                                         <input type="hidden" name="sport_date_id" value="{{ sport_item.sport_date_id }}">
                                         <input type="hidden" name="kpi_id" value="{{ sport_item.kpi_user.id }}">
                                         <input type="hidden" name="score" value="{{ sport_item.score }}">
-                                        <button type="submit" class="work-button" name="decrease_sport_score">{% if user.is_authenticated %}
-                                            <i class="ri-close-line yes"></i>
-                                            {% endif %}
-                                        </button>
+                                        {% if user.is_authenticated %}
+                                            <button type="submit" class="work-button" name="decrease_sport_score">
+                                                <i class="ri-close-line yes"></i>
+                                            </button>
+                                        {% else %}
+                                            <button type="submit" class="work-button-off" name="decrease_sport_score">
+                                                <i class="ri-close-line yes"></i>
+                                            </button>
+                                        {% endif %}
                                     </form>
                                     <!-- <form action="{% url 'sport_increase_decrease_score' sport_item.score %}" method="POST">
                                                 {% csrf_token %}
@@ -249,10 +263,15 @@
                                         {% csrf_token %}
                                         <input type="hidden" name="sport_date_id" value="{{ sport_item.sport_date_id }}">
                                         <input type="hidden" name="kpi_id" value="{{ sport_item.kpi_user.id }}">
-                                        <button type="submit" class="work-button" name="increase_sport_score">{% if user.is_authenticated %}
-                                            <i class="ri-check-line yes"></i>
-                                            {% endif %}
-                                        </button>
+                                        {% if user.is_authenticated %}
+                                            <button type="submit" class="work-button" name="increase_sport_score">
+                                                <i class="ri-check-line yes"></i>
+                                            </button>
+                                        {% else %}
+                                            <button type="submit" class="work-button-off" name="increase_sport_score">
+                                                <i class="ri-check-line yes"></i>
+                                            </button>
+                                        {% endif %}
                                     </form>
                                 </div>
                             </div>
