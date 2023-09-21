@@ -53,7 +53,7 @@
     }
 
     .table {
-        width: fit-content;
+        width: auto;
         table-layout: fixed;
     }
 
@@ -151,7 +151,7 @@
         padding: 0.25rem 1rem;
         color: #292929;
         background: #efefef;
-        width: auto;
+        width: 40px;
     }
 
     .work-button-off {
@@ -159,7 +159,7 @@
         padding: 0.25rem 1rem;
         color: #292929;
         background: #efefef;
-        width: auto;
+        width: 40px;
         pointer-events: none;
     }
 
@@ -250,19 +250,28 @@
                                             </button>
                                         {% endif %}
                                     </form>
-                                    <!-- <form action="{% url 'sport_increase_decrease_score' sport_item.score %}" method="POST">
-                                                {% csrf_token %}
-                                                <input type="hidden" name="sport_date_id" value="{{sport_item.sport_date}}">
-                                                <input type="hidden" name="kpi_id" value="{{kpi.id}}">
-                                                <button type="submit" class="work-button" name="reset_sport_score">
-                                                    <i class="ri-subtract-line yes"></i>
-                                                </button>
-                                            </form> -->
+                                    <form action="{% url 'sport_increase_decrease_score' sport_item.sport_id %}"
+                                          method="POST">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="sport_date_id" value="{{ sport_item.sport_date_id }}">
+                                        <input type="hidden" name="kpi_id" value="{{ sport_item.kpi_user.id }}">
+                                        <input type="hidden" name="score" value="{{ sport_item.score }}">
+                                        {% if user.is_authenticated %}
+                                            <button type="submit" class="work-button" name="reset_sport_score">
+                                                <i class="ri-subtract-line yes"></i>
+                                            </button>
+                                        {% else %}
+                                            <button type="submit" class="work-button-off" name="reset_sport_score">
+                                                <i class="ri-subtract-line yes"></i>
+                                            </button>
+                                        {% endif %}
+                                    </form>
                                     <form action="{% url 'sport_increase_decrease_score' sport_item.sport_id %}"
                                         method="POST">
                                         {% csrf_token %}
                                         <input type="hidden" name="sport_date_id" value="{{ sport_item.sport_date_id }}">
                                         <input type="hidden" name="kpi_id" value="{{ sport_item.kpi_user.id }}">
+                                        <input type="hidden" name="score" value="{{ sport_item.score }}">
                                         {% if user.is_authenticated %}
                                             <button type="submit" class="work-button" name="increase_sport_score">
                                                 <i class="ri-check-line yes"></i>

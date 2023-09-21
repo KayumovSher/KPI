@@ -9,7 +9,7 @@ from django.utils import timezone
 class WorkManager(models.Manager):
     def work_sum(self, kpi):
         work = self.filter(kpi=kpi)
-        return sum(float(x.score) for x in work)
+        return sum(0 if x.score=="-" else float(x.score) for x in work)
 
 
 class DeadlineModel(models.Model):
@@ -22,7 +22,7 @@ class DeadlineModel(models.Model):
 
 class WorkModel(models.Model):
     WORK_CHOICES = (
-        ("0.5", "0.5"), ("-1", "-1"), ('0', '0')
+        ("0.5", "0.5"), ("-1", "-1"), ('-', '-')
     )
     deadline = models.ForeignKey(DeadlineModel, on_delete=models.CASCADE)
     score = models.CharField(max_length=100, choices=WORK_CHOICES, default='0', null=True, blank=True)
@@ -44,7 +44,7 @@ class SportManager(models.Manager):
 
     def sport_sum(self, kpi):
         sports = self.filter(kpi=kpi)
-        return sum(x.score for x in sports)
+        return sum(0 if x.score=="-" else int(x.score) for x in sports)
 
 
 class SportDateModel(models.Model):
@@ -57,10 +57,10 @@ class SportDateModel(models.Model):
 
 class SportModel(models.Model):
     SPORT_CHOICES = (
-        (0, 0), (-1, -1)
+        ("0", "0"), ("-1", "-1"), ("-", "-")
     )
     sport_date = models.ForeignKey('SportDateModel', on_delete=models.CASCADE, related_name='sport_date_items')
-    score = models.IntegerField(null=True, choices=SPORT_CHOICES)
+    score = models.CharField(max_length=100, choices=SPORT_CHOICES, default='0', null=True, blank=True)
     kpi = models.ForeignKey("KpiModel", on_delete=models.CASCADE, related_name="sport_items")
     created_at = models.DateTimeField(auto_now=True)
     objects = SportManager()
@@ -76,7 +76,7 @@ class SportModel(models.Model):
 class BooksManager(models.Manager):
     def books_sum(self, kpi):
         books = self.filter(kpi=kpi)
-        return sum(x.score for x in books)
+        return sum(0 if x.score=="-" else int(x.score) for x in books)
 
 
 class BookItem(models.Model):
@@ -89,11 +89,13 @@ class BookItem(models.Model):
 
 class BookModel(models.Model):
     BOOK_CHOICES = (
-        (1, 1), (0, 0)
+        ("1", "1"), ("0", "0"), ("-", "-")
     )
+
     # deadline = models.DateTimeField(default=timezone.now)
     book = models.ForeignKey(BookItem, on_delete=models.CASCADE, related_name="book_title")
-    score = models.IntegerField(null=True, choices=BOOK_CHOICES)
+    # score = models.IntegerField(null=True, choices=BOOK_CHOICES)
+    score = models.CharField(max_length=100, choices=BOOK_CHOICES, default='0', null=True, blank=True)
     kpi = models.ForeignKey("KpiModel", on_delete=models.CASCADE, related_name="book_items")
     created_at = models.DateTimeField(auto_now=True)
     objects = BooksManager()

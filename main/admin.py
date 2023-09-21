@@ -23,12 +23,16 @@ class KPIAdmin(admin.ModelAdmin):
 class WorkAdmin(admin.ModelAdmin):
     def kpi_users(self, obj):
         return obj.kpi.name
-    list_display = ("score", "kpi_users")
+    def get_date(self, obj):
+        return obj.deadline.date
+    list_display = ("score", "kpi_users", "get_date")
 
 class SportAdmin(admin.ModelAdmin):
+    def kpi_users(self, obj):
+        return obj.kpi.name
     def get_date(self, obj):
         return obj.sport_date.date
-    list_display = ("get_date", "score")
+    list_display = ("score", "get_date", "kpi_users")
 
 class SportDateModelAdmin(admin.ModelAdmin):
     list_display = ('date',)

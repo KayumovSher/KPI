@@ -243,8 +243,7 @@
                         {% for book in book_list %}
                             <td class="button_done">
                                 <div class="container_done">
-                                    <div class="button-wrap d-flex justify-content-center{% if book.score == 1 %} green-buttons{% endif %}{% if book.score == 0 %} red-buttons{% endif %}">
-
+                                    <div class="button-wrap d-flex justify-content-center{% if book.score == '1' %} green-buttons{% endif %}{% if book.score == '0' %} red-buttons{% endif %}">
 
                                         <form action="{% url 'book_increase_decrease_score' book.book_id %}" method="POST">
                                             {% csrf_token %}
@@ -258,6 +257,22 @@
                                             {% else %}
                                                 <button type="submit" class="work-button-off" name="decrease_book_score">
                                                     <i class="ri-close-line yes"></i>
+                                                </button>
+                                            {% endif %}
+                                        </form>
+
+                                        <form action="{% url 'book_increase_decrease_score' book.book_id %}" method="POST">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="book_item_id" value="{{ book.book_item_id }}">
+                                            <input type="hidden" name="kpi_id" value="{{ kpi.id }}">
+                                            <input type="hidden" name="score" value="{{ book.score }}">
+                                            {% if user.is_authenticated %}
+                                                <button type="submit" class="work-button" name="reset_book_score">
+                                                    <i class="ri-subtract-line yes"></i>
+                                                </button>
+                                            {% else %}
+                                                <button type="submit" class="work-button-off" name="reset_book_score">
+                                                    <i class="ri-subtract-line yes"></i>
                                                 </button>
                                             {% endif %}
                                         </form>

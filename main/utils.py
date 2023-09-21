@@ -42,7 +42,7 @@ def change_sport_score(sport_id=None, sport_date_id=None, kpi_id=None, score=0):
     if sport_id == 0 or sport_id == 'None':
             SportModel.objects.create(sport_date=sport_date_obj, score=score, kpi=kpi_user).save()
             return redirect('/all_sports/')
-        
+
     sport = get_object_or_404(SportModel, id=sport_id)
     sport.score = score
     sport.save()
