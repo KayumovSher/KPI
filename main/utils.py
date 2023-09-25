@@ -52,7 +52,7 @@ def change_meeting_score(meeting_id=None, meeting_date_id=None, kpi_id=None, sco
     meeting_date_obj = MeetingDateModel.objects.get(id=meeting_date_id)
     if meeting_id == 0 or meeting_id == 'None':
             MeetingModel.objects.create(meeting_date=meeting_date_obj, score=score, kpi=kpi_user).save()
-            return redirect('/all_sports/')
+            return redirect('/all_meetings/')
         
     meeting = get_object_or_404(MeetingModel, id=meeting_id)
     meeting.score = score

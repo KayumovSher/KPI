@@ -24,7 +24,7 @@ def index(request):
         sports = sum(0 if x.score=="-" else int(x.score) for x in SportModel.objects.filter(kpi=x))
         evrikas = sum(x.score for x in EvrikaModel.objects.filter(kpi=x))
         works = sum(0 if x.score=="-" else float(x.score) for x in WorkModel.objects.filter(kpi=x))
-        meetings = sum(x.score for x in MeetingModel.objects.filter(kpi=x))
+        meetings = sum(0 if x.score=="-" else float(x.score) for x in MeetingModel.objects.filter(kpi=x))
         result.append(
             {"kpi": x, "sports": sports, "evrikas": evrikas, "works": works, "books": books, 'meetings': meetings})
 
@@ -36,6 +36,8 @@ def all_meetings(request):
     if 'create_date' in request.POST:
         meet_date = MeetingDateModel.objects.create(date=request.POST.get('meeting_date'))
         meet_date.save()
+        for i in KpiModel.objects.all():
+            MeetingModel.objects.update_or_create(meeting_date=meet_date, kpi=i, defaults={'score': "-"})
         return redirect('/all_meetings/')
     elif 'save_meeting' in request.POST:
         n_score, meeting_id = request.POST.get('n_score'), request.POST.get('meeting_id')
@@ -53,49 +55,42 @@ def all_meetings(request):
         return redirect('/all_meetings/')
 
     data = []
-    kpi_objects = KpiModel.objects.all()
-    deadlines = list(x.date for x in MeetingDateModel.objects.all().order_by('deadline'))
-    deadline_pairs = {x.date: x.id for x in MeetingDateModel.objects.all().order_by('deadline')}
+    kpi_objects = [x for x in KpiModel.objects.all()]
+    deadlines = list(x for x in MeetingDateModel.objects.all().order_by('deadline'))
+    # deadline_pairs = {x.date: x.id for x in MeetingDateModel.objects.all().order_by('deadline')}
 
-    for kpi_obj in kpi_objects:
-        kpi_data = {kpi_obj: []}
-        work_dic = {}
-
+    for z, kpi_obj in enumerate(deadlines):
+        kpi_data = {kpi_obj.date.strftime('%Y-%m-%d'): []}
+        meeting_dic = {}
         # Iterate through each WorkModel object and add to the kpi_data dictionary
-        for meeting_item in kpi_obj.meeting_items.all():
-            work_dic[meeting_item.meeting_date.date] = {'score': meeting_item.score, 'meeting_id': meeting_item.id,
-                                                        "meeting_date_id": meeting_item.meeting_date.id}
-        for i in range(len(deadlines)):
-            if deadlines[i] in work_dic:
-                kpi_data[kpi_obj].append({
-                    'date': deadlines[i].strftime('%Y-%m-%d'),
-                    'score': work_dic[deadlines[i]]['score'],
-                    'meeting_id': work_dic[deadlines[i]]['meeting_id'],
-                    'meeting_date_id': work_dic[deadlines[i]]['meeting_date_id']
-                })
-            else:
-                kpi_data[kpi_obj].append({
-                    'date': deadlines[i].strftime('%Y-%m-%d'),
-                    'score': 0,
-                    'meeting_id': None,
-                    'meeting_date_id': deadline_pairs[deadlines[i]]
-                })
 
+        for meeting_item in kpi_obj.meeting_date_items.all():
+            meeting_dic[kpi_obj.date.strftime('%Y-%m-%d')] = {'score': meeting_item.score,
+                                                                  'meeting_id': meeting_item.id,
+                                                                  'meeting_date_id': meeting_item.meeting_date.id,
+                                                                  'kpi_user': meeting_item.kpi}
+        for i in kpi_objects:
+            kpi_data[kpi_obj.date.strftime('%Y-%m-%d')].append({
+                'score': i.meeting_items.all()[z].score,
+                'meeting_id': i.meeting_items.all()[z].id,
+                'meeting_date_id': meeting_dic[kpi_obj.date.strftime('%Y-%m-%d')]['meeting_date_id'],
+                'kpi_user': i.meeting_items.all()[z].kpi
+            })
         data.append(kpi_data)
-    return render(request, 'all_meetings.html', context={'data': data, 'deadlines': deadlines})
+    return render(request, 'all_meetings.html', context={'data': data, 'kpi_objects': kpi_objects})
 
 
 @IsAdminOrReadOnly
 def meeting(request, id=None):
     kpi = get_object_or_404(KpiModel, id=id)
-    meetings = MeetingModel.objects.filter(kpi=kpi).order_by("meeting_date__date")
+    meetings = MeetingModel.objects.filter(kpi=kpi).order_by("meeting_date")
     return render(request, 'meeting.html', {"meetings": meetings, 'kpi': kpi})
 
 
-def meeting_increase_decrease_score(request, meeting_id=0):
+def meeting_increase_decrease_score(request, meeting_id=None):
     if request.method != 'POST':
         return HttpResponseNotAllowed(('POST',))
-    score_dic = {'increase_meeting_score': 0, 'decrease_meeting_score': -5, 'reset_work_score': 0}
+    score_dic = {'increase_meeting_score': 0, 'decrease_meeting_score': -5, 'reset_meeting_score': "-"}
     post_data = list(request.POST.items())
     last_key = post_data[-1][0]
     utils.change_meeting_score(meeting_id, request.POST.get('meeting_date_id'), request.POST.get('kpi_id'),

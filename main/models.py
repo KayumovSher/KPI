@@ -219,11 +219,11 @@ class KpiModel(models.Model):
 class MeetingManager(models.Manager):
     def meeting_score(self, kpi):
         meetings = self.filter(kpi=kpi)
-        return sum(x.score for x in meetings)
+        return sum(0 if x.score=="-" else float(x.score) for x in meetings)
 
 
 class MeetingDateModel(models.Model):
-    date = models.DateField()
+    date = models.DateField(default=timezone.now)
     deadline = models.DateTimeField(auto_now=True)
 
     def __str__(self):
@@ -232,11 +232,11 @@ class MeetingDateModel(models.Model):
 
 class MeetingModel(models.Model):
     CHOICES = (
-        (0, 0), (-5, -5)
+        ("0", "0"), ("-5", "-5"), ("-", "-")
     )
-    meeting_date = models.ForeignKey(MeetingDateModel, on_delete=models.CASCADE)
-    score = models.IntegerField(choices=CHOICES, default=0)
-    kpi = models.ForeignKey(KpiModel, on_delete=models.CASCADE, related_name='meeting_items')
+    meeting_date = models.ForeignKey('MeetingDateModel', on_delete=models.CASCADE, related_name='meeting_date_items')
+    score = models.CharField(max_length=100, choices=CHOICES, default='0', null=True, blank=True)
+    kpi = models.ForeignKey("KpiModel", on_delete=models.CASCADE, related_name='meeting_items')
     deadline = models.DateTimeField(auto_now=True)
 
     objects = MeetingManager()
