@@ -239,7 +239,7 @@
                                     <input type="hidden" name="sport_date_id" value="{{ sport_item.sport_date_id }}">
                                     <input type="hidden" name="kpi_id" value="{{ sport_item.kpi_user.id }}">
                                     <input type="hidden" name="score" value="{{ sport_item.score }}">
-                                    {% if user.is_authenticated %}
+                                    {% if user.is_authenticated and sport_item.sport_date_id != -1 %}
                                         <button type="submit" class="work-button" name="decrease_sport_score">
                                             <i class="ri-close-line yes"></i>
                                         </button>
@@ -255,7 +255,7 @@
                                     <input type="hidden" name="sport_date_id" value="{{ sport_item.sport_date_id }}">
                                     <input type="hidden" name="kpi_id" value="{{ sport_item.kpi_user.id }}">
                                     <input type="hidden" name="score" value="{{ sport_item.score }}">
-                                    {% if user.is_authenticated %}
+                                    {% if user.is_authenticated and sport_item.sport_date_id != -1 %}
                                         <button type="submit" class="work-button" name="reset_sport_score">
                                             <i class="ri-subtract-line yes"></i>
                                         </button>
@@ -271,7 +271,7 @@
                                     <input type="hidden" name="sport_date_id" value="{{ sport_item.sport_date_id }}">
                                     <input type="hidden" name="kpi_id" value="{{ sport_item.kpi_user.id }}">
                                     <input type="hidden" name="score" value="{{ sport_item.score }}">
-                                    {% if user.is_authenticated %}
+                                    {% if user.is_authenticated and sport_item.sport_date_id != -1 %}
                                         <button type="submit" class="work-button" name="increase_sport_score">
                                             <i class="ri-check-line yes"></i>
                                         </button>

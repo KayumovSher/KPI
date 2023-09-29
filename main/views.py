@@ -20,11 +20,11 @@ def index(request):
     kpi_models = KpiModel.objects.all().order_by('name')
     result = []
     for x in kpi_models:
-        books = sum(0 if x.score=="-" else int(x.score) for x in BookModel.objects.filter(kpi=x))
-        sports = sum(0 if x.score=="-" else int(x.score) for x in SportModel.objects.filter(kpi=x))
+        books = sum(0 if x.score == "-" else int(x.score) for x in BookModel.objects.filter(kpi=x))
+        sports = sum(0 if x.score == "-" else int(x.score) for x in SportModel.objects.filter(kpi=x))
         evrikas = sum(x.score for x in EvrikaModel.objects.filter(kpi=x))
-        works = sum(0 if x.score=="-" else float(x.score) for x in WorkModel.objects.filter(kpi=x))
-        meetings = sum(0 if x.score=="-" else float(x.score) for x in MeetingModel.objects.filter(kpi=x))
+        works = sum(0 if x.score == "-" else float(x.score) for x in WorkModel.objects.filter(kpi=x))
+        meetings = sum(0 if x.score == "-" else float(x.score) for x in MeetingModel.objects.filter(kpi=x))
         result.append(
             {"kpi": x, "sports": sports, "evrikas": evrikas, "works": works, "books": books, 'meetings': meetings})
 
@@ -66,9 +66,9 @@ def all_meetings(request):
 
         for meeting_item in kpi_obj.meeting_date_items.all():
             meeting_dic[kpi_obj.date.strftime('%Y-%m-%d')] = {'score': meeting_item.score,
-                                                                  'meeting_id': meeting_item.id,
-                                                                  'meeting_date_id': meeting_item.meeting_date.id,
-                                                                  'kpi_user': meeting_item.kpi}
+                                                              'meeting_id': meeting_item.id,
+                                                              'meeting_date_id': meeting_item.meeting_date.id,
+                                                              'kpi_user': meeting_item.kpi}
         for i in kpi_objects:
             kpi_data[kpi_obj.date.strftime('%Y-%m-%d')].append({
                 'score': i.meeting_items.all()[z].score,
@@ -326,7 +326,6 @@ def all_books(request):
 
         obj = BookModel.objects.get(id=book_id)
         obj.score = book_score
-        # obj.book = dead_obj
         obj.kpi = kpi_user
         obj.save()
         return redirect('/all_books/')
@@ -334,7 +333,6 @@ def all_books(request):
     data = []
     kpis = KpiModel.objects.all()
     book_items = list(x.title for x in BookItem.objects.all().order_by('created_at'))
-    book_pairs = {x.title: x.id for x in BookItem.objects.all().order_by('created_at')}
     for kpi_obj in kpis:
         kpi_data = {kpi_obj: []}
         book_dic = {}
@@ -344,12 +342,18 @@ def all_books(request):
             book_dic[book.book.title] = {'score': book.score, 'book_id': book.id, "book_item_id": book.book.id}
 
         for i in range(len(book_items)):
-            kpi_data[kpi_obj].append({
-                # 'book': book_items[i],
-                'book_id': book_dic[book_items[i]]['book_id'],
-                'score': book_dic[book_items[i]]['score'],
-                'book_item_id': book_dic[book_items[i]]['book_item_id'],
-            })
+            if book_items[i] in book_dic:
+                kpi_data[kpi_obj].append({
+                    'book_id': book_dic[book_items[i]]['book_id'],
+                    'score': book_dic[book_items[i]]['score'],
+                    'book_item_id': book_dic[book_items[i]]['book_item_id'],
+                })
+            else:
+                kpi_data[kpi_obj].append({
+                    'book_id': -1,
+                    'score': "-",
+                    'book_item_id': -1,
+                })
         data.append(kpi_data)
 
     return render(request, 'all_books.html', {"book_items": book_items, "data": data})
@@ -413,8 +417,10 @@ def sport_increase_decrease_score(request, sport_id=None):
     score_dic = {'decrease_sport_score': -1, 'increase_sport_score': 0, 'reset_sport_score': "-"}
     post_data = list(request.POST.items())
     last_key = post_data[-1][0]
-    utils.change_sport_score(sport_id, request.POST.get('sport_date_id'), request.POST.get('kpi_id'), score=score_dic[last_key])
+    utils.change_sport_score(sport_id, request.POST.get('sport_date_id'), request.POST.get('kpi_id'),
+                             score=score_dic[last_key])
     return redirect(to='all_sports')
+
 
 @IsAdminOrReadOnly
 def all_sports(request):
@@ -452,16 +458,26 @@ def all_sports(request):
             sport_dic[sport_date_obj.date.strftime('%Y-%m-%d')] = {'score': sport_item.score, 'sport_id': sport_item.id,
                                                                    "sport_date_id": sport_item.sport_date.id,
                                                                    'kpi_user': sport_item.kpi}
-
+        print(sport_dic)
+        print(kpi_objects)
         for i in kpi_objects:
-            sport_data[sport_date_obj.date.strftime('%Y-%m-%d')].append({
-                'score': i.sport_items.all()[z].score,
-                'sport_id': i.sport_items.all()[z].id,
-                'sport_date_id': sport_dic[sport_date_obj.date.strftime('%Y-%m-%d')]['sport_date_id'],
-                'kpi_user': i.sport_items.all()[z].kpi
-            })
+            if i in sport_dic:
+                sport_data[sport_date_obj.date.strftime('%Y-%m-%d')].append({
+                    'score': i.sport_items.all()[z].score,
+                    'sport_id': i.sport_items.all()[z].id,
+                    'sport_date_id': sport_dic[sport_date_obj.date.strftime('%Y-%m-%d')]['sport_date_id'],
+                    'kpi_user': i.sport_items.all()[z].kpi
+                })
+            else:
+                sport_data[sport_date_obj.date.strftime('%Y-%m-%d')].append({
+                    "sport_id": -1,
+                    "score": "-",
+                    "sport_date_id": -1,
+                    'kpi_user': -1
+                })
         data.append(sport_data)
     return render(request, 'all_sports.html', {'data': data, 'kpi_objects': kpi_objects})
+
 
 # [{<KpiModel: sadriddin>: [{'date': '2023-08-17', 'score': '-1', 'work_id': 1, 'deadline_id': 1}, {'date': '1221-12-21', 'score': 0, 'work_id': None, 'deadline_id': 2}]}]
 # [{<KpiModel: sadriddin>: [{'date': '2023-08-17', 'score': '-1', 'work_id': 1, 'deadline_id': 1}, {'date': '1221-12-21', 'score': 0, 'work_id': None, 'deadline_id': 2}]}, {<KpiModel: user-1>: [{'date': '2023-08-17', 'score': 0, 'work_id': None, 'deadline_id': 1}, {'date': '1221-12-21', 'score': 0, 'work_id': None, 'deadline_id': 2}]}]

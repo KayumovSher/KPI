@@ -250,7 +250,7 @@
                                             <input type="hidden" name="book_item_id" value="{{ book.book_item_id }}">
                                             <input type="hidden" name="kpi_id" value="{{ kpi.id }}">
                                             <input type="hidden" name="score" value="{{ book.score }}">
-                                            {% if user.is_authenticated %}
+                                            {% if user.is_authenticated and book.book_item_id != -1 %}
                                                 <button type="submit" class="work-button" name="decrease_book_score">
                                                     <i class="ri-close-line yes"></i>
                                                 </button>
@@ -266,7 +266,7 @@
                                             <input type="hidden" name="book_item_id" value="{{ book.book_item_id }}">
                                             <input type="hidden" name="kpi_id" value="{{ kpi.id }}">
                                             <input type="hidden" name="score" value="{{ book.score }}">
-                                            {% if user.is_authenticated %}
+                                            {% if user.is_authenticated and book.book_item_id != -1 %}
                                                 <button type="submit" class="work-button" name="reset_book_score">
                                                     <i class="ri-subtract-line yes"></i>
                                                 </button>
@@ -282,7 +282,7 @@
                                             <input type="hidden" name="book_item_id" value="{{ book.book_item_id }}">
                                             <input type="hidden" name="kpi_id" value="{{ kpi.id }}">
                                             <input type="hidden" name="score" value="{{ book.score }}">
-                                            {% if user.is_authenticated %}
+                                            {% if user.is_authenticated and book.book_item_id != -1 %}
                                                 <button type="submit" class="work-button" name="increase_book_score">
                                                     <i class="ri-check-line yes"></i>
                                                 </button>
