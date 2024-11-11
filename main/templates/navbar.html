@@ -45,7 +45,8 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <ul class="navbar-nav w-100 justify-content-between d-flex me-auto mb-2 mb-lg-0" style="align-items: inherit">
         <li class="nav-item">
-            <a href="{% url 'index' %}"> <i class="ri-arrow-left-circle-line"></i> </a>
+            {% comment %} Back icon {% endcomment %}
+            <a href="{% url 'index' %}"> <i class="ri-arrow-left-circle-line"></i></a>
             <h3 class="m-0 d-flex align-items-center" style="color: aliceblue;">{% if request.user.is_authenticated %}
                 <i class="ri-user-line">{{ request.user.username }}!</i>
             {% endif %}
